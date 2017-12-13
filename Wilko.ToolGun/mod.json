@@ -1,0 +1,90 @@
+{
+
+	"Name" : "Tool Gun",
+	"Description" : "A test mod to see if things get injected correctly",
+	"Authors" : [
+		"James Wilkinson"
+	],
+	"Contacts" : [
+		"jw@jameswilko.com"
+	],
+	"Version" : 1.0,
+
+	"Files" : [
+		{
+			"ComparisonString" : "global function GetPilotLoadoutForCurrentMapSP\r\nglobal function GetTitanLoadoutForCurrentMap\r\nglobal function SpInitLoadouts",
+			"ReplacedCodeFile" : "game_scripts/_sp_loadouts.nut"
+		},
+		{
+			"id" : "_sp_sh_init",
+			"ComparisonString" : "global function SPMP_Shared_Init",
+			"ReplacedCodeFile" : "game_scripts/_sp_sh_init.gnut"
+		},
+		{
+			"ComparisonString" : "untyped\r\n\r\nglobal function OnWeaponPrimaryAttack_weapon_shotgun_pistol",
+			"ReplacedCodeFile" : "game_scripts/mp_weapon_shotgun_pistol.nut"
+		},
+		{
+			"ComparisonString" : "untyped\r\n\r\n\r\nglobal function RemoteFunctions_Init",
+			"ReplacedCodeFile" : "game_scripts/_remote_functions_sp.gnut"
+		}
+	],
+
+	"AppendedFiles" : [
+		{
+			"AppendTo" : "_sp_sh_init",
+			"ScriptPath" : "scripts/sh_dev_tools.nut"
+		},
+		{
+			"AppendTo" : "_sp_sh_init",
+			"ScriptPath" : "scripts/sh_toolgun.nut"
+		},
+		{
+			"AppendTo" : "_sp_sh_init",
+			"ScriptPath" : "scripts/sv_toolgun.nut"
+		},
+		{
+			"AppendTo" : "_sp_sh_init",
+			"ScriptPath" : "scripts/cl_toolgun.nut"
+		},
+		{
+			"AppendTo" : "_sp_sh_init",
+			"ScriptPath" : "scripts/ui_toolgun.nut"
+		},
+		{
+			"AppendTo" : "_sp_sh_init",
+			"ScriptPath" : "scripts/tools/sh_tool_spawn_prop.nut"
+		},
+		{
+			"AppendTo" : "_sp_sh_init",
+			"ScriptPath" : "scripts/tools/sh_tool_remove_prop.nut"
+		},
+		{
+			"AppendTo" : "_sp_sh_init",
+			"ScriptPath" : "scripts/tools/sh_tool_prop_info.nut"
+		},
+
+		{
+			"AppendTo" : "_sp_sh_init",
+			"ScriptPath" : "scripts/gauntlet/sv_custom_gauntlet.nut"
+		},
+		{
+			"AppendTo" : "_sp_sh_init",
+			"ScriptPath" : "scripts/gauntlet/sh_custom_gauntlet.nut"
+		},
+		{
+			"AppendTo" : "_sp_sh_init",
+			"ScriptPath" : "scripts/gauntlet/cl_custom_gauntlet.nut"
+		},
+		{
+			"AppendTo" : "_sp_sh_init",
+			"ScriptPath" : "scripts/gauntlet/tools/sh_tool_gauntlet_place_start_finish.nut"
+		},
+
+		{
+			"AppendTo" : "_sp_sh_init",
+			"ScriptPath" : "scripts/spawnlists/sp_training.nut"
+		}
+	]
+
+}
