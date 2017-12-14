@@ -15,6 +15,13 @@ global function Toolgun_Client_PrimaryAttack
 #endif
 // TOOLGUN END
 
+// CUSTOM GAUNTLET START
+#if CLIENT
+global function ServerCallback_Gauntlet_StartRun
+global function ServerCallback_Gauntlet_FinishRun
+#endif
+// CUSTOM GAUNTLET END
+
 void function SPMP_Shared_Init()
 {
 //	Settings_Init()

@@ -78,6 +78,10 @@
 		},
 		{
 			"AppendTo" : "_sp_sh_init",
+			"ScriptPath" : "scripts/gauntlet/ui_custom_gauntlet.nut"
+		},
+		{
+			"AppendTo" : "_sp_sh_init",
 			"ScriptPath" : "scripts/gauntlet/tools/sh_tool_gauntlet_place_start_finish.nut"
 		},
 

@@ -5,76 +5,30 @@ void function CustomGauntlet_Client_Init()
 {
 	RegisterButtonPressedCallback( KEY_BACKSLASH, KeyPress_TestGauntlet );
 
-	thread CustomGauntlet_Client_Think();
-}
+	CustomGauntlet.Tips.append( "#GAUNTLET_TIP_0" );
+	CustomGauntlet.Tips.append( "#GAUNTLET_TIP_1" );
+	CustomGauntlet.Tips.append( "#GAUNTLET_TIP_2" );
+	CustomGauntlet.Tips.append( "#GAUNTLET_TIP_3" );
+	CustomGauntlet.Tips.append( "#GAUNTLET_TIP_4" );
+	CustomGauntlet.Tips.append( "#GAUNTLET_TIP_5" );
+	CustomGauntlet.Tips.append( "#GAUNTLET_TIP_6" );
+	CustomGauntlet.Tips.append( "#GAUNTLET_TIP_7" );
+	CustomGauntlet.Tips.append( "#GAUNTLET_TIP_8" );
+	CustomGauntlet.Tips.append( "#GAUNTLET_TIP_9" );
+	CustomGauntlet.Tips.randomize();
 
-void function CustomGauntlet_UI_Init()
-{
-	var rui = RuiCreate( $"ui/cockpit_console_text_top_right.rpak", clGlobal.topoCockpitHudPermanent, RUI_DRAW_COCKPIT, 0 );
-	RuiSetInt( rui, "maxLines", 1 );
-	RuiSetInt( rui, "lineNum", 1 );
-	RuiSetFloat2( rui, "msgPos", <0.95, 0.05, 0.0> );
-	RuiSetString( rui, "msgText", "Gauntlet Active" );
-	RuiSetFloat( rui, "msgFontSize", 48.0 );
-	RuiSetFloat( rui, "msgAlpha", 0.9 );
-	RuiSetFloat( rui, "thicken", 0.0 );
-	RuiSetFloat3( rui, "msgColor", <1.0, 1.0, 1.0> );
-	CustomGauntlet.IsActiveRui = rui;
+	thread CustomGauntlet_Client_Think();
 }
 
 void function CustomGauntlet_Client_Think()
 {
 	while( true )
 	{
-
-		if( CustomGauntlet.IsActive )
-		{
-			entity player = GetLocalClientPlayer();
-
-			float DistanceToStart = Length( player.GetOrigin() - CustomGauntlet.StartPoint.Location );
-			if( DistanceToStart < 100 )
-			{
-				CustomGauntlet_Start();
-			}
-
-			float DistanceToFinish = Length( player.GetOrigin() - CustomGauntlet.FinishPoint.Location );
-			if( DistanceToFinish < 100 )
-			{
-				CustomGauntlet_Finish();
-			}
-		}
-
-		if( CustomGauntlet.IsActiveRui != null )
-		{
-			if( CustomGauntlet.IsActive )
-				RuiSetFloat( CustomGauntlet.IsActiveRui, "msgAlpha", 0.9 );
-			else
-				RuiSetFloat( CustomGauntlet.IsActiveRui, "msgAlpha", 0.0 );
-		}
-
 		WaitFrame()
 	}
 }
 
-void function CustomGauntlet_Start_Client()
-{
-	var splashRUI = RuiCreate( $"ui/gauntlet_splash.rpak", clGlobal.topoCockpitHud, RUI_DRAW_COCKPIT, 0 )
-	RuiSetFloat( splashRUI, "duration", 1.8 )
-	RuiSetString( splashRUI, "message", "#GAUNTLET_START_TEXT")
-
-	// Network to the server
-	GetLocalClientPlayer().ClientCommand( "CustomGauntlet_Start" );
-}
-
-void function CustomGauntlet_Finish_Client()
-{
-	var splashRUI = RuiCreate( $"ui/gauntlet_splash.rpak", clGlobal.topoCockpitHud, RUI_DRAW_COCKPIT, 0 )
-	RuiSetFloat( splashRUI, "duration", 1.8 )
-	RuiSetString( splashRUI, "message", "#GAUNTLET_FINISH_TEXT")
-
-	// Network to the server
-	GetLocalClientPlayer().ClientCommand( "CustomGauntlet_Finish" );
-}
+// -----------------------------------------------------------------------------
 
 void function CustomGauntlet_PlaceStartLine( vector Pos, vector Ang )
 {
@@ -86,6 +40,8 @@ void function CustomGauntlet_PlaceStartLine( vector Pos, vector Ang )
 	CustomGauntlet.StartDisplayTopology = CustomGauntlet_CreateCentredTopology( Pos, Ang, 60, 30 );
 	CustomGauntlet.StartDisplayRui = RuiCreate( $"ui/gauntlet_starting_line.rpak", CustomGauntlet.StartDisplayTopology, RUI_DRAW_WORLD, 0 )
 	RuiSetString( CustomGauntlet.StartDisplayRui, "displayText", "#GAUNTLET_START_TEXT" );
+
+	CustomGauntlet_SendEntityToServer( "start_point", Pos, Ang );
 }
 
 void function CustomGauntlet_PlaceFinishLine( vector Pos, vector Ang )
@@ -98,6 +54,8 @@ void function CustomGauntlet_PlaceFinishLine( vector Pos, vector Ang )
 	CustomGauntlet.FinishDisplayTopology = CustomGauntlet_CreateCentredTopology( Pos, Ang, 60, 30 );
 	CustomGauntlet.FinishDisplayRui = RuiCreate( $"ui/gauntlet_starting_line.rpak", CustomGauntlet.FinishDisplayTopology, RUI_DRAW_WORLD, 0 )
 	RuiSetString( CustomGauntlet.FinishDisplayRui, "displayText", "#GAUNTLET_FINISH_TEXT" );
+
+	CustomGauntlet_SendEntityToServer( "finish_point", Pos, Ang );
 }
 
 void function CustomGauntlet_PlaceTarget( vector Pos, vector Ang )
@@ -112,7 +70,7 @@ void function CustomGauntlet_PlaceTarget( vector Pos, vector Ang )
 	RuiSetString( TargetRui, "displayText", "Target" );
 	CustomGauntlet.TargetRuis.append( TargetRui );
 
-	GetLocalClientPlayer().ClientCommand( "CustomGauntlet_AddTarget " + Pos.x + " " + Pos.y + " " + Pos.z + " " + Ang.x + " " + Ang.y + " " + Ang.z );
+	CustomGauntlet_SendEntityToServer( "target", Pos, Ang );
 }
 
 var function CustomGauntlet_CreateCentredTopology( vector Pos, vector Ang, float Width = 60, float Height = 30 )
@@ -148,7 +106,7 @@ void function CustomGauntlet_DestroyFinishLine()
 void function KeyPress_TestGauntlet( var button )
 {
 	CustomGauntlet.IsActive = !CustomGauntlet.IsActive;
-	CustomGauntlet_Reset();
+	GetLocalClientPlayer().ClientCommand( "CustomGauntlet_DevToggleActive " + (CustomGauntlet.IsActive ? 1 : 0) );
 }
 
 // -----------------------------------------------------------------------------
@@ -172,6 +130,7 @@ void function CustomGauntlet_PlaceLeaderboard( vector Pos, vector Ang )
 		CustomGauntlet_SetLeaderboardEntry( i, "Person " + i, i * 10.0, i == 3 );
 	}
 
+	CustomGauntlet_SendEntityToServer( "leaderboard", Pos, Ang );
 }
 
 void function CustomGauntlet_SetLeaderboardEntry( int leaderboardIdx, string name, float time, bool highlight )
@@ -195,6 +154,7 @@ void function CustomGauntlet_PlaceResults( vector Pos, vector Ang )
 	if( CustomGauntlet.ResultsRui != null )
 	{
 		RuiDestroyIfAlive( CustomGauntlet.ResultsRui );
+		CustomGauntlet.ResultsRui = null;
 	}
 
 	CustomGauntlet.ResultsPoint.Location = Pos;
@@ -202,10 +162,86 @@ void function CustomGauntlet_PlaceResults( vector Pos, vector Ang )
 
 	float Size = 120.0;
 	CustomGauntlet.ResultsTopology = CustomGauntlet_CreateCentredTopology( Pos, Ang, Size, Size * 0.6 );
-	CustomGauntlet.ResultsRui = RuiCreate( $"ui/gauntlet_results_display.rpak", CustomGauntlet.ResultsTopology, RUI_DRAW_WORLD, 0 )
+	CustomGauntlet.ResultsRui = RuiCreate( $"ui/gauntlet_results_display.rpak", CustomGauntlet.ResultsTopology, RUI_DRAW_WORLD, 0 );
 
-	RuiSetInt( CustomGauntlet.ResultsRui, "numEnemies", 10 )
-	RuiSetInt( CustomGauntlet.ResultsRui, "enemiesKilled", 6 )
+	CustomGauntlet_SendEntityToServer( "results", Pos, Ang );
+}
+
+// -----------------------------------------------------------------------------
+
+void function ServerCallback_Gauntlet_StartRun()
+{
+	if( CustomGauntlet.SplashRui != null && IsValid( CustomGauntlet.SplashRui ) )
+	{
+		RuiDestroyIfAlive( CustomGauntlet.SplashRui );
+		CustomGauntlet.SplashRui = null;
+	}
+	var splashRUI = RuiCreate( $"ui/gauntlet_splash.rpak", clGlobal.topoCockpitHud, RUI_DRAW_COCKPIT, 0 );
+	RuiSetFloat( splashRUI, "duration", 1.8 );
+	RuiSetString( splashRUI, "message", "#GAUNTLET_START_TEXT");
+	CustomGauntlet.SplashRui = splashRUI;
+
+	CustomGauntlet.StartTime = Time();
+	CustomGauntlet_CreatePlayerHUD();
+
+	if( CustomGauntlet.ResultsRui != null )
+	{
+		RuiSetBool( CustomGauntlet.ResultsRui, "runFinished", false );
+		RuiSetGameTime( CustomGauntlet.ResultsRui, "startTime", Time() );
+	}
+
+}
+
+void function ServerCallback_Gauntlet_FinishRun( float RunTime, float BestRunTime, float MissedEnemiesPenalty, int TotalEnemies, int EnemiesKilled )
+{
+	if( CustomGauntlet.SplashRui != null && IsValid( CustomGauntlet.SplashRui ) )
+	{
+		RuiDestroyIfAlive( CustomGauntlet.SplashRui );
+		CustomGauntlet.SplashRui = null;
+	}
+	var splashRUI = RuiCreate( $"ui/gauntlet_splash.rpak", clGlobal.topoCockpitHud, RUI_DRAW_COCKPIT, 0 );
+	RuiSetFloat( splashRUI, "duration", 1.8 );
+	RuiSetString( splashRUI, "message", "#GAUNTLET_FINISH_TEXT");
+	CustomGauntlet.SplashRui = splashRUI;
+
+	CustomGauntlet.LastRunTime = RunTime;
+	CustomGauntlet.BestRunTime = BestRunTime;
+
+	if( CustomGauntlet.ResultsRui != null )
+	{
+		RuiSetBool( CustomGauntlet.ResultsRui, "runFinished", true );
+		RuiSetFloat( CustomGauntlet.ResultsRui, "finalTime", RunTime );
+		RuiSetFloat( CustomGauntlet.ResultsRui, "bestTime", BestRunTime );
+		RuiSetFloat( CustomGauntlet.ResultsRui, "enemiesMissedTimePenalty", MissedEnemiesPenalty );
+		RuiSetInt( CustomGauntlet.ResultsRui, "numEnemies", TotalEnemies );
+		RuiSetInt( CustomGauntlet.ResultsRui, "enemiesKilled", EnemiesKilled );
+
+		CustomGauntlet.TipIdx++;
+		if ( CustomGauntlet.TipIdx >= CustomGauntlet.Tips.len() )
+		{
+			CustomGauntlet.TipIdx = 0;
+		}
+		RuiSetString( CustomGauntlet.ResultsRui, "tipString", CustomGauntlet.Tips[CustomGauntlet.TipIdx] );
+		RuiSetGameTime( CustomGauntlet.ResultsRui, "tipResetTime", Time() );
+	}
+
+	thread CustomGauntlet_FinishRun_PlayerHUD_Think( RunTime, BestRunTime, MissedEnemiesPenalty );
+}
+
+void function ServerCallback_Gauntlet_UpdateEnemiesKilled( int TotalEnemies, int EnemiesKilled )
+{
+	if( CustomGauntlet.ResultsRui != null )
+	{
+		RuiSetInt( CustomGauntlet.ResultsRui, "numEnemies", TotalEnemies );
+		RuiSetInt( CustomGauntlet.ResultsRui, "enemiesKilled", EnemiesKilled );
+	}
+}
+
+// -----------------------------------------------------------------------------
+
+void function CustomGauntlet_SendEntityToServer( string Type, vector Pos, vector Ang )
+{
+	GetLocalClientPlayer().ClientCommand( "CustomGauntlet_PlaceEntity " + Type + " " + Pos.x + " " + Pos.y + " " + Pos.z + " " + Ang.x + " " + Ang.y + " " + Ang.z );
 }
 
 #endif

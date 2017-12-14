@@ -791,6 +791,12 @@ function RemoteFunctions_Init()
 			ClSentryTurret_RegisterNetworkFunctions()
 	#endif
 	
+// CUSTOM GAUNTLET START
+	Remote_RegisterFunction( "ServerCallback_Gauntlet_StartRun" )
+	Remote_RegisterFunction( "ServerCallback_Gauntlet_FinishRun" )
+	Remote_RegisterFunction( "ServerCallback_Gauntlet_UpdateEnemiesKilled" )
+// CUSTOM GAUNTLET END
+
 	Remote_EndRegisteringFunctions()
 	_RegisteringFunctions = false
 }

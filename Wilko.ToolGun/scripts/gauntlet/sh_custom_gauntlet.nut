@@ -1,6 +1,7 @@
 
 const float GAUNTLET_TARGET_DISSOLVE_TIME = 0.25 * 1000
 const int GAUNTLET_LEADERBOARD_MAX_ENTRIES = 10
+const float GAUNTLET_ENEMY_MISSED_TIME_PENALTY = 2.0
 
 struct WorldPoint
 {
@@ -13,6 +14,10 @@ struct
 	bool IsActive,
 	bool Started,
 	bool Finished,
+
+	float StartTime,
+	float LastRunTime,
+	float BestRunTime = -1.0,
 
 	WorldPoint StartPoint,
 	WorldPoint FinishPoint,
@@ -29,11 +34,20 @@ struct
 	var LeaderboardRui,
 	var ResultsTopology,
 	var ResultsRui,
+	var SplashRui,
 
 	var IsActiveRui
 
 	array<entity> SpawnedTargets,
-	int NumberOfTargetsAlive
+	int NumberOfTargetsAlive,
+
+#if CLIENT
+	int TipIdx,
+	array<string> Tips,
+	var HUDRui,
+#endif
+
+	var STRUCT_MAX
 
 } CustomGauntlet;
 
@@ -88,44 +102,4 @@ void function CustomGauntlet_Shared_RegisterTools()
 	ToolGunTools.append( ToolGauntletResults )
 	ToolGunToolFunctions.append( Toolgun_Func_Gauntlet_PlaceResults )
 	
-}
-
-void function CustomGauntlet_Reset()
-{
-	CustomGauntlet.Started = false;
-	CustomGauntlet.Finished = false;
-
-	#if CLIENT
-	GetLocalClientPlayer().ClientCommand( "CustomGauntlet_Reset" );
-	#endif
-}
-
-void function CustomGauntlet_Start()
-{
-	if( CustomGauntlet.Started || CustomGauntlet.Finished )
-	{
-		return;
-	}
-
-	CustomGauntlet.Started = true;
-	#if CLIENT
-	CustomGauntlet_Start_Client();
-	#elseif SERVER
-	CustomGauntlet_Start_Server();
-	#endif
-}
-
-void function CustomGauntlet_Finish()
-{
-	if( CustomGauntlet.Finished || !CustomGauntlet.Started )
-	{
-		return;
-	}
-
-	CustomGauntlet.Finished = true;
-	#if CLIENT
-	CustomGauntlet_Finish_Client();
-	#elseif SERVER
-	CustomGauntlet_Finish_Server();
-	#endif
 }
