@@ -38,6 +38,9 @@ void function CustomGauntlet_Reset_Server()
 {
 	CustomGauntlet.Started = false;
 	CustomGauntlet.Finished = false;
+
+	entity player = GetPlayerByIndex( 0 );
+	Remote_CallFunction_NonReplay( player, "ServerCallback_Gauntlet_Reset" );
 }
 
 void function CustomGauntlet_Start_Server()
@@ -56,7 +59,7 @@ void function CustomGauntlet_Start_Server()
 
 	CustomGauntlet_SpawnTargetNPCs();
 
-	Remote_CallFunction_Replay( player, "ServerCallback_Gauntlet_StartRun" )
+	Remote_CallFunction_Replay( player, "ServerCallback_Gauntlet_StartRun" );
 }
 
 void function CustomGauntlet_Finish_Server()

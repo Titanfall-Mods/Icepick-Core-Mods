@@ -9,6 +9,17 @@ struct WorldPoint
 	vector Rotation
 }
 
+struct GauntletPlayerSpeedTracker
+{
+	float startTime 	= -1
+	float topSpeed 		= 0.0
+	float avgSpeed 		= 0.0
+	float highSpeedTime = 0.0
+	int highSpeedKills 	= 0
+	float totalHours 	= 0.0
+	float totalMiles 	= 0.0
+}
+
 struct
 {
 	bool IsActive,
