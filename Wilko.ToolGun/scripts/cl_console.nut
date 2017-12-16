@@ -2,7 +2,7 @@
 #if CLIENT
 
 const int MAX_CONSOLE_AUTOCOMPLETE_RESULTS = 10;
-const float CONSOLE_TEXT_SIZE = 24.0;
+const float CONSOLE_TEXT_SIZE = 32.0;
 
 struct {
 	bool IsInputting,
@@ -99,7 +99,7 @@ void function Console_UI_Init()
 	RuiSetInt( rui, "lineNum", 1 );
 	RuiSetFloat2( rui, "msgPos", <0.95, 0.05, 0.0> );
 	RuiSetString( rui, "msgText", "> " );
-	RuiSetFloat( rui, "msgFontSize", 24.0 );
+	RuiSetFloat( rui, "msgFontSize", CONSOLE_TEXT_SIZE );
 	RuiSetFloat( rui, "msgAlpha", 1.0 );
 	RuiSetFloat( rui, "thicken", 0.0 );
 	RuiSetFloat3( rui, "msgColor", <1.0, 1.0, 1.0> );

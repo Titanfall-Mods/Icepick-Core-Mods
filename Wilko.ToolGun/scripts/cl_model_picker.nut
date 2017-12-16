@@ -2,6 +2,7 @@
 #if CLIENT
 
 const int MAX_MODEL_PICKER_RESULTS = 10;
+const float MODEL_PICKER_TEXT_SIZE = 32.0;
 
 struct {
 	bool IsInputting,
@@ -100,7 +101,7 @@ void function ModelPicker_UI_Init()
 	RuiSetInt( rui, "lineNum", 1 );
 	RuiSetFloat2( rui, "msgPos", <0.95, 0.05, 0.0> );
 	RuiSetString( rui, "msgText", "> " );
-	RuiSetFloat( rui, "msgFontSize", 24.0 );
+	RuiSetFloat( rui, "msgFontSize", MODEL_PICKER_TEXT_SIZE );
 	RuiSetFloat( rui, "msgAlpha", 1.0 );
 	RuiSetFloat( rui, "thicken", 0.0 );
 	RuiSetFloat3( rui, "msgColor", <1.0, 1.0, 1.0> );
@@ -250,7 +251,7 @@ void function ModelPicker_UpdateUi()
 			RuiSetInt( rui, "lineNum", Idx + 2 );
 			RuiSetFloat2( rui, "msgPos", <0.95, 0.05, 0.0> );
 			RuiSetString( rui, "msgText", "[" + Idx + "] " + result );
-			RuiSetFloat( rui, "msgFontSize", 24.0 );
+			RuiSetFloat( rui, "msgFontSize", MODEL_PICKER_TEXT_SIZE );
 			RuiSetFloat( rui, "msgAlpha", 1.0 );
 			RuiSetFloat( rui, "thicken", 0.0 );
 			RuiSetFloat3( rui, "msgColor", <1.0, 1.0, 1.0> );
@@ -267,7 +268,7 @@ void function ModelPicker_UpdateUi()
 		RuiSetInt( rui, "lineNum", 2 );
 		RuiSetFloat2( rui, "msgPos", <0.95, 0.05, 0.0> );
 		RuiSetString( rui, "msgText", HelpString );
-		RuiSetFloat( rui, "msgFontSize", 24.0 );
+		RuiSetFloat( rui, "msgFontSize", MODEL_PICKER_TEXT_SIZE );
 		RuiSetFloat( rui, "msgAlpha", 1.0 );
 		RuiSetFloat( rui, "thicken", 0.0 );
 		RuiSetFloat3( rui, "msgColor", <1.0, 1.0, 1.0> );
