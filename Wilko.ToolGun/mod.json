@@ -87,7 +87,7 @@
 
 		{
 			"AppendTo" : "_sp_sh_init",
-			"ScriptPath" : "scripts/spawnlists/sp_training.nut"
+			"ScriptPath" : "scripts/spawnlists/sp_boomtown.nut"
 		}
 	]
 
