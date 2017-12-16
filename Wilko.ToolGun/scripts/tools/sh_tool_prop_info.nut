@@ -11,7 +11,7 @@ bool function Toolgun_Func_PropInfo( entity player, array<string> args )
 	if( traceResults.hitEnt )
 	{
 		AddPlayerHint( 2.0, 0.25, $"", "Output " + traceResults.hitEnt.GetModelName() + " to console" )
-		printc( "Model: ", traceResults.hitEnt.GetModelName() )
+		printc( "Model: ", traceResults.hitEnt.GetModelName(), "\n", "Class: ", traceResults.hitEnt.GetClassName() )
 		return true
 	}
 	return false

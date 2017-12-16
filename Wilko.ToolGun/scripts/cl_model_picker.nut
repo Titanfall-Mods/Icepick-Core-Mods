@@ -149,8 +149,6 @@ void function ModelPicker_Input( string char, string shiftChar )
 	if( ModelPickerSettings.IsInputting )
 	{
 		ModelPickerSettings.SearchString += finalChar;
-		printc( "Searching: " + ModelPickerSettings.SearchString + "(" + finalChar + ")" );
-
 		ModelPicker_UpdateSearch();
 	}
 }
@@ -161,8 +159,6 @@ void function KeyPress_ModelPicker_Backspace( var button )
 	if( ModelPickerSettings.IsInputting && SearchLength > 0 )
 	{
 		ModelPickerSettings.SearchString = ModelPickerSettings.SearchString.slice( 0, SearchLength - 1 );
-		printc( "Searching: " + ModelPickerSettings.SearchString );
-
 		ModelPicker_UpdateSearch();
 	}
 }

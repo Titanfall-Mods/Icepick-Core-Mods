@@ -28,7 +28,8 @@ void function Console_RegisterFunctions()
 	Console_RegisterFunc( "teleport", Console_Command_TeleportToLocation, "teleport x y z", "Teleports the player to the specified coordinates" );
 	Console_RegisterFunc( "kill_npcs", Console_Command_KillAllNPCs, "kill_npcs", "Removes all NPCs currently in the level" );
 
-	Console_RegisterFunc( "dump_spawned_ents", Console_Command_DumpSpawnedEnts, "dump_spawned_ents", "Save all player spawned entities to a file in the Titanfall game folder" );
+	Console_RegisterFunc( "save_ents", Console_Command_DumpSpawnedEnts, "save_ents", "Save all player spawned entities to a file in the Titanfall folder" );
+	Console_RegisterFunc( "load_ents", Console_Command_LoadEntsFromFile, "load_ents", "Load all ents from a file in the Toolgun mod" );
 }
 
 void function Console_RegisterFunc( string command, void functionref( array<string> ) func, string autocompleteHelp, string helpText )
@@ -108,31 +109,46 @@ void function Console_Command_KillAllNPCClass( string classname )
 void function Console_Command_DumpSpawnedEnts( array<string> args )
 {
 	#if SERVER
-	string Output = "\n";
-	Output += "array<array<var>> SavedEnts = [";
-	// foreach( ent in ToolgunData.SpawnedEntities )
-	int MaxNum = ToolgunData.SpawnedEntities.len();
-	for( int i = 0; i < MaxNum; ++i )
+	string AssetsOut = "\narray<asset> ToolgunSavedEnts_Assets = [\n";
+	string LocationsOut = "\narray<vector> ToolgunSavedEnts_Locations = [\n";
+	string AnglesOut = "\narray<vector> ToolgunSavedEnts_Angles = [\n";
+	int NumEnts = ToolgunData.SpawnedEntities.len();
+
+	for( int i = 0; i < NumEnts; ++i )
 	{
 		entity ent = ToolgunData.SpawnedEntities[i];
-		Output += "\n";
-		Output += "\t[";
-		Output += "" + ent.GetModelName();
-		Output += ", ";
-		Output += "" + ent.GetOrigin();
-		Output += ", ";
-		Output += "" + ent.GetAngles();
-		Output += "]";
-		Output += (i == MaxNum - 1 ? "" : ", ");
+		string LineEndChar = (i == NumEnts - 1 ? "\n" : ", \n");
+		AssetsOut += "\t" + ent.GetModelName() + LineEndChar;
+		LocationsOut += "\t" + ent.GetOrigin() + LineEndChar;
+		AnglesOut += "\t" + ent.GetAngles() + LineEndChar;
 	}
-	Output += "\n];";
-	Output += "\n";
+
+	AssetsOut += "];";
+	LocationsOut += "];";
+	AnglesOut += "];";
 
 	DevTextBufferClear();
-	DevTextBufferWrite( Output );
+	DevTextBufferWrite( AssetsOut );
+	DevTextBufferWrite( LocationsOut );
+	DevTextBufferWrite( AnglesOut );
 	DevTextBufferDumpToFile( "../spawned_ents.txt" );
 	DevTextBufferClear();
 	#elseif CLIENT
 	AddPlayerHint( 2.0, 0.25, $"", "Dumped to spawned_ents.txt" );
+	#endif
+}
+
+void function Console_Command_LoadEntsFromFile( array<string> args )
+{
+	#if SERVER
+	for(int i = 0; i < ToolgunSavedEnts_Assets.len(); ++i)
+	{
+		asset Asset = ToolgunSavedEnts_Assets[i];
+		vector Pos = ToolgunSavedEnts_Locations[i];
+		vector Ang = ToolgunSavedEnts_Angles[i];
+		Toolgun_Func_SpawnAsset( Asset, Pos, Ang );
+	}
+	#elseif CLIENT
+	AddPlayerHint( 2.0, 0.25, $"", "Loaded ents from file spawned_ents" );
 	#endif
 }

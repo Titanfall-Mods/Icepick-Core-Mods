@@ -163,6 +163,8 @@ void function Console_RunCommand( var button )
 	// Stop inputting text
 	ConsoleSettings.IsInputting = false;
 	ConsoleSettings.InputString = "";
+	ConsoleSettings.AutocompleteResults.len();
+	Console_ClearUi();
 	GetLocalClientPlayer().UnfreezeControlsOnClient();
 }
 
@@ -266,7 +268,7 @@ void function Console_UpdateUi()
 			RuiSetInt( rui, "maxLines", MaxLines );
 			RuiSetInt( rui, "lineNum", Idx + 2 );
 			RuiSetFloat2( rui, "msgPos", <0.95, 0.05, 0.0> );
-			RuiSetString( rui, "msgText", "[" + Idx + "] " + result );
+			RuiSetString( rui, "msgText", result );
 			RuiSetFloat( rui, "msgFontSize", CONSOLE_TEXT_SIZE );
 			RuiSetFloat( rui, "msgAlpha", 1.0 );
 			RuiSetFloat( rui, "thicken", 0.0 );

@@ -2,7 +2,15 @@
 bool function Toolgun_Func_SpawnProp( entity player, array<string> args )
 {
 #if SERVER
-	thread Toolgun_Func_SpawnProp_Precache();
+	entity player = GetPlayerByIndex( 0 );
+	vector origin = player.EyePosition();
+	vector angles = player.EyeAngles();
+	vector forward = AnglesToForward( angles );
+
+	vector Pos = origin + forward * 200;
+	vector Ang = Vector(0, player.EyeAngles().y, 0);
+	Toolgun_Func_SpawnAsset( ToolGunSettings.SelectedModel, Pos, Ang );
+
 	Toolgun_Utils_FireToolTracer( player );
 	return true
 #else
@@ -11,32 +19,33 @@ bool function Toolgun_Func_SpawnProp( entity player, array<string> args )
 }
 
 #if SERVER
-void function Toolgun_Func_SpawnProp_Precache()
+void function Toolgun_Func_SpawnAsset( asset Asset, vector Pos, vector Ang )
 {
-	PrecacheModel( ToolGunSettings.SelectedModel )
-	while( !ModelIsPrecached( ToolGunSettings.SelectedModel ) )
+	thread Toolgun_Func_SpawnAssetThreaded( Asset, Pos, Ang );
+}
+
+void function Toolgun_Func_SpawnAssetThreaded( asset Asset, vector Pos, vector Ang )
+{
+	PrecacheModel( Asset )
+	while( !ModelIsPrecached( Asset ) )
 	{
 		wait 0.5
 	}
 
 	entity prop_dynamic = CreateEntity( "prop_dynamic" )
-	prop_dynamic.SetValueForModelKey( ToolGunSettings.SelectedModel )
+	prop_dynamic.SetValueForModelKey( Asset )
 	prop_dynamic.kv.fadedist = -1
 	prop_dynamic.kv.renderamt = 255
 	prop_dynamic.kv.rendercolor = "255 255 255"
 	prop_dynamic.kv.solid = 6 // 0 = no collision, 2 = bounding box, 6 = use vPhysics, 8 = hitboxes only
 	SetTeam( prop_dynamic, TEAM_BOTH )	// need to have a team other then 0 or it won't take impact damage
 
-	entity player = GetPlayerByIndex( 0 )
-	vector origin = player.EyePosition()
-	vector angles = player.EyeAngles()
-	vector forward = AnglesToForward( angles )
-
-	prop_dynamic.SetOrigin( origin + forward * 200 )
-	prop_dynamic.SetAngles( Vector(0, player.EyeAngles().y, 0) );
+	prop_dynamic.SetOrigin( Pos )
+	prop_dynamic.SetAngles( Ang );
 	DispatchSpawn( prop_dynamic )
+	prop_dynamic.SetOrigin( Pos )
+	prop_dynamic.SetAngles( Ang );
 	
 	ToolgunData.SpawnedEntities.append( prop_dynamic );
-
 }
 #endif
