@@ -39,6 +39,10 @@
 			"AppendTo" : "_sp_sh_init",
 			"ScriptPath" : "scripts/sv_console.nut"
 		},
+		{
+			"AppendTo" : "_sp_sh_init",
+			"ScriptPath" : "scripts/sh_console.nut"
+		},
 
 		{
 			"AppendTo" : "_sp_sh_init",

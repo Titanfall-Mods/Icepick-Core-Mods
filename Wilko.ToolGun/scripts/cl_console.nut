@@ -1,17 +1,10 @@
 
 #if CLIENT
 
-struct ConCommand
-{
-	string Command,
-	void functionref( array<string> ) Func
-}
-
 struct {
 	bool IsInputting,
 	int IsShiftDown,
 	string InputString,
-	array<ConCommand> Commands
 } ConsoleSettings;
 
 struct {
@@ -92,7 +85,6 @@ void function Console_Client_Init()
 	RegisterButtonPressedCallback( KEY_PAD_9, KeyPress_Console_KEY_PAD_9 );
 
 	Console_UI_Init();
-	Console_RegisterFunctions();
 }
 
 void function Console_UI_Init()
@@ -140,7 +132,7 @@ void function Console_RunCommand( var button )
 		}
 
 		bool FoundCommand = false;
-		foreach( cmd in ConsoleSettings.Commands )
+		foreach( cmd in ConsoleData.Commands )
 		{
 			if( cmd.Command == Command )
 			{
@@ -267,38 +259,5 @@ void function KeyPress_Console_KEY_PAD_6( var button ){ Console_Input("6", "6");
 void function KeyPress_Console_KEY_PAD_7( var button ){ Console_Input("7", "7"); }
 void function KeyPress_Console_KEY_PAD_8( var button ){ Console_Input("8", "8"); }
 void function KeyPress_Console_KEY_PAD_9( var button ){ Console_Input("9", "9"); }
-
-// -----------------------------------------------------------------------------
-
-void function Console_RegisterFunctions()
-{
-	Console_RegisterFunc( "print_loc", Console_Command_PrintPlayerLocation );
-	Console_RegisterFunc( "teleport", Console_Command_TeleportToLocation );
-	Console_RegisterFunc( "kill_npcs", Console_Command_KillAllNPCs );
-}
-
-void function Console_RegisterFunc( string command, void functionref( array<string> ) func )
-{
-	ConCommand cmd
-	cmd.Command = command
-	cmd.Func = func
-	ConsoleSettings.Commands.append( cmd )
-}
-
-void function Console_Command_TeleportToLocation( array<string> args )
-{
-	// Handled by server
-}
-
-void function Console_Command_PrintPlayerLocation( array<string> args )
-{
-	printc( "Location: " + GetLocalClientPlayer().GetOrigin() + "\nEye angles: " + GetLocalClientPlayer().EyeAngles() );
-	AddPlayerHint( 0.5, 0.25, $"", "Position print to console" );
-}
-
-void function Console_Command_KillAllNPCs( array<string> args )
-{
-	AddPlayerHint( 0.5, 0.25, $"", "NPCs killed" );
-}
 
 #endif

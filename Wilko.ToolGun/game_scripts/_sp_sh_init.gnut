@@ -29,12 +29,8 @@ void function SPMP_Shared_Init()
 
 	Shared_SP_Init()
 
-#if CLIENT
-	Console_Client_Init()
-#elseif SERVER
-	Console_Server_Init()
-#endif
-	Toolgun_Shared_Init()
+	Console_Shared_Init();
+	Toolgun_Shared_Init();
 }
 
 void function Shared_SP_Init()
