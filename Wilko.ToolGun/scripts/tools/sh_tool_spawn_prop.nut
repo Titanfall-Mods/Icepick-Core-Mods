@@ -7,9 +7,10 @@ bool function Toolgun_Func_SpawnProp( entity player, array<string> args )
 	vector angles = player.EyeAngles();
 	vector forward = AnglesToForward( angles );
 
+	asset Asset = IsValid(ToolGunSettings.SelectedModel) ? ToolGunSettings.SelectedModel : SpawnList[0];
 	vector Pos = origin + forward * 200;
 	vector Ang = Vector(0, player.EyeAngles().y, 0);
-	Toolgun_Func_SpawnAsset( ToolGunSettings.SelectedModel, Pos, Ang );
+	Toolgun_Func_SpawnAsset( Asset, Pos, Ang );
 
 	Toolgun_Utils_FireToolTracer( player );
 	return true
