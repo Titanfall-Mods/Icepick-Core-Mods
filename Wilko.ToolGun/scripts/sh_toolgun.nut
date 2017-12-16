@@ -32,6 +32,7 @@ void function Toolgun_Shared_Init()
 	Toolgun_Server_Init()
 	#endif
 	#if CLIENT
+	ModelPicker_Client_Init()
 	Toolgun_Client_Init()
 	Toolgun_UI_Init()
 	#endif

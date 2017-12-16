@@ -105,8 +105,11 @@ void function CustomGauntlet_DestroyFinishLine()
 
 void function KeyPress_TestGauntlet( var button )
 {
-	CustomGauntlet.IsActive = !CustomGauntlet.IsActive;
-	GetLocalClientPlayer().ClientCommand( "CustomGauntlet_DevToggleActive " + (CustomGauntlet.IsActive ? 1 : 0) );
+	if( Toolgun_CanUseKeyboardInput() )
+	{
+		CustomGauntlet.IsActive = !CustomGauntlet.IsActive;
+		GetLocalClientPlayer().ClientCommand( "CustomGauntlet_DevToggleActive " + (CustomGauntlet.IsActive ? 1 : 0) );
+	}
 }
 
 // -----------------------------------------------------------------------------

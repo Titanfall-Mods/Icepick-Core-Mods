@@ -53,6 +53,11 @@
 		},
 		{
 			"AppendTo" : "_sp_sh_init",
+			"ScriptPath" : "scripts/cl_model_picker.nut"
+		},
+
+		{
+			"AppendTo" : "_sp_sh_init",
 			"ScriptPath" : "scripts/tools/sh_tool_spawn_prop.nut"
 		},
 		{

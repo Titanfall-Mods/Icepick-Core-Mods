@@ -36,15 +36,20 @@ void function Toolgun_Client_Init()
 	RegisterButtonPressedCallback( KEY_PAD_5, KeyPress_ToolgunRotate_Reset );
 }
 
+bool function Toolgun_CanUseKeyboardInput()
+{
+	return !ModelPickerSettings.IsInputting;
+}
+
 bool function Toolgun_Client_PrimaryAttack( entity player )
 {
 	if( Toolgun_GetCurrentModeFunction() != null )
 	{
 		array<string> args = [];
 		Toolgun_GetCurrentModeFunction()( player, args );
-		return true
+		return true;
 	}
-	return false
+	return false;
 }
 
 void function KeyPress_ToolgunNextMode( var button )
@@ -59,23 +64,26 @@ void function KeyPress_ToolgunPrevMode( var button )
 
 void function Toolgun_Client_ChangeTool( int Change )
 {
-	ToolGunSettings.CurrentModeIdx = ToolGunSettings.CurrentModeIdx + Change;
-	if(ToolGunSettings.CurrentModeIdx == ToolGunTools.len())
+	if( Toolgun_CanUseKeyboardInput() )
 	{
-		ToolGunSettings.CurrentModeIdx = 0;
+		ToolGunSettings.CurrentModeIdx = ToolGunSettings.CurrentModeIdx + Change;
+		if(ToolGunSettings.CurrentModeIdx == ToolGunTools.len())
+		{
+			ToolGunSettings.CurrentModeIdx = 0;
+		}
+		if(ToolGunSettings.CurrentModeIdx < 0)
+		{
+			ToolGunSettings.CurrentModeIdx = ToolGunTools.len() - 1;
+		}
+	
+		EmitSoundOnEntity( GetLocalClientPlayer(), "menu_focus" );
+		GetLocalClientPlayer().ClientCommand( "Toolgun_SetMode " + ToolGunSettings.CurrentModeIdx );
 	}
-	if(ToolGunSettings.CurrentModeIdx < 0)
-	{
-		ToolGunSettings.CurrentModeIdx = ToolGunTools.len() - 1;
-	}
-
-	EmitSoundOnEntity( GetLocalClientPlayer(), "menu_focus" );
-	GetLocalClientPlayer().ClientCommand( "Toolgun_SetMode " + ToolGunSettings.CurrentModeIdx );
 }
 
 void function MousePress_ToolgunGrab( var button )
 {
-	AddPlayerHint( 0.5, 0.25, $"", "Toolgun Grab" );
+	// AddPlayerHint( 0.5, 0.25, $"", "Toolgun Grab" );
 
 	entity player = GetLocalClientPlayer();
 	vector eyePosition = player.EyePosition();
@@ -97,7 +105,7 @@ void function MousePress_ToolgunGrab( var button )
 
 void function MouseRelease_ToolgunGrab( var button )
 {
-	AddPlayerHint( 0.5, 0.25, $"", "Toolgun Release" );
+	// AddPlayerHint( 0.5, 0.25, $"", "Toolgun Release" );
 	ToolgunGrab.GrabbedEntity = null;
 	GetLocalClientPlayer().ClientCommand( "Toolgun_ReleaseEntity" );
 }
@@ -134,8 +142,11 @@ void function KeyRelease_ToolgunRotate( var button )
 
 void function Toolgun_PerformRotate( float x, float y, float z )
 {
-	// AddPlayerHint( 0.5, 0.25, $"", "Rotate " + x + " " + y + " " + z );
-	GetLocalClientPlayer().ClientCommand( "Toolgun_Grab_PerformRotation " + x + " " + y + " " + z );
+	if( Toolgun_CanUseKeyboardInput() )
+	{
+		// AddPlayerHint( 0.5, 0.25, $"", "Rotate " + x + " " + y + " " + z );
+		GetLocalClientPlayer().ClientCommand( "Toolgun_Grab_PerformRotation " + x + " " + y + " " + z );
+	}
 }
 
 void function KeyPress_ToolgunRotate_PitchUp( var button )
@@ -175,12 +186,15 @@ void function KeyPress_ToolgunRotate_Reset( var button )
 
 void function KeyPress_ToolgunRandomProp( var button )
 {
-	int RandomIndex = RandomIntRange( 0, SpawnList.len() - 1 );
-	ToolGunSettings.SelectedModel = SpawnList[ RandomIndex ];
-
-	PrecacheModel( ToolGunSettings.SelectedModel );
-	AddPlayerHint( 0.5, 0.15, $"", "Spawning: " + ToolGunSettings.SelectedModel );
-	GetLocalClientPlayer().ClientCommand( "Toolgun_ChangeModel " + RandomIndex );
+	if( Toolgun_CanUseKeyboardInput() )
+	{
+		int RandomIndex = RandomIntRange( 0, SpawnList.len() - 1 );
+		ToolGunSettings.SelectedModel = SpawnList[ RandomIndex ];
+	
+		PrecacheModel( ToolGunSettings.SelectedModel );
+		AddPlayerHint( 0.5, 0.15, $"", "Spawning: " + ToolGunSettings.SelectedModel );
+		GetLocalClientPlayer().ClientCommand( "Toolgun_ChangeModel " + RandomIndex );
+	}
 }
 
 void function ToolgunGrab_Think()
