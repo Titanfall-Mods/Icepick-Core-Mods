@@ -12,6 +12,10 @@ struct {
 	entity GrabBeamTarget
 } ToolgunGrab;
 
+struct {
+	array<entity> SpawnedEntities
+} ToolgunData;
+
 void function Toolgun_Server_Init()
 {
 	AddClientCommandCallback( "Toolgun_SetMode", ClientCommand_Toolgun_SetMode )
@@ -234,10 +238,14 @@ void function ToolgunGrab_Think( entity player )
 
 bool function ClientCommand_Toolgun_UndoSpawn( entity player, array<string> args )
 {
-	if( ToolGunSettings.LastSpawnedEntity != null && IsValid( ToolGunSettings.LastSpawnedEntity ) )
+	int NumEnts = ToolgunData.SpawnedEntities.len();
+	if( NumEnts > 0 )
 	{
-		ToolGunSettings.LastSpawnedEntity.Destroy();
-		ToolGunSettings.LastSpawnedEntity = null;
+		entity LastEnt = ToolgunData.SpawnedEntities.pop();
+		if( IsValid( LastEnt ) )
+		{
+			LastEnt.Destroy();
+		}
 		return true;
 	}
 	return false;

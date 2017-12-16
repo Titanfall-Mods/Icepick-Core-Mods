@@ -8,7 +8,17 @@ bool function Toolgun_Func_RemoveProp( entity player, array<string> args )
 	if( traceResults.hitEnt && traceResults.hitEnt.GetClassName() != "prop_static" )
 	{
 		Toolgun_Utils_FireToolTracer( player );
+
+		for( int i = 0; i < ToolgunData.SpawnedEntities.len(); ++i )
+		{
+			if( ToolgunData.SpawnedEntities[i] == traceResults.hitEnt )
+			{
+				ToolgunData.SpawnedEntities.remove( i );
+				break;
+			}
+		}
 		traceResults.hitEnt.Destroy();
+		
 		return true
 	}
 	return false
