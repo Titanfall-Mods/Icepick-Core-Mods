@@ -56,7 +56,7 @@ bool function Toolgun_Func_Gauntlet_PlaceTarget( entity player, array<string> ar
 #if CLIENT
 	vector AimPos = Toolgun_Func_Gauntlet_GetPlaceLocation( player );
 	vector PlayerYaw = Toolgun_Func_Gauntlet_GetPlayerYaw( player );
-	CustomGauntlet_PlaceTarget( AimPos + Vector(0, 0, 40), PlayerYaw );
+	CustomGauntlet_PlaceTarget( AimPos, PlayerYaw + <0, 180, 0> );
 
 	return true;
 #else

@@ -1,4 +1,7 @@
 
+const ENEMY_HOLOGRAM_MODEL = $"models/humans/grunts/imc_grunt_rifle.mdl"
+const FX_HOLOGRAM_HEX_EFFECT = $"P_ar_holopilot_hextrail"
+
 const float GAUNTLET_TARGET_DISSOLVE_TIME = 0.25 * 1000
 const int GAUNTLET_LEADERBOARD_MAX_ENTRIES = 10
 const float GAUNTLET_ENEMY_MISSED_TIME_PENALTY = 2.0
@@ -54,6 +57,8 @@ struct
 	int NumberOfTargetsKilled,
 
 #if CLIENT
+	array<entity> TargetModels,
+
 	int TipIdx,
 	array<string> Tips,
 	var HUDRui,
@@ -65,6 +70,9 @@ struct
 
 void function CustomGauntlet_Shared_Init()
 {
+	PrecacheModel( ENEMY_HOLOGRAM_MODEL );
+	PrecacheParticleSystem( FX_HOLOGRAM_HEX_EFFECT );
+
 	CustomGauntlet_Shared_RegisterTools();
 
 	#if SERVER

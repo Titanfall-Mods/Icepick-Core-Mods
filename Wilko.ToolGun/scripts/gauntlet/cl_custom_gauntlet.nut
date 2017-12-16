@@ -65,10 +65,16 @@ void function CustomGauntlet_PlaceTarget( vector Pos, vector Ang )
 	TargetPoint.Rotation = Ang;
 	CustomGauntlet.TargetPoints.append( TargetPoint );
 
-	var TargetTopology = CustomGauntlet_CreateCentredTopology( Pos, Ang, 60, 30 );
+	var TargetTopology = CustomGauntlet_CreateCentredTopology( Pos, Ang + <0, 180, 0>, 60, 30 );
 	var TargetRui = RuiCreate( $"ui/gauntlet_starting_line.rpak", TargetTopology, RUI_DRAW_WORLD, 0 )
 	RuiSetString( TargetRui, "displayText", "Target" );
 	CustomGauntlet.TargetRuis.append( TargetRui );
+
+	entity enemyHologram = CreateClientSidePropDynamic( Pos, Ang, ENEMY_HOLOGRAM_MODEL );
+	enemyHologram.SetSkin( 1 );
+	int attachIndexEnemy = enemyHologram.LookupAttachment( "CHESTFOCUS" );
+	StartParticleEffectOnEntity( enemyHologram, GetParticleSystemIndex( FX_HOLOGRAM_HEX_EFFECT ), FX_PATTACH_POINT_FOLLOW, attachIndexEnemy );
+	CustomGauntlet.TargetModels.append( enemyHologram );
 
 	CustomGauntlet_SendEntityToServer( "target", Pos, Ang );
 }
@@ -197,6 +203,11 @@ void function ServerCallback_Gauntlet_StartRun()
 	CustomGauntlet_CreatePlayerHUD();
 	thread CustomGauntlet_TrackPlayerSpeed();
 
+	foreach( enemyHologram in CustomGauntlet.TargetModels )
+	{
+		enemyHologram.Hide()
+	}
+
 	if( CustomGauntlet.ResultsRui != null )
 	{
 		RuiSetBool( CustomGauntlet.ResultsRui, "runFinished", false );
@@ -219,6 +230,11 @@ void function ServerCallback_Gauntlet_FinishRun( float RunTime, float BestRunTim
 	CustomGauntlet.Finished = true;
 	CustomGauntlet.LastRunTime = RunTime;
 	CustomGauntlet.BestRunTime = BestRunTime;
+
+	foreach( enemyHologram in CustomGauntlet.TargetModels )
+	{
+		enemyHologram.Show()
+	}
 
 	if( CustomGauntlet.ResultsRui != null )
 	{

@@ -104,7 +104,7 @@ void function CustomGauntlet_SpawnTargetNPCs()
 	CustomGauntlet.NumberOfTargetsAlive = 0;
 	for( int i = 0; i < CustomGauntlet.TargetPoints.len(); ++i )
 	{
-		entity SpawnedGrunt = CreateSoldier( TEAM_IMC, CustomGauntlet.TargetPoints[i].Location, CustomGauntlet.TargetPoints[i].Rotation + <0, 180, 0> );
+		entity SpawnedGrunt = CreateSoldier( TEAM_IMC, CustomGauntlet.TargetPoints[i].Location, CustomGauntlet.TargetPoints[i].Rotation );
 		DispatchSpawn( SpawnedGrunt );
 
 		Highlight_SetEnemyHighlightWithParam1( SpawnedGrunt, "gauntlet_target_highlight", SpawnedGrunt.EyePosition() );
