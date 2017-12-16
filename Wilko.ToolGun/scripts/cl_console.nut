@@ -1,19 +1,24 @@
 
 #if CLIENT
 
+const int MAX_CONSOLE_AUTOCOMPLETE_RESULTS = 10;
+const float CONSOLE_TEXT_SIZE = 24.0;
+
 struct {
 	bool IsInputting,
 	int IsShiftDown,
 	string InputString,
+	array<string> AutocompleteResults
 } ConsoleSettings;
 
 struct {
-	var InputRui
+	var InputRui,
+	array<var> ResultsRuis
 } ConsoleUi;
 
 void function Console_Client_Init()
 {
-	RegisterButtonPressedCallback( KEY_BACKQUOTE, Console_ToggleEnabled );
+	RegisterButtonPressedCallback( KEY_BACKQUOTE, Console_KeyPressed_ToggleEnabled );
 	RegisterButtonPressedCallback( KEY_ENTER, Console_RunCommand );
 
 	RegisterButtonPressedCallback( KEY_BACKSPACE, KeyPress_Console_Backspace );
@@ -118,6 +123,13 @@ void function Console_UI_Think()
 
 // -----------------------------------------------------------------------------
 
+string function Console_GetCurrentInputCommand()
+{
+	string InputString = ConsoleSettings.InputString.tolower();
+	array<string> args = split( InputString, " " );
+	return args[0];
+}
+
 void function Console_RunCommand( var button )
 {
 	if( ConsoleSettings.InputString.len() > 0 )
@@ -154,7 +166,7 @@ void function Console_RunCommand( var button )
 	GetLocalClientPlayer().UnfreezeControlsOnClient();
 }
 
-void function Console_ToggleEnabled( var button )
+void function Console_ToggleEnabled()
 {
 	ConsoleSettings.IsInputting = !ConsoleSettings.IsInputting;
 	ConsoleSettings.InputString = "";
@@ -162,11 +174,18 @@ void function Console_ToggleEnabled( var button )
 	if( ConsoleSettings.IsInputting )
 	{
 		GetLocalClientPlayer().FreezeControlsOnClient();
+		Console_UpdateAutocomplete();
 	}
 	else
 	{
 		GetLocalClientPlayer().UnfreezeControlsOnClient();
+		Console_ClearUi();
 	}
+}
+
+void function Console_KeyPressed_ToggleEnabled( var button )
+{
+	Console_ToggleEnabled();
 }
 
 void function Console_Input( string char, string shiftChar )
@@ -175,6 +194,7 @@ void function Console_Input( string char, string shiftChar )
 	if( ConsoleSettings.IsInputting )
 	{
 		ConsoleSettings.InputString += finalChar;
+		Console_UpdateAutocomplete();
 	}
 }
 
@@ -184,6 +204,7 @@ void function KeyPress_Console_Backspace( var button )
 	if( ConsoleSettings.IsInputting && InputLength > 0 )
 	{
 		ConsoleSettings.InputString = ConsoleSettings.InputString.slice( 0, InputLength - 1 );
+		Console_UpdateAutocomplete();
 	}
 }
 
@@ -195,6 +216,89 @@ void function KeyPress_Console_ShiftPressed( var button )
 void function KeyPress_Console_ShiftReleased( var button )
 {
 	ConsoleSettings.IsShiftDown--;
+}
+
+// -----------------------------------------------------------------------------
+
+void function Console_UpdateAutocomplete()
+{
+	ConsoleSettings.AutocompleteResults.clear();
+	if( ConsoleSettings.InputString.len() > 0 )
+	{
+		string command = Console_GetCurrentInputCommand();
+		foreach( cmd in ConsoleData.Commands )
+		{
+			if( cmd.Command == command )
+			{
+				// Show autocomplete and help if we find an exact match
+				ConsoleSettings.AutocompleteResults.clear();
+				ConsoleSettings.AutocompleteResults.append( cmd.AutocompleteText );
+				ConsoleSettings.AutocompleteResults.append( cmd.HelpText );
+				break;
+			}
+			else if( cmd.Command.find( command ) != null )
+			{
+				ConsoleSettings.AutocompleteResults.append( cmd.AutocompleteText );
+				if( ConsoleSettings.AutocompleteResults.len() >= MAX_CONSOLE_AUTOCOMPLETE_RESULTS )
+				{
+					break; // Can only show first 10 results
+				}
+			}
+		}
+	}
+
+	Console_UpdateUi();
+}
+
+void function Console_UpdateUi()
+{
+	Console_ClearUi();
+
+	int NumResults = ConsoleSettings.AutocompleteResults.len();
+	if( NumResults > 0 )
+	{
+		// Add new search results
+		int MaxLines = NumResults + 2;
+		int Idx = 0;
+		foreach( string result in ConsoleSettings.AutocompleteResults )
+		{
+			var rui = RuiCreate( $"ui/cockpit_console_text_top_right.rpak", clGlobal.topoCockpitHudPermanent, RUI_DRAW_COCKPIT, 0 );
+			RuiSetInt( rui, "maxLines", MaxLines );
+			RuiSetInt( rui, "lineNum", Idx + 2 );
+			RuiSetFloat2( rui, "msgPos", <0.95, 0.05, 0.0> );
+			RuiSetString( rui, "msgText", "[" + Idx + "] " + result );
+			RuiSetFloat( rui, "msgFontSize", CONSOLE_TEXT_SIZE );
+			RuiSetFloat( rui, "msgAlpha", 1.0 );
+			RuiSetFloat( rui, "thicken", 0.0 );
+			RuiSetFloat3( rui, "msgColor", <1.0, 1.0, 1.0> );
+			ConsoleUi.ResultsRuis.append(rui);
+			Idx++;
+		}
+	}
+	else
+	{
+		// Add help text if no input was given or no results
+		string HelpString = ConsoleSettings.InputString.len() > 0 ? "No Results" : "Type to enter console commands";
+		var rui = RuiCreate( $"ui/cockpit_console_text_top_right.rpak", clGlobal.topoCockpitHudPermanent, RUI_DRAW_COCKPIT, 0 );
+		RuiSetInt( rui, "maxLines", 2 );
+		RuiSetInt( rui, "lineNum", 2 );
+		RuiSetFloat2( rui, "msgPos", <0.95, 0.05, 0.0> );
+		RuiSetString( rui, "msgText", HelpString );
+		RuiSetFloat( rui, "msgFontSize", CONSOLE_TEXT_SIZE );
+		RuiSetFloat( rui, "msgAlpha", 1.0 );
+		RuiSetFloat( rui, "thicken", 0.0 );
+		RuiSetFloat3( rui, "msgColor", <1.0, 1.0, 1.0> );
+		ConsoleUi.ResultsRuis.append(rui);
+	}
+}
+
+void function Console_ClearUi()
+{
+	foreach( rui in ConsoleUi.ResultsRuis )
+	{
+		RuiDestroyIfAlive( rui );
+	}
+	ConsoleUi.ResultsRuis.clear();
 }
 
 // -----------------------------------------------------------------------------

@@ -2,6 +2,8 @@
 struct ConCommand
 {
 	string Command,
+	string AutocompleteText,
+	string HelpText,
 	void functionref( array<string> ) Func
 };
 
@@ -22,15 +24,19 @@ void function Console_Shared_Init()
 
 void function Console_RegisterFunctions()
 {
-	Console_RegisterFunc( "print_loc", Console_Command_PrintPlayerLocation );
-	Console_RegisterFunc( "teleport", Console_Command_TeleportToLocation );
-	Console_RegisterFunc( "kill_npcs", Console_Command_KillAllNPCs );
+	Console_RegisterFunc( "mylocation", Console_Command_PrintPlayerLocation, "mylocation", "Prints current player location to the external console" );
+	Console_RegisterFunc( "teleport", Console_Command_TeleportToLocation, "teleport x y z", "Teleports the player to the specified coordinates" );
+	Console_RegisterFunc( "kill_npcs", Console_Command_KillAllNPCs, "kill_npcs", "Removes all NPCs currently in the level" );
+
+	Console_RegisterFunc( "dump_spawned_ents", Console_Command_DumpSpawnedEnts, "dump_spawned_ents", "Save all player spawned entities to a file in the Titanfall game folder" );
 }
 
-void function Console_RegisterFunc( string command, void functionref( array<string> ) func )
+void function Console_RegisterFunc( string command, void functionref( array<string> ) func, string autocompleteHelp, string helpText )
 {
 	ConCommand cmd
 	cmd.Command = command
+	cmd.AutocompleteText = autocompleteHelp
+	cmd.HelpText = helpText
 	cmd.Func = func
 	ConsoleData.Commands.append( cmd )
 }
@@ -53,7 +59,7 @@ void function Console_Command_PrintPlayerLocation( array<string> args )
 {
 	#if CLIENT
 	printc( "Location: " + GetLocalClientPlayer().GetOrigin() + "\nEye angles: " + GetLocalClientPlayer().EyeAngles() );
-	AddPlayerHint( 1.0, 0.25, $"", "Position print to console" );
+	AddPlayerHint( 1.0, 0.25, $"", "Location printed to console" );
 	#endif
 }
 
@@ -98,3 +104,35 @@ void function Console_Command_KillAllNPCClass( string classname )
 	}
 }
 #endif
+
+void function Console_Command_DumpSpawnedEnts( array<string> args )
+{
+	#if SERVER
+	string Output = "\n";
+	Output += "array<array<var>> SavedEnts = [";
+	// foreach( ent in ToolgunData.SpawnedEntities )
+	int MaxNum = ToolgunData.SpawnedEntities.len();
+	for( int i = 0; i < MaxNum; ++i )
+	{
+		entity ent = ToolgunData.SpawnedEntities[i];
+		Output += "\n";
+		Output += "\t[";
+		Output += "" + ent.GetModelName();
+		Output += ", ";
+		Output += "" + ent.GetOrigin();
+		Output += ", ";
+		Output += "" + ent.GetAngles();
+		Output += "]";
+		Output += (i == MaxNum - 1 ? "" : ", ");
+	}
+	Output += "\n];";
+	Output += "\n";
+
+	DevTextBufferClear();
+	DevTextBufferWrite( Output );
+	DevTextBufferDumpToFile( "../spawned_ents.txt" );
+	DevTextBufferClear();
+	#elseif CLIENT
+	AddPlayerHint( 2.0, 0.25, $"", "Dumped to spawned_ents.txt" );
+	#endif
+}
