@@ -51,6 +51,7 @@ struct
 
 	array<entity> SpawnedTargets,
 	int NumberOfTargetsAlive,
+	int NumberOfTargetsKilled,
 
 #if CLIENT
 	int TipIdx,

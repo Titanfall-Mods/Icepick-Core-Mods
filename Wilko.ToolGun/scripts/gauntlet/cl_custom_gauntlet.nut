@@ -240,6 +240,9 @@ void function ServerCallback_Gauntlet_FinishRun( float RunTime, float BestRunTim
 
 void function ServerCallback_Gauntlet_UpdateEnemiesKilled( int TotalEnemies, int EnemiesKilled )
 {
+	CustomGauntlet.NumberOfTargetsAlive = TotalEnemies - EnemiesKilled;
+	CustomGauntlet.NumberOfTargetsKilled = EnemiesKilled;
+
 	if( CustomGauntlet.ResultsRui != null )
 	{
 		RuiSetInt( CustomGauntlet.ResultsRui, "numEnemies", TotalEnemies );
@@ -298,12 +301,12 @@ void function CustomGauntlet_TrackPlayerSpeed()
 		// - HACK re numTicks- first tick always seems to calculate an artificially high distance traveled
 		if ( inchesSinceLastTick <= SPEEDOMETER_MAX_INCHES_PER_TICK && lastTickDuration > 0 && numTicks > 1 )
 		{
-			// int enemiesKilledThisTick = 0
-			// if ( lastEnemiesKilled < gauntlet.enemiesKilled )
-			// {
-			// 	enemiesKilledThisTick = gauntlet.enemiesKilled - lastEnemiesKilled
-			// 	lastEnemiesKilled = gauntlet.enemiesKilled
-			// }
+			int enemiesKilledThisTick = 0
+			if ( lastEnemiesKilled < CustomGauntlet.NumberOfTargetsKilled )
+			{
+				enemiesKilledThisTick = CustomGauntlet.NumberOfTargetsKilled - lastEnemiesKilled
+				lastEnemiesKilled = CustomGauntlet.NumberOfTargetsKilled
+			}
 
 			float milesSinceLastTick = inchesSinceLastTick / inchesPerMile
 			float hoursSinceLastTick = lastTickDuration / secondsPerHour
@@ -324,7 +327,7 @@ void function CustomGauntlet_TrackPlayerSpeed()
 			if ( avgSpeedMPH_sinceLastTick > HIGH_SPEED_THRESHOLD_MPH )
 			{
 				tracker.highSpeedTime += lastTickDuration
-				// tracker.highSpeedKills += enemiesKilledThisTick
+				tracker.highSpeedKills += enemiesKilledThisTick
 			}
 		}
 		else
@@ -381,7 +384,7 @@ void function CustomGauntlet_TrackPlayerSpeed()
 		}
 		if ( tracker.highSpeedKills >= 0 )
 		{
-			// Not implemented
+			// Not implemented, having problems networking enemy kills via ServerCallback_Gauntlet_UpdateEnemiesKilled
 			// RuiSetInt( CustomGauntlet.ResultsRui, "highSpeedKills", tracker.highSpeedKills )
 		}
 	}
