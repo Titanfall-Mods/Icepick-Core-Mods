@@ -33,6 +33,15 @@
 	"AppendedFiles" : [
 		{
 			"AppendTo" : "_sp_sh_init",
+			"ScriptPath" : "scripts/cl_console.nut"
+		},
+		{
+			"AppendTo" : "_sp_sh_init",
+			"ScriptPath" : "scripts/sv_console.nut"
+		},
+
+		{
+			"AppendTo" : "_sp_sh_init",
 			"ScriptPath" : "scripts/sh_dev_tools.nut"
 		},
 		{

@@ -28,6 +28,12 @@ void function SPMP_Shared_Init()
 	GAMETYPE = "solo"
 
 	Shared_SP_Init()
+
+#if CLIENT
+	Console_Client_Init()
+#elseif SERVER
+	Console_Server_Init()
+#endif
 	Toolgun_Shared_Init()
 }
 
