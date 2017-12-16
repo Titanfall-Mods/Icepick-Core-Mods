@@ -18,6 +18,8 @@ void function Toolgun_Client_Init()
 	RegisterButtonPressedCallback( MOUSE_RIGHT, MousePress_ToolgunGrab );
 	RegisterButtonReleasedCallback( MOUSE_RIGHT, MouseRelease_ToolgunGrab );
 
+	RegisterButtonPressedCallback( KEY_BACKSPACE, KeyPress_Toolgun_UndoSpawn );
+
 #if TOOLGUN_ENABLE_MOUSE_ROTATE
 	// Renable for toolgun mouse rotation
 	RegisterButtonPressedCallback( KEY_E, KeyPress_ToolgunRotate );
@@ -201,5 +203,15 @@ void function ToolgunGrab_Think()
 		WaitFrame();
 	}
 }
+
+void function KeyPress_Toolgun_UndoSpawn( var button )
+{
+	if( Toolgun_CanUseKeyboardInput() )
+	{
+		AddPlayerHint( 0.5, 0.15, $"", "Undo Spawn" );
+		GetLocalClientPlayer().ClientCommand( "Toolgun_UndoSpawn" );
+	}
+}
+
 
 #endif

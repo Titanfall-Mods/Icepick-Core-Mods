@@ -11,8 +11,9 @@ array<bool functionref( entity, array<string> )> ToolGunToolFunctions = [];
 struct
 {
 	int CurrentMode,
-	int CurrentModeIdx
-	asset SelectedModel
+	int CurrentModeIdx,
+	asset SelectedModel,
+	entity LastSpawnedEntity
 } ToolGunSettings;
 
 void function Toolgun_Shared_Init()

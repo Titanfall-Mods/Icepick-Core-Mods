@@ -67,5 +67,7 @@ void function Toolgun_Func_SpawnProp_Precache()
 	prop_dynamic.SetAngles( Vector(0, player.EyeAngles().y, 0) );
 	DispatchSpawn( prop_dynamic )
 
+	ToolGunSettings.LastSpawnedEntity = prop_dynamic;
+
 }
 #endif

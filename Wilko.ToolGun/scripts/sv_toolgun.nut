@@ -22,6 +22,35 @@ void function Toolgun_Server_Init()
 	AddClientCommandCallback( "Toolgun_Grab_StopRotate", ClientCommand_Toolgun_Grab_StopRotate )
 	AddClientCommandCallback( "Toolgun_Grab_PerformRotation", ClientCommand_Toolgun_Grab_PerformRotation )
 	AddClientCommandCallback( "Toolgun_ChangeModel", ClientCommand_Toolgun_ChangeModel )
+	AddClientCommandCallback( "Toolgun_UndoSpawn", ClientCommand_Toolgun_UndoSpawn )
+
+	// Test_RemoveTriggers( "trigger_cylinder" )
+	// Test_RemoveTriggers( "trigger_multiple" )
+	// Test_RemoveTriggers( "trigger_once" )
+	// Test_RemoveTriggers( "trigger_flag_set" )
+	// Test_RemoveTriggers( "trigger_flag_clear" )
+	// Test_RemoveTriggers( "trigger_flag_touching" )
+	// Test_RemoveTriggers( "trigger_movetarget" )
+	// Test_RemoveTriggers( "trigger_checkpoint" )
+	// Test_RemoveTriggers( "trigger_checkpoint_silent" )
+	// Test_RemoveTriggers( "trigger_checkpoint_safe" )
+	// Test_RemoveTriggers( "trigger_checkpoint_forced" )
+	// Test_RemoveTriggers( "trigger_checkpoint_to_safe_spots" )
+	// Test_RemoveTriggers( "trigger_teleporter" )
+	// Test_RemoveTriggers( "trigger_quickdeath_checkpoint" )
+	// Test_RemoveTriggers( "trigger_quickdeath" )
+	// Test_RemoveTriggers( "trigger_hurt" )
+	// Test_RemoveTriggers( "trigger_out_of_bounds" )
+	// Test_RemoveTriggers( "trigger_level_transition" )
+}
+
+void function Test_RemoveTriggers( string classname )
+{
+	array<entity> triggers = GetEntArrayByClass_Expensive( classname )
+	foreach ( trigger in triggers )
+	{
+		trigger.Destroy()
+	}
 }
 
 void function Toolgun_Utils_FireToolTracer( entity player )
@@ -201,6 +230,17 @@ void function ToolgunGrab_Think( entity player )
 
 		wait 0.016;
 	}
+}
+
+bool function ClientCommand_Toolgun_UndoSpawn( entity player, array<string> args )
+{
+	if( ToolGunSettings.LastSpawnedEntity != null && IsValid( ToolGunSettings.LastSpawnedEntity ) )
+	{
+		ToolGunSettings.LastSpawnedEntity.Destroy();
+		ToolGunSettings.LastSpawnedEntity = null;
+		return true;
+	}
+	return false;
 }
 
 #endif
