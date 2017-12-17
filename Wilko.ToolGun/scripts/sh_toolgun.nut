@@ -62,6 +62,13 @@ void function Toolgun_RegisterTools()
 	ToolPropInfo.help <- "Left click to print info on a prop to the console"
 	ToolGunTools.append( ToolPropInfo )
 	ToolGunToolFunctions.append( Toolgun_Func_PropInfo )
+
+	table ToolMirrorProp = {}
+	ToolMirrorProp.id <- "mirror_prop"
+	ToolMirrorProp.name <- "Mirror Prop"
+	ToolMirrorProp.help <- "Left click to mirror a prop to the other timeline"
+	ToolGunTools.append( ToolMirrorProp )
+	ToolGunToolFunctions.append( Toolgun_Func_TimeshiftMirror )
 }
 
 table function Toolgun_GetCurrentMode()

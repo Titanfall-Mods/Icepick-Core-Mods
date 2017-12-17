@@ -114,7 +114,10 @@ void function CustomGauntlet_SpawnTargetNPCs()
 		SpawnedGrunt.SetEfficientMode( true );
 		SpawnedGrunt.SetHologram();
 		SpawnedGrunt.SetDeathActivity( "ACT_DIESIMPLE" );
-		SpawnedGrunt.Freeze();
+		if( !SpawnedGrunt.IsFrozen() )
+		{
+			SpawnedGrunt.Freeze();
+		}
 
 		AddEntityCallback_OnDamaged( SpawnedGrunt, CustomGauntlet_NPC_Damaged );
 

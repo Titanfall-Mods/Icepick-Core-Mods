@@ -27,6 +27,8 @@ void function Console_RegisterFunctions()
 	Console_RegisterFunc( "mylocation", Console_Command_PrintPlayerLocation, "mylocation", "Prints current player location to the external console" );
 	Console_RegisterFunc( "teleport", Console_Command_TeleportToLocation, "teleport x y z", "Teleports the player to the specified coordinates" );
 	Console_RegisterFunc( "kill_npcs", Console_Command_KillAllNPCs, "kill_npcs", "Removes all NPCs currently in the level" );
+	Console_RegisterFunc( "give", Console_Command_GiveWeapon, "give weapon_name", "Gives the player the specified weapon" );
+	Console_RegisterFunc( "list_weapons", Console_Command_ListPrecachedWeapons, "list_weapons", "Lists available weapons for this level in the console" );
 
 	Console_RegisterFunc( "save_ents", Console_Command_DumpSpawnedEnts, "save_ents", "Save all player spawned entities to a file in the Titanfall folder" );
 	Console_RegisterFunc( "load_ents", Console_Command_LoadEntsFromFile, "load_ents", "Load all ents from a file in the Toolgun mod" );
@@ -79,6 +81,7 @@ void function Console_Command_KillAllNPCs( array<string> args )
 	Console_Command_KillAllNPCClass( "npc_super_spectre" );
 	Console_Command_KillAllNPCClass( "npc_drone_rocket" );
 	Console_Command_KillAllNPCClass( "npc_prowler" );
+	Console_Command_KillAllNPCClass( "npc_drone" );
 	Console_Command_KillAllNPCClass( "npc_frag_drone" );
 	Console_Command_KillAllNPCClass( "npc_drone_plasma" );
 	Console_Command_KillAllNPCClass( "npc_drone_worker" );
@@ -118,9 +121,12 @@ void function Console_Command_DumpSpawnedEnts( array<string> args )
 	{
 		entity ent = ToolgunData.SpawnedEntities[i];
 		string LineEndChar = (i == NumEnts - 1 ? "\n" : ", \n");
+		vector Pos = ent.GetOrigin();
+		vector Ang = ent.GetAngles();
+
 		AssetsOut += "\t" + ent.GetModelName() + LineEndChar;
-		LocationsOut += "\t" + ent.GetOrigin() + LineEndChar;
-		AnglesOut += "\t" + ent.GetAngles() + LineEndChar;
+		LocationsOut += "\t< " + Pos.x + ", " + Pos.y + ", " + Pos.z + " >" + LineEndChar;
+		AnglesOut += "\t< " + Ang.x + ", " + Ang.y + ", " + Ang.z + " >" + LineEndChar;
 	}
 
 	AssetsOut += "];";
@@ -150,5 +156,132 @@ void function Console_Command_LoadEntsFromFile( array<string> args )
 	}
 	#elseif CLIENT
 	AddPlayerHint( 2.0, 0.25, $"", "Loaded ents from file spawned_ents" );
+	#endif
+}
+
+void function Console_Command_GiveWeapon( array<string> args )
+{
+	#if SERVER
+	entity player = GetPlayerByIndex( 0 );
+	string weaponName = args[0];
+	switch (weaponName)
+	{
+		case "toolgun":
+		case "mozambique":
+			weaponName = "mp_weapon_shotgun_pistol";
+			break;
+		case "car":
+			weaponName = "mp_weapon_car";
+			break;
+		case "re45":
+			weaponName = "mp_weapon_autopistol";
+			break;
+		case "charge_rifle":
+			weaponName = "mp_weapon_defender";
+			break;
+		case "longbow":
+		case "dmr":
+			weaponName = "mp_weapon_dmr";
+			break;
+		case "doubletake":
+			weaponName = "mp_weapon_doubletake";
+			break;
+		case "epg":
+			weaponName = "mp_weapon_epg";
+			break;
+		case "devotion":
+			weaponName = "mp_weapon_esaw";
+			break;
+		case "g2":
+			weaponName = "mp_weapon_g2";
+			break;
+		case "hemlok":
+			weaponName = "mp_weapon_hemlok";
+			break;
+		case "spitfire":
+			weaponName = "mp_weapon_lmg";
+			break;
+		case "mastiff":
+			weaponName = "mp_weapon_mastiff";
+			break;
+		case "mgl":
+			weaponName = "mp_weapon_mgl";
+			break;
+		case "r101":
+			weaponName = "mp_weapon_rspn101";
+			break;
+		case "r97":
+			weaponName = "mp_weapon_r97";
+			break;
+		case "lstar":
+			weaponName = "mp_weapon_lstar";
+			break;
+		case "shotgun":
+			weaponName = "mp_weapon_shotgun";
+			break;
+		case "smart_pistol":
+		case "sp":
+			weaponName = "mp_weapon_smart_pistol";
+			break;
+		case "smr":
+		case "sidewinder":
+			weaponName = "mp_weapon_smr";
+			break;
+		case "sniper":
+		case "kraber":
+			weaponName = "mp_weapon_sniper";
+			break;
+		case "softball":
+			weaponName = "mp_weapon_softball";
+			break;
+		case "flatline":
+			weaponName = "mp_weapon_vinson";
+			break;
+		case "coldwar":
+			weaponName = "mp_weapon_pulse_lmg";
+			break;
+		case "wingman":
+			weaponName = "mp_weapon_wingman";
+			break;
+		case "pistol":
+		case "p2011":
+			weaponName = "mp_weapon_semipistol";
+			break;
+		case "archer":
+			weaponName = "mp_weapon_rocket_launcher";
+			break;
+		case "alternator":
+			weaponName = "mp_weapon_alternator_smg";
+			break;
+		case "volt":
+			weaponName = "mp_weapon_hemlok_smg";
+			break;
+	}
+
+	if( PlayerHasWeapon( player, weaponName ) )
+	{
+		printc( "Player already has weapon, " + weaponName );
+		return;
+	}
+	if( GetAllPrecachedSPWeapons().find( weaponName ) == -1 )
+	{
+		printc( "Could not use weapon " + weaponName + " as it is not precached in this level." );
+		return;
+	}
+	player.TakeWeaponNow( player.GetActiveWeapon().GetWeaponClassName() );
+	player.GiveWeapon( weaponName );
+	player.SetActiveWeaponByName( weaponName );
+	#endif
+}
+
+void function Console_Command_ListPrecachedWeapons( array<string> args )
+{
+	#if SERVER
+	string Output = "";
+	foreach( weapon in GetAllPrecachedSPWeapons() )
+	{
+		Output += weapon + "\n";
+	}
+	printc( Output );
 	#endif
 }

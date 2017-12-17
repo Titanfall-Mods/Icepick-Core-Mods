@@ -81,6 +81,10 @@
 			"AppendTo" : "_sp_sh_init",
 			"ScriptPath" : "scripts/tools/sh_tool_prop_info.nut"
 		},
+		{
+			"AppendTo" : "_sp_sh_init",
+			"ScriptPath" : "scripts/tools/sh_tool_timeshift_mirror.nut"
+		},
 
 		{
 			"AppendTo" : "_sp_sh_init",
@@ -105,7 +109,11 @@
 
 		{
 			"AppendTo" : "_sp_sh_init",
-			"ScriptPath" : "scripts/spawnlists/sp_boomtown.nut"
+			"ScriptPath" : "scripts/spawnlists/sp_timeshift_spoke.nut"
+		},
+		{
+			"AppendTo" : "_sp_sh_init",
+			"ScriptPath" : "scripts/saves/spawned_ents.nut"
 		}
 	]
 

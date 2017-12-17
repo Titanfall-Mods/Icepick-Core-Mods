@@ -85,20 +85,23 @@ void function MousePress_ToolgunGrab( var button )
 {
 	// AddPlayerHint( 0.5, 0.25, $"", "Toolgun Grab" );
 
-	entity player = GetLocalClientPlayer();
-	vector eyePosition = player.EyePosition();
-	vector viewVector = player.GetViewVector();
-	TraceResults traceResults = TraceLine( eyePosition, eyePosition + viewVector * 10000, player, TRACE_MASK_PLAYERSOLID | TRACE_MASK_TITANSOLID | TRACE_MASK_NPCWORLDSTATIC, TRACE_COLLISION_GROUP_NONE )
-	if( traceResults.hitEnt )
+	if( Toolgun_IsHoldingToolgun() )
 	{
-		ToolgunGrab.GrabbedEntity = traceResults.hitEnt;
-		if( ToolgunGrab.GrabbedEntity != null )
+		entity player = GetLocalClientPlayer();
+		vector eyePosition = player.EyePosition();
+		vector viewVector = player.GetViewVector();
+		TraceResults traceResults = TraceLine( eyePosition, eyePosition + viewVector * 10000, player, TRACE_MASK_PLAYERSOLID | TRACE_MASK_TITANSOLID | TRACE_MASK_NPCWORLDSTATIC, TRACE_COLLISION_GROUP_NONE )
+		if( traceResults.hitEnt )
 		{
-			var GrabDistance = Length(traceResults.endPos - eyePosition);
-			vector GrabOffset = ToolgunGrab.GrabbedEntity.GetOrigin() - traceResults.endPos;
-			var cmd = "Toolgun_GrabEntity " + ToolgunGrab.GrabbedEntity.GetEntIndex() + " " + GrabOffset.x + " " + GrabOffset.y + " " + GrabOffset.z + " " + GrabDistance;
-			GetLocalClientPlayer().ClientCommand( cmd );
-			thread ToolgunGrab_Think();
+			ToolgunGrab.GrabbedEntity = traceResults.hitEnt;
+			if( ToolgunGrab.GrabbedEntity != null )
+			{
+				var GrabDistance = Length(traceResults.endPos - eyePosition);
+				vector GrabOffset = ToolgunGrab.GrabbedEntity.GetOrigin() - traceResults.endPos;
+				var cmd = "Toolgun_GrabEntity " + ToolgunGrab.GrabbedEntity.GetEntIndex() + " " + GrabOffset.x + " " + GrabOffset.y + " " + GrabOffset.z + " " + GrabDistance;
+				GetLocalClientPlayer().ClientCommand( cmd );
+				thread ToolgunGrab_Think();
+			}
 		}
 	}
 }

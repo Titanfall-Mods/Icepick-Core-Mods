@@ -13,7 +13,8 @@ struct {
 } ToolgunGrab;
 
 struct {
-	array<entity> SpawnedEntities
+	array<entity> SpawnedEntities,
+	float LastSpawnTime
 } ToolgunData;
 
 void function Toolgun_Server_Init()
