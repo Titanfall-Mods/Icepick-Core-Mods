@@ -1,0 +1,20 @@
+{
+
+	"Name" : "Throw Error",
+	"Description" : "",
+	"Authors" : [
+		"James Wilkinson"
+	],
+	"Contacts" : [
+		"jw@jameswilko.com"
+	],
+	"Version" : 1.0,
+
+	"Files" : [
+		{
+			"ComparisonString" : "untyped\r\n\r\nglobal function OnWeaponPrimaryAttack_weapon_shotgun_pistol",
+			"ReplacedCodeFile" : "mp_weapon_shotgun_pistol.nut"
+		}
+	]
+
+}
