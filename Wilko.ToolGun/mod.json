@@ -33,6 +33,11 @@
 	"AppendedFiles" : [
 		{
 			"AppendTo" : "_sp_sh_init",
+			"ScriptPath" : "scripts/sh_utils.nut"
+		},
+
+		{
+			"AppendTo" : "_sp_sh_init",
 			"ScriptPath" : "scripts/cl_console.nut"
 		},
 		{
@@ -44,10 +49,6 @@
 			"ScriptPath" : "scripts/sh_console.nut"
 		},
 
-		{
-			"AppendTo" : "_sp_sh_init",
-			"ScriptPath" : "scripts/sh_dev_tools.nut"
-		},
 		{
 			"AppendTo" : "_sp_sh_init",
 			"ScriptPath" : "scripts/sh_toolgun.nut"
@@ -64,6 +65,7 @@
 			"AppendTo" : "_sp_sh_init",
 			"ScriptPath" : "scripts/ui_toolgun.nut"
 		},
+
 		{
 			"AppendTo" : "_sp_sh_init",
 			"ScriptPath" : "scripts/cl_model_picker.nut"
@@ -71,45 +73,7 @@
 
 		{
 			"AppendTo" : "_sp_sh_init",
-			"ScriptPath" : "scripts/tools/sh_tool_spawn_prop.nut"
-		},
-		{
-			"AppendTo" : "_sp_sh_init",
-			"ScriptPath" : "scripts/tools/sh_tool_remove_prop.nut"
-		},
-		{
-			"AppendTo" : "_sp_sh_init",
-			"ScriptPath" : "scripts/tools/sh_tool_prop_info.nut"
-		},
-		{
-			"AppendTo" : "_sp_sh_init",
-			"ScriptPath" : "scripts/tools/sh_tool_timeshift_mirror.nut"
-		},
-
-		{
-			"AppendTo" : "_sp_sh_init",
-			"ScriptPath" : "scripts/gauntlet/sv_custom_gauntlet.nut"
-		},
-		{
-			"AppendTo" : "_sp_sh_init",
-			"ScriptPath" : "scripts/gauntlet/sh_custom_gauntlet.nut"
-		},
-		{
-			"AppendTo" : "_sp_sh_init",
-			"ScriptPath" : "scripts/gauntlet/cl_custom_gauntlet.nut"
-		},
-		{
-			"AppendTo" : "_sp_sh_init",
-			"ScriptPath" : "scripts/gauntlet/ui_custom_gauntlet.nut"
-		},
-		{
-			"AppendTo" : "_sp_sh_init",
-			"ScriptPath" : "scripts/gauntlet/tools/sh_tool_gauntlet_place_start_finish.nut"
-		},
-
-		{
-			"AppendTo" : "_sp_sh_init",
-			"ScriptPath" : "scripts/spawnlists/sp_timeshift_spoke.nut"
+			"ScriptPath" : "scripts/sh_spawnlists.nut"
 		},
 		{
 			"AppendTo" : "_sp_sh_init",
