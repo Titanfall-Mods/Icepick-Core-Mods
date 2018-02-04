@@ -4,12 +4,13 @@ struct ConCommand
 	string Command,
 	string AutocompleteText,
 	string HelpText,
-	void functionref( array<string> ) Func
+	void functionref( array<string>, string ) Func
 };
 
 struct
 {
-	array<ConCommand> Commands
+	array<ConCommand> Commands,
+	table< string, float > FloatConVars,
 } ConsoleData;
 
 void function Console_Shared_Init()
@@ -34,7 +35,7 @@ void function Console_RegisterFunctions()
 	Console_RegisterFunc( "load_ents", Console_Command_LoadEntsFromFile, "load_ents", "Load all ents from a file in the Toolgun mod" );
 }
 
-void function Console_RegisterFunc( string command, void functionref( array<string> ) func, string autocompleteHelp, string helpText )
+void function Console_RegisterFunc( string command, void functionref( array<string>, string ) func, string autocompleteHelp, string helpText )
 {
 	ConCommand cmd
 	cmd.Command = command
@@ -44,9 +45,50 @@ void function Console_RegisterFunc( string command, void functionref( array<stri
 	ConsoleData.Commands.append( cmd )
 }
 
+void function RegisterConVar( string VarName, float InitialValue, string AutocompleteHelp, string HelpText )
+{
+	ConsoleData.FloatConVars[VarName] <- InitialValue;
+
+	ConCommand cmd;
+	cmd.Command = VarName;
+	cmd.AutocompleteText = AutocompleteHelp;
+	cmd.HelpText = "[ConVar] " + HelpText;
+	cmd.Func = Console_Command_UpdateConVar;
+	ConsoleData.Commands.append( cmd );
+}
+
+void function SetConVarValue( string VarName, float NewValue )
+{
+#if CLIENT
+	// Update convar value on client
+	ConsoleData.FloatConVars[VarName] <- NewValue;
+
+	// Send convar value to server
+	string InputString = VarName + " " + NewValue;
+	GetLocalClientPlayer().ClientCommand( "Console_RunCommand " + InputString );
+#endif
+#if SERVER
+	printc("[Error] SetConVarValue should not be used on the server as it doesn't do anything!");
+#endif
+}
+
+float function GetConVarValue( string VarName, float DefaultValue )
+{
+	if( VarName in ConsoleData.FloatConVars )
+	{
+		return ConsoleData.FloatConVars[ VarName ];
+	}
+	else
+	{
+		printc("[Warning] " + VarName + " does not exist as a convar!");
+		return DefaultValue;
+	}
+	unreachable;
+}
+
 // -----------------------------------------------------------------------------
 
-void function Console_Command_TeleportToLocation( array<string> args )
+void function Console_Command_TeleportToLocation( array<string> args, string command )
 {
 	#if CLIENT
 	AddPlayerHint( 1.0, 0.25, $"", "Teleported to location" );
@@ -58,7 +100,7 @@ void function Console_Command_TeleportToLocation( array<string> args )
 	#endif
 }
 
-void function Console_Command_PrintPlayerLocation( array<string> args )
+void function Console_Command_PrintPlayerLocation( array<string> args, string command )
 {
 	#if CLIENT
 	printc( "Location: " + GetLocalClientPlayer().GetOrigin() + "\nEye angles: " + GetLocalClientPlayer().EyeAngles() );
@@ -66,7 +108,7 @@ void function Console_Command_PrintPlayerLocation( array<string> args )
 	#endif
 }
 
-void function Console_Command_KillAllNPCs( array<string> args )
+void function Console_Command_KillAllNPCs( array<string> args, string command )
 {
 	#if CLIENT
 	AddPlayerHint( 1.0, 0.25, $"", "NPCs killed" );
@@ -109,7 +151,7 @@ void function Console_Command_KillAllNPCClass( string classname )
 }
 #endif
 
-void function Console_Command_DumpSpawnedEnts( array<string> args )
+void function Console_Command_DumpSpawnedEnts( array<string> args, string command )
 {
 	#if SERVER
 	string AssetsOut = "\narray<asset> ToolgunSavedEnts_Assets = [\n";
@@ -144,7 +186,7 @@ void function Console_Command_DumpSpawnedEnts( array<string> args )
 	#endif
 }
 
-void function Console_Command_LoadEntsFromFile( array<string> args )
+void function Console_Command_LoadEntsFromFile( array<string> args, string command )
 {
 	#if SERVER
 	for(int i = 0; i < ToolgunSavedEnts_Assets.len(); ++i)
@@ -159,7 +201,7 @@ void function Console_Command_LoadEntsFromFile( array<string> args )
 	#endif
 }
 
-void function Console_Command_GiveWeapon( array<string> args )
+void function Console_Command_GiveWeapon( array<string> args, string command )
 {
 	#if SERVER
 	entity player = GetPlayerByIndex( 0 );
@@ -274,7 +316,7 @@ void function Console_Command_GiveWeapon( array<string> args )
 	#endif
 }
 
-void function Console_Command_ListPrecachedWeapons( array<string> args )
+void function Console_Command_ListPrecachedWeapons( array<string> args, string command )
 {
 	#if SERVER
 	string Output = "";
@@ -284,4 +326,11 @@ void function Console_Command_ListPrecachedWeapons( array<string> args )
 	}
 	printc( Output );
 	#endif
+}
+
+void function Console_Command_UpdateConVar( array<string> args, string command )
+{
+	string ConvarName = command;
+	float Value = args[0].tofloat();
+	ConsoleData.FloatConVars[ConvarName] <- Value;
 }

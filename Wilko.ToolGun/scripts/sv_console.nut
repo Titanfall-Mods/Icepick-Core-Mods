@@ -19,7 +19,7 @@ bool function ClientCommand_Console_RunCommand( entity player, array<string> arg
 	{
 		if( cmd.Command == command )
 		{
-			cmd.Func( CommandArgs );
+			cmd.Func( CommandArgs, command );
 			return true;
 		}
 	}

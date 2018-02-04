@@ -148,7 +148,7 @@ void function Console_RunCommand( var button )
 		{
 			if( cmd.Command == Command )
 			{
-				cmd.Func( CommandArgs );
+				cmd.Func( CommandArgs, Command );
 				GetLocalClientPlayer().ClientCommand( "Console_RunCommand " + InputString );
 				FoundCommand = true;
 				break;
