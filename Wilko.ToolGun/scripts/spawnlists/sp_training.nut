@@ -1,5 +1,5 @@
 
-const array<asset> SpawnList = [
+array<asset> SpawnList_Training = [
 	$"models/angel_city/keypad_01.mdl",
 	$"models/barriers/fence_wire_holder_double.mdl",
 	$"models/beacon/beacon_crane_base_phys.mdl",
@@ -454,3 +454,5 @@ const array<asset> SpawnList = [
 	$"models/weapons/w1128/w_w1128.mdl",
 	$"models/error.mdl",
 ];
+
+CurrentLevelSpawnList = SpawnList_Training;

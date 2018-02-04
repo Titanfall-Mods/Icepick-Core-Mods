@@ -208,7 +208,7 @@ bool function ClientCommand_Toolgun_Grab_PerformRotation( entity player, array<s
 bool function ClientCommand_Toolgun_ChangeModel( entity player, array<string> args )
 {
 	int Index = args[0].tointeger();
-	ToolGunSettings.SelectedModel = SpawnList[ Index ];
+	ToolGunSettings.SelectedModel = CurrentLevelSpawnList[ Index ];
 	return true;
 }
 

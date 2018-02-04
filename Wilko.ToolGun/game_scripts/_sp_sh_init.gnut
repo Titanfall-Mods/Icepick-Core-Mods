@@ -30,7 +30,13 @@ void function SPMP_Shared_Init()
 	Shared_SP_Init()
 
 	Console_Shared_Init();
+	SpawnList_Shared_Init();
 	Toolgun_Shared_Init();
+	#if CLIENT
+	ModelPicker_Client_Init();
+	#endif
+
+	// CustomGauntlet_Shared_Init();
 }
 
 void function Shared_SP_Init()

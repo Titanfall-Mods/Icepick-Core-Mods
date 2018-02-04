@@ -31,5 +31,5 @@ function FireWeaponPlayerAndNPC( WeaponPrimaryAttackParams attackParams, bool pl
 	weapon.SetWeaponPrimaryClipCount( weapon.GetWeaponPrimaryClipCountMax() )
 	weapon.SetWeaponPrimaryAmmoCount( weapon.GetWeaponPrimaryClipCountMax() )
 
-	return 1
+	return 1;
 }

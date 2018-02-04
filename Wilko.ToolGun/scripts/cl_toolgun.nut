@@ -191,8 +191,8 @@ void function KeyPress_ToolgunRandomProp( var button )
 {
 	if( Toolgun_CanUseKeyboardInput() )
 	{
-		int RandomIndex = RandomIntRange( 0, SpawnList.len() - 1 );
-		ToolGunSettings.SelectedModel = SpawnList[ RandomIndex ];
+		int RandomIndex = RandomIntRange( 0, CurrentLevelSpawnList.len() - 1 );
+		ToolGunSettings.SelectedModel = CurrentLevelSpawnList[ RandomIndex ];
 	
 		PrecacheModel( ToolGunSettings.SelectedModel );
 		AddPlayerHint( 0.5, 0.15, $"", "Spawning: " + ToolGunSettings.SelectedModel );
@@ -230,5 +230,5 @@ void function KeyPress_Toolgun_UndoSpawn( var button )
 	}
 }
 
-
 #endif
+

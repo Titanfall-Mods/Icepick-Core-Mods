@@ -181,9 +181,9 @@ void function ModelPicker_SelectResultIndex( int idx )
 		string assetName = ModelPickerSettings.SearchResults[idx];
 
 		int FoundIdx = -1;
-		for( int i = 0; i < SpawnList.len(); ++i )
+		for( int i = 0; i < CurrentLevelSpawnList.len(); ++i )
 		{
-			string searchName = "" + SpawnList[i];
+			string searchName = "" + CurrentLevelSpawnList[i];
 			if( assetName == searchName )
 			{
 				FoundIdx = i;
@@ -212,7 +212,7 @@ void function ModelPicker_UpdateSearch()
 	ModelPickerSettings.SearchResults.clear();
 	if( ModelPickerSettings.SearchString.len() > 0 )
 	{
-		foreach( a in SpawnList )
+		foreach( a in CurrentLevelSpawnList )
 		{
 			string assetName = "" + a;
 			if( assetName.find( ModelPickerSettings.SearchString ) != null )

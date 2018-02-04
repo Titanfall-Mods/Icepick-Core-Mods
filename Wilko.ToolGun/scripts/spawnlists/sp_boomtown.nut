@@ -1,5 +1,5 @@
 
-const array<asset> SpawnList = [
+array<asset> SpawnList_Boomtown = [
 	$"models/angel_city/box_small_01.mdl",
 	$"models/angel_city/box_small_02.mdl",
 	$"models/angel_city/ground_pile_trash_03.mdl",
@@ -734,3 +734,5 @@ const array<asset> SpawnList = [
 	$"models/zone_18/zone_18_exit_sign_04_on.mdl",
 	$"models/error.mdl"
 ];
+
+CurrentLevelSpawnList = SpawnList_Boomtown;

@@ -18,26 +18,23 @@ struct
 
 void function Toolgun_Shared_Init()
 {
-	PrecacheModel( SPAWN_MODEL )
-	PrecacheParticleSystem( EMP_GRENADE_BEAM_EFFECT )
-	PrecacheParticleSystem( TOOLGUN_GRAB_EFFECT )
+	PrecacheModel( SPAWN_MODEL );
+	PrecacheParticleSystem( EMP_GRENADE_BEAM_EFFECT );
+	PrecacheParticleSystem( TOOLGUN_GRAB_EFFECT );
 
-	for (var i = 0; i < SpawnList.len(); i++)
+	for (int i = 0; i < CurrentLevelSpawnList.len(); i++)
 	{
-		PrecacheModel( SpawnList[i] );
+		PrecacheModel( CurrentLevelSpawnList[i] );
 	}
 
-	Toolgun_RegisterTools()
+	Toolgun_RegisterTools();
 	#if SERVER
-	Toolgun_Server_Init()
+	Toolgun_Server_Init();
 	#endif
 	#if CLIENT
-	ModelPicker_Client_Init()
-	Toolgun_Client_Init()
-	Toolgun_UI_Init()
+	Toolgun_Client_Init();
+	Toolgun_UI_Init();
 	#endif
-
-	CustomGauntlet_Shared_Init()
 }
 
 void function Toolgun_RegisterTools()

@@ -1,5 +1,5 @@
 	
-const array<asset> SpawnList = [
+array<asset> SpawnList_TimeshiftSpoke = [
 	$"models/angel_city/box_small_01_burned.mdl",
 	$"models/angel_city/box_small_02.mdl",
 	$"models/angel_city/box_small_02_burned.mdl",
@@ -1206,3 +1206,5 @@ const array<asset> SpawnList = [
 	$"models/zone_18/light_fc_godray.mdl",
 	$"models/error.mdl"
 ];
+
+CurrentLevelSpawnList = SpawnList_TimeshiftSpoke;
