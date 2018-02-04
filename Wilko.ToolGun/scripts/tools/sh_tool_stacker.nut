@@ -55,10 +55,43 @@ void function Toolgun_RegisterTool_Stacker()
 		return "Fire to duplicate a prop on its surface.\nTab to change stack direction.";
 	}
 
+	ToolStackProp.CreateBeamTarget <- function()
+	{
+	#if SERVER
+		entity Target = CreateEntity( "info_placement_helper" );
+		SetTargetName( Target, UniqueString( "emp_grenade_beam_cpEnd" ) );
+		Target.SetOrigin( Vector(0, 0, 0) );
+		DispatchSpawn( Target );
+
+		ToolStackProp._LastTarget <- Target;
+
+		return Target;
+	#endif
+	}
+
+	ToolStackProp.CreateGuideBeam <- function()
+	{
+	#if SERVER
+		entity Beam = CreateEntity( "info_particle_system" );
+		Beam.kv.cpoint1 = ToolStackProp._LastTarget.GetTargetName();
+		Beam.SetValueForEffectNameKey( $"P_wpn_lasertrip_beam" );
+		Beam.kv.start_active = 0;
+		Beam.SetOrigin( Vector(0, 0, 0) );
+		DispatchSpawn( Beam );
+		Beam.Fire( "Start" );
+		return Beam;
+	#endif
+	}
+
 	ToolStackProp.OnSelected <- function()
 	{
 	#if CLIENT
 		RegisterButtonPressedCallback( KEY_TAB, ToolStackProp_ToggleStackSurface );
+	#endif
+
+	#if SERVER
+		ToolStackProp.DirBeamTarget <- ToolStackProp.CreateBeamTarget();
+		ToolStackProp.DirBeam <- ToolStackProp.CreateGuideBeam();
 	#endif
 	}
 
@@ -67,12 +100,77 @@ void function Toolgun_RegisterTool_Stacker()
 	#if CLIENT
 		DeregisterButtonPressedCallback( KEY_TAB, ToolStackProp_ToggleStackSurface );
 	#endif
+
+	#if SERVER
+		if( "DirBeam" in ToolStackProp )
+		{
+			ToolStackProp.DirBeam.Destroy();
+			ToolStackProp.DirBeamTarget.Destroy();
+		}
+	#endif
 	}
 
 	ToolStackProp.OnThink <- function()
 	{
 	#if SERVER
-		entity player = GetPlayerByIndex( 0 );
+		if( "DirBeam" in ToolStackProp )
+		{
+			entity player = GetPlayerByIndex( 0 );
+			vector eyePosition = player.EyePosition();
+			vector viewVector = player.GetViewVector();
+			TraceResults traceResults = TraceLine( eyePosition, eyePosition + viewVector * 10000, player, TRACE_MASK_PLAYERSOLID, TRACE_COLLISION_GROUP_PLAYER );
+			if( traceResults.hitEnt )
+			{
+				// Get stacking info
+				int StackDirValue = floor( GetConVarValue( "stacker_dir", 0 ) ).tointeger();
+				float StackDist = 0.0;
+				vector BoundMins = traceResults.hitEnt.GetBoundingMins();
+				vector BoundMaxs = traceResults.hitEnt.GetBoundingMaxs();
+				switch ( StackDirValue )
+				{
+					case StackDirection.Up:
+					case StackDirection.Down:
+						StackDist = fabs( BoundMaxs.z - BoundMins.z );
+						break;
+					case StackDirection.Left:
+					case StackDirection.Right:
+						StackDist = fabs( BoundMaxs.y - BoundMins.y );
+						break;
+					case StackDirection.Forward:
+					case StackDirection.Backward:
+						StackDist = fabs( BoundMaxs.x - BoundMins.x );
+						break;
+				}
+
+				vector StackDir = Vector( 0, 0, 0 );
+				switch ( StackDirValue )
+				{
+					case StackDirection.Up:
+						StackDir = traceResults.hitEnt.GetUpVector();
+						break;
+					case StackDirection.Down:
+						StackDir = traceResults.hitEnt.GetUpVector() * -1;
+						break;
+					case StackDirection.Left:
+						StackDir = traceResults.hitEnt.GetRightVector() * -1;
+						break;
+					case StackDirection.Right:
+						StackDir = traceResults.hitEnt.GetRightVector();
+						break;
+					case StackDirection.Forward:
+						StackDir = traceResults.hitEnt.GetForwardVector();
+						break;
+					case StackDirection.Backward:
+						StackDir = traceResults.hitEnt.GetForwardVector() * -1;
+						break;
+				}
+
+				// Move to stack position
+				vector BeamOrigin = traceResults.hitEnt.GetWorldSpaceCenter();
+				ToolStackProp.DirBeam.SetOrigin( BeamOrigin );
+				ToolStackProp.DirBeamTarget.SetOrigin( BeamOrigin + (StackDir * StackDist) );				
+			}
+		}
 	#endif
 	}
 
@@ -80,9 +178,9 @@ void function Toolgun_RegisterTool_Stacker()
 	{
 	#if SERVER
 		entity player = GetPlayerByIndex( 0 );
-		vector eyePosition = player.EyePosition()
-		vector viewVector = player.GetViewVector()
-		TraceResults traceResults = TraceLine( eyePosition, eyePosition + viewVector * 10000, player, TRACE_MASK_PLAYERSOLID, TRACE_COLLISION_GROUP_PLAYER )
+		vector eyePosition = player.EyePosition();
+		vector viewVector = player.GetViewVector();
+		TraceResults traceResults = TraceLine( eyePosition, eyePosition + viewVector * 10000, player, TRACE_MASK_PLAYERSOLID, TRACE_COLLISION_GROUP_PLAYER );
 
 		if( traceResults.hitEnt )
 		{
