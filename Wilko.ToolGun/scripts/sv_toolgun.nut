@@ -88,14 +88,34 @@ void function Toolgun_Utils_FireToolTracer( entity player )
 
 bool function ClientCommand_Toolgun_SetMode( entity player, array<string> args )
 {
-	int ToolIdx = args[0].tointeger()
-	ToolGunSettings.CurrentModeIdx = ToolIdx
+	// Deselect previous tool
+	table OldTool = ToolGunTools[ToolGunSettings.CurrentModeIdx];
+	if( "OnDeselected" in OldTool )
+	{
+		OldTool.OnDeselected();
+	}
+
+	// Change tool
+	int ToolIdx = args[0].tointeger();
+	ToolGunSettings.CurrentModeIdx = ToolIdx;
+
+	// Select new tool
+	table NewTool = ToolGunTools[ToolGunSettings.CurrentModeIdx];
+	if( "OnSelected" in NewTool )
+	{
+		NewTool.OnSelected();
+	}
+
 	return true;
 }
 
 bool function ClientCommand_Toolgun_PrimaryAttack( entity player, array<string> args )
 {
-	if( Toolgun_GetCurrentModeFunction() != null )
+	if( "OnFire" in Toolgun_GetCurrentMode() )
+	{
+		Toolgun_GetCurrentMode().OnFire();
+	}
+	else if( Toolgun_GetCurrentModeFunction() != null )
 	{
 		Toolgun_GetCurrentModeFunction()( player, args );
 		return true

@@ -172,8 +172,25 @@ void function Toolgun_UI_UpdateToolgunHelp()
 			}
 		}
 
-		RuiSetString( ruiToolgunMode, "msgText", "Mode: " + Toolgun_GetCurrentMode().name )
-		RuiSetString( ruiToolgunHelp, "msgText", Toolgun_GetCurrentMode().help )
+		if( "GetName" in Toolgun_GetCurrentMode() )
+		{
+			RuiSetString( ruiToolgunMode, "msgText", "Mode: " + Toolgun_GetCurrentMode().GetName() )
+		}
+		else
+		{
+			RuiSetString( ruiToolgunMode, "msgText", "Mode: " + Toolgun_GetCurrentMode().name )
+			// RuiSetString( ruiToolgunMode, "msgText", "Mode: Missing GetName function" )
+		}
+		
+		if( "GetHelp" in Toolgun_GetCurrentMode() )
+		{
+			RuiSetString( ruiToolgunHelp, "msgText", Toolgun_GetCurrentMode().GetHelp() )
+		}
+		else
+		{
+			RuiSetString( ruiToolgunHelp, "msgText", Toolgun_GetCurrentMode().help )
+			// RuiSetString( ruiToolgunHelp, "msgText", "Missing GetHelp function" )
+		}
 
 		WaitFrame()
 	}

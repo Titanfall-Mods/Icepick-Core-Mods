@@ -43,12 +43,17 @@ bool function Toolgun_CanUseKeyboardInput()
 
 bool function Toolgun_Client_PrimaryAttack( entity player )
 {
-	if( Toolgun_GetCurrentModeFunction() != null )
+	if( "OnFire" in Toolgun_GetCurrentMode() )
+	{
+		Toolgun_GetCurrentMode().OnFire();
+	}
+	else if( Toolgun_GetCurrentModeFunction() != null )
 	{
 		array<string> args = [];
 		Toolgun_GetCurrentModeFunction()( player, args );
 		return true;
 	}
+
 	return false;
 }
 
@@ -66,6 +71,14 @@ void function Toolgun_Client_ChangeTool( int Change )
 {
 	if( Toolgun_CanUseKeyboardInput() )
 	{
+		// Deselect previous tool
+		table OldTool = ToolGunTools[ToolGunSettings.CurrentModeIdx];
+		if( "OnDeselected" in OldTool )
+		{
+			OldTool.OnDeselected();
+		}
+
+		// Change tool
 		ToolGunSettings.CurrentModeIdx = ToolGunSettings.CurrentModeIdx + Change;
 		if(ToolGunSettings.CurrentModeIdx == ToolGunTools.len())
 		{
@@ -74,6 +87,13 @@ void function Toolgun_Client_ChangeTool( int Change )
 		if(ToolGunSettings.CurrentModeIdx < 0)
 		{
 			ToolGunSettings.CurrentModeIdx = ToolGunTools.len() - 1;
+		}
+
+		// Select new tool
+		table NewTool = ToolGunTools[ToolGunSettings.CurrentModeIdx];
+		if( "OnSelected" in NewTool )
+		{
+			NewTool.OnSelected();
 		}
 	
 		EmitSoundOnEntity( GetLocalClientPlayer(), "menu_focus" );
