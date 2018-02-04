@@ -178,8 +178,7 @@ void function Toolgun_UI_UpdateToolgunHelp()
 		}
 		else
 		{
-			RuiSetString( ruiToolgunMode, "msgText", "Mode: " + Toolgun_GetCurrentMode().name )
-			// RuiSetString( ruiToolgunMode, "msgText", "Mode: Missing GetName function" )
+			RuiSetString( ruiToolgunMode, "msgText", "Mode: Missing GetName function" )
 		}
 		
 		if( "GetHelp" in Toolgun_GetCurrentMode() )
@@ -188,8 +187,7 @@ void function Toolgun_UI_UpdateToolgunHelp()
 		}
 		else
 		{
-			RuiSetString( ruiToolgunHelp, "msgText", Toolgun_GetCurrentMode().help )
-			// RuiSetString( ruiToolgunHelp, "msgText", "Missing GetHelp function" )
+			RuiSetString( ruiToolgunHelp, "msgText", "Missing GetHelp function" )
 		}
 
 		WaitFrame()

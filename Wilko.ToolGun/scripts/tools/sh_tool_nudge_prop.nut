@@ -64,7 +64,6 @@ void function Toolgun_RegisterTool_NudgeProp()
 
 	// Register the tool
 	ToolGunTools.append( ToolNudgeProp );
-	ToolGunToolFunctions.append( Toolgun_Func_Null ); // @todo: remove this
 
 }
 

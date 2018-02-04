@@ -47,6 +47,5 @@ void function Toolgun_RegisterTool_PropInfo()
 
 	// Register the tool
 	ToolGunTools.append( ToolPropInfo );
-	ToolGunToolFunctions.append( Toolgun_Func_Null ); // @todo: remove this
 
 }

@@ -66,6 +66,5 @@ void function Toolgun_RegisterTool_TimeshiftMirror()
 
 	// Register the tool
 	ToolGunTools.append( ToolMirrorProp );
-	ToolGunToolFunctions.append( Toolgun_Func_Null ); // @todo: remove this
 
 }

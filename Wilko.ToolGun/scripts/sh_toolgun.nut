@@ -6,7 +6,6 @@ const EMP_GRENADE_BEAM_EFFECT = $"P_wpn_charge_tool_beam"
 const TOOLGUN_GRAB_EFFECT = $"P_wpn_hand_laser_beam"
 
 array<table> ToolGunTools = [];
-array<bool functionref( entity, array<string> )> ToolGunToolFunctions = [];
 
 struct
 {
@@ -50,16 +49,6 @@ void function Toolgun_RegisterTools()
 table function Toolgun_GetCurrentMode()
 {
 	return ToolGunTools[ ToolGunSettings.CurrentModeIdx ]
-}
-
-bool functionref( entity, array<string> ) function Toolgun_GetCurrentModeFunction()
-{
-	return ToolGunToolFunctions[ ToolGunSettings.CurrentModeIdx ]
-}
-
-bool function Toolgun_Func_Null( entity player, array<string> args )
-{
-	return false;
 }
 
 // #includefolder scripts/tools/sh_*.nut

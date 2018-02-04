@@ -61,6 +61,5 @@ void function Toolgun_RegisterTool_RemoveProp()
 
 	// Register the tool
 	ToolGunTools.append( ToolRemoveProp );
-	ToolGunToolFunctions.append( Toolgun_Func_Null ); // @todo: remove this
 
 }

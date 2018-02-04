@@ -167,8 +167,6 @@ void function Toolgun_RegisterTool_Stacker()
 	// Register the tool
 	ToolGunTools.append( ToolStackProp );
 	
-	ToolGunToolFunctions.append( Toolgun_Func_Null ); // @todo: remove this
-
 }
 
 void function ToolStackProp_ToggleStackSurface( var button )

@@ -115,12 +115,7 @@ bool function ClientCommand_Toolgun_PrimaryAttack( entity player, array<string> 
 	{
 		Toolgun_GetCurrentMode().OnFire();
 	}
-	else if( Toolgun_GetCurrentModeFunction() != null )
-	{
-		Toolgun_GetCurrentModeFunction()( player, args );
-		return true
-	}
-	return false
+	return false;
 }
 
 bool function ClientCommand_Toolgun_GrabEntity( entity player, array<string> args )

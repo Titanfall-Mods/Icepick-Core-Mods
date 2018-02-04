@@ -47,13 +47,6 @@ bool function Toolgun_Client_PrimaryAttack( entity player )
 	{
 		Toolgun_GetCurrentMode().OnFire();
 	}
-	else if( Toolgun_GetCurrentModeFunction() != null )
-	{
-		array<string> args = [];
-		Toolgun_GetCurrentModeFunction()( player, args );
-		return true;
-	}
-
 	return false;
 }
 

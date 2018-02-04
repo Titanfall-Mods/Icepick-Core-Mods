@@ -54,8 +54,7 @@ void function Toolgun_RegisterTool_SpawnProp()
 
 	// Register the tool
 	ToolGunTools.append( ToolSpawnProp );
-	ToolGunToolFunctions.append( Toolgun_Func_Null ); // @todo: remove this
-
+	
 }
 
 #if SERVER
