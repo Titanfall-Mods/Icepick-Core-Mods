@@ -1,28 +1,61 @@
 
-bool function Toolgun_Func_SpawnProp( entity player, array<string> args )
+table ToolSpawnProp = {};
+
+void function Toolgun_RegisterTool_SpawnProp()
 {
-#if SERVER
-	// HACK: stop props from being spawned too quick, fixes issue where server will start to spawn multiple of the same prop after a while?
-	if( Time() - ToolgunData.LastSpawnTime < 0.25 )
+	// Create the tool
+	ToolSpawnProp.id <- "spawn_prop";
+
+	ToolSpawnProp.GetName <- function()
 	{
-		return false;
+		return "Spawner";
 	}
 
-	entity player = GetPlayerByIndex( 0 );
-	vector origin = player.EyePosition();
-	vector angles = player.EyeAngles();
-	vector forward = AnglesToForward( angles );
+	ToolSpawnProp.GetHelp <- function()
+	{
+		return "Fire to spawn a prop.";
+	}
 
-	asset Asset = IsValid(ToolGunSettings.SelectedModel) ? ToolGunSettings.SelectedModel : CurrentLevelSpawnList[0];
-	vector Pos = origin + forward * 200;
-	vector Ang = Vector(0, player.EyeAngles().y, 0);
-	Toolgun_Func_SpawnAsset( Asset, Pos, Ang );
+	ToolSpawnProp.OnSelected <- function()
+	{
+	}
 
-	Toolgun_Utils_FireToolTracer( player );
-	return true
-#else
-	return false
-#endif
+	ToolSpawnProp.OnDeselected <- function()
+	{
+	}
+
+	ToolSpawnProp.OnFire <- function()
+	{
+	#if SERVER
+
+		// HACK: stop props from being spawned too quick, fixes issue where server will start to spawn multiple of the same prop after a while?
+		if( Time() - ToolgunData.LastSpawnTime < 0.25 )
+		{
+			return false;
+		}
+
+		entity player = GetPlayerByIndex( 0 );
+		vector origin = player.EyePosition();
+		vector angles = player.EyeAngles();
+		vector forward = AnglesToForward( angles );
+
+		asset Asset = IsValid(ToolGunSettings.SelectedModel) ? ToolGunSettings.SelectedModel : CurrentLevelSpawnList[0];
+		vector Pos = origin + forward * 200;
+		vector Ang = Vector(0, player.EyeAngles().y, 0);
+		Toolgun_Func_SpawnAsset( Asset, Pos, Ang );
+
+		Toolgun_Utils_FireToolTracer( player );
+		return true;
+
+	#else
+		return false;
+	#endif
+	}
+
+	// Register the tool
+	ToolGunTools.append( ToolSpawnProp );
+	ToolGunToolFunctions.append( Toolgun_Func_Null ); // @todo: remove this
+
 }
 
 #if SERVER

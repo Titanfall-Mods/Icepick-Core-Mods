@@ -57,16 +57,23 @@ void function Toolgun_RegisterTool_Stacker()
 
 	ToolStackProp.OnSelected <- function()
 	{
-		#if CLIENT
+	#if CLIENT
 		RegisterButtonPressedCallback( KEY_TAB, ToolStackProp_ToggleStackSurface );
-		#endif
+	#endif
 	}
 
 	ToolStackProp.OnDeselected <- function()
 	{
-		#if CLIENT
+	#if CLIENT
 		DeregisterButtonPressedCallback( KEY_TAB, ToolStackProp_ToggleStackSurface );
-		#endif
+	#endif
+	}
+
+	ToolStackProp.OnThink <- function()
+	{
+	#if SERVER
+		entity player = GetPlayerByIndex( 0 );
+	#endif
 	}
 
 	ToolStackProp.OnFire <- function()
@@ -103,8 +110,6 @@ void function Toolgun_RegisterTool_Stacker()
 
 			// Get stacking info
 			int StackDirValue = floor( GetConVarValue( "stacker_dir", 0 ) ).tointeger();
-			printc("StackDirValue: " + StackDirValue);
-
 			float StackDist = 0.0;
 			vector BoundMins = prop_dynamic.GetBoundingMins();
 			vector BoundMaxs = prop_dynamic.GetBoundingMaxs();
@@ -164,15 +169,6 @@ void function Toolgun_RegisterTool_Stacker()
 	
 	ToolGunToolFunctions.append( Toolgun_Func_Null ); // @todo: remove this
 
-}
-
-bool function Toolgun_Func_StackProp( entity player, array<string> args )
-{
-#if SERVER
-	return false;
-#else
-	return false;
-#endif
 }
 
 void function ToolStackProp_ToggleStackSurface( var button )

@@ -39,36 +39,12 @@ void function Toolgun_Shared_Init()
 
 void function Toolgun_RegisterTools()
 {
-	table ToolSpawnProp = {}
-	ToolSpawnProp.id <- "spawn_prop";
-	ToolSpawnProp.name <- "Spawn Prop";
-	ToolSpawnProp.help <- "Fire to spawn a prop";
-	ToolGunTools.append( ToolSpawnProp );
-	ToolGunToolFunctions.append( Toolgun_Func_SpawnProp );
-
-	table ToolRemoveProp = {}
-	ToolRemoveProp.id <- "remove_prop";
-	ToolRemoveProp.name <- "Remove Prop";
-	ToolRemoveProp.help <- "Fire to remove a prop";
-	ToolGunTools.append( ToolRemoveProp );
-	ToolGunToolFunctions.append( Toolgun_Func_RemoveProp );
-
+	Toolgun_RegisterTool_SpawnProp();
+	Toolgun_RegisterTool_RemoveProp();
 	Toolgun_RegisterTool_NudgeProp();
 	Toolgun_RegisterTool_Stacker();
-
-	table ToolPropInfo = {}
-	ToolPropInfo.id <- "prop_info";
-	ToolPropInfo.name <- "Prop Info";
-	ToolPropInfo.help <- "Fire to print info on a prop to the console";
-	ToolGunTools.append( ToolPropInfo );
-	ToolGunToolFunctions.append( Toolgun_Func_PropInfo );
-
-	table ToolMirrorProp = {}
-	ToolMirrorProp.id <- "mirror_prop";
-	ToolMirrorProp.name <- "Mirror Prop";
-	ToolMirrorProp.help <- "Fire to mirror a prop to the other timeline";
-	ToolGunTools.append( ToolMirrorProp );
-	ToolGunToolFunctions.append( Toolgun_Func_TimeshiftMirror );
+	Toolgun_RegisterTool_TimeshiftMirror();
+	Toolgun_RegisterTool_PropInfo();
 }
 
 table function Toolgun_GetCurrentMode()
