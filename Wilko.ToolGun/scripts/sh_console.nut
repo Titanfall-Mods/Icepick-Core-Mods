@@ -30,6 +30,7 @@ void function Console_RegisterFunctions()
 	Console_RegisterFunc( "kill_npcs", Console_Command_KillAllNPCs, "kill_npcs", "Removes all NPCs currently in the level" );
 	Console_RegisterFunc( "give", Console_Command_GiveWeapon, "give weapon_name", "Gives the player the specified weapon" );
 	Console_RegisterFunc( "list_weapons", Console_Command_ListPrecachedWeapons, "list_weapons", "Lists available weapons for this level in the console" );
+	Console_RegisterFunc( "play", Console_Command_PlaySound, "play sound_name", "Play the sound on the local player" );
 
 	Console_RegisterFunc( "save_ents", Console_Command_DumpSpawnedEnts, "save_ents", "Save all player spawned entities to a file in the Titanfall folder" );
 	Console_RegisterFunc( "load_ents", Console_Command_LoadEntsFromFile, "load_ents", "Load all ents from a file in the Toolgun mod" );
@@ -313,6 +314,14 @@ void function Console_Command_GiveWeapon( array<string> args, string command )
 	player.TakeWeaponNow( player.GetActiveWeapon().GetWeaponClassName() );
 	player.GiveWeapon( weaponName );
 	player.SetActiveWeaponByName( weaponName );
+	#endif
+}
+
+void function Console_Command_PlaySound( array<string> args, string command )
+{
+	#if SERVER
+	entity player = GetPlayerByIndex( 0 );
+	EmitSoundOnEntity( player, args[0] );
 	#endif
 }
 
