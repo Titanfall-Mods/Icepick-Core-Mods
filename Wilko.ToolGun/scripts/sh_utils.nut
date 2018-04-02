@@ -1,20 +1,25 @@
 
 void function printc( ... )
 {
-	thread Dump_printc()
+	string out = "";
 	for( int i = 0; i < vargc; i++ )
 	{
-		DevTextBufferWrite( "" + vargv[i] )
+		out += ( "" + vargv[i] );
 		if( i + 1 < vargc )
 		{
-			DevTextBufferWrite( "\t" )
+			out += "\t";
 		}
 	}
+	print( out );
 }
 
-void function Dump_printc()
+float function FloatStepTowards( float a, float b, float MaxStep )
 {
-	WaitFrame()
-	DevTextBufferDumpToFile( "../console_log.txt" )
-	DevTextBufferClear()
+	float delta = clamp( b - a, MaxStep * -1, MaxStep );
+	return a + delta;
+}
+
+vector function VectorStepTowards( vector a, vector b, float MaxStep )
+{
+	return Vector( FloatStepTowards(a.x, b.x, MaxStep), FloatStepTowards(a.y, b.y, MaxStep), FloatStepTowards(a.z, b.z, MaxStep) );
 }

@@ -12,73 +12,23 @@
 
 	"Files" : [
 		{
-			"ComparisonString" : "global function GetPilotLoadoutForCurrentMapSP\r\nglobal function GetTitanLoadoutForCurrentMap\r\nglobal function SpInitLoadouts",
-			"ReplacedCodeFile" : "game_scripts/_sp_loadouts.nut"
-		},
-		{
-			"id" : "_sp_sh_init",
-			"ComparisonString" : "global function SPMP_Shared_Init",
-			"ReplacedCodeFile" : "game_scripts/_sp_sh_init.gnut"
-		},
-		{
-			"ComparisonString" : "untyped\r\n\r\nglobal function OnWeaponPrimaryAttack_weapon_shotgun_pistol",
-			"ReplacedCodeFile" : "game_scripts/mp_weapon_shotgun_pistol.nut"
-		},
-		{
-			"ComparisonString" : "untyped\r\n\r\n\r\nglobal function RemoteFunctions_Init",
-			"ReplacedCodeFile" : "game_scripts/_remote_functions_sp.gnut"
-		}
-	],
-
-	"AppendedFiles" : [
-		{
-			"AppendTo" : "_sp_sh_init",
-			"ScriptPath" : "scripts/sh_utils.nut"
-		},
-
-		{
-			"AppendTo" : "_sp_sh_init",
-			"ScriptPath" : "scripts/cl_console.nut"
-		},
-		{
-			"AppendTo" : "_sp_sh_init",
-			"ScriptPath" : "scripts/sv_console.nut"
-		},
-		{
-			"AppendTo" : "_sp_sh_init",
-			"ScriptPath" : "scripts/sh_console.nut"
-		},
-
-		{
-			"AppendTo" : "_sp_sh_init",
-			"ScriptPath" : "scripts/sh_toolgun.nut"
-		},
-		{
-			"AppendTo" : "_sp_sh_init",
-			"ScriptPath" : "scripts/sv_toolgun.nut"
-		},
-		{
-			"AppendTo" : "_sp_sh_init",
-			"ScriptPath" : "scripts/cl_toolgun.nut"
-		},
-		{
-			"AppendTo" : "_sp_sh_init",
-			"ScriptPath" : "scripts/ui_toolgun.nut"
-		},
-
-		{
-			"AppendTo" : "_sp_sh_init",
-			"ScriptPath" : "scripts/cl_model_picker.nut"
-		},
-
-		{
-			"AppendTo" : "_sp_sh_init",
-			"ScriptPath" : "scripts/sh_spawnlists.nut"
-		},
-		{
-			"AppendTo" : "_sp_sh_init",
-			"ScriptPath" : "scripts/saves/spawned_ents.nut"
+			"Chunk" : "sp/_sp_sh_init.gnut",
+			"Replacement" : "game_scripts/_sp_sh_init.gnut",
+			"Appends" : [
+				"scripts/sh_utils.nut",
+				"scripts/cl_console.nut",
+				"scripts/sv_console.nut",
+				"scripts/sh_console.nut",
+				"scripts/sh_toolgun.nut",
+				"scripts/sv_toolgun.nut",
+				"scripts/cl_toolgun.nut",
+				"scripts/ui_toolgun.nut",
+				"scripts/cl_model_picker.nut",
+				"scripts/sh_spawnlists.nut",
+				"scripts/saves/spawned_ents.nut"
+			]
 		}
 	]
+
 
 }

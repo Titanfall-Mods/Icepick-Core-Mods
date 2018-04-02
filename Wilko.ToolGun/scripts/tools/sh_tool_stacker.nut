@@ -50,6 +50,11 @@ void function Toolgun_RegisterTool_Stacker()
 		return "Stacker - " + Direction;
 	}
 
+	ToolStackProp.GetRawName <- function()
+	{
+		return "Stacker";
+	}
+
 	ToolStackProp.GetHelp <- function()
 	{
 		return "Fire to duplicate a prop on its surface.\nTab to change stack direction.";

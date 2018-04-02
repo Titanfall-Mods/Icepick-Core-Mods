@@ -13,7 +13,12 @@ void function Toolgun_RegisterTool_NudgeProp()
 
 	ToolNudgeProp.GetName <- function()
 	{
-		return "Nudge - " + GetConVarValue( "nudge_distance", 1 ) + " units";
+		return "Nudger - " + GetConVarValue( "nudge_distance", 1 ) + " units";
+	}
+
+	ToolNudgeProp.GetRawName <- function()
+	{
+		return "Nudger";
 	}
 
 	ToolNudgeProp.GetHelp <- function()

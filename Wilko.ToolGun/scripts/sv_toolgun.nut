@@ -248,7 +248,7 @@ void function ToolgunGrab_Think( entity player )
 		// ToolgunGrab.GrabBeamEffect.SetOrigin( player.EyePosition() + AnglesToRight( angles ) * 5 + AnglesToUp( angles ) * -5 )
 		// ToolgunGrab.GrabBeamTarget.SetOrigin( origin + forward * ToolgunGrab.GrabDistance + ToolgunGrab.GrabOffset )
 
-		wait 0.016;
+		WaitFrame();
 	}
 }
 

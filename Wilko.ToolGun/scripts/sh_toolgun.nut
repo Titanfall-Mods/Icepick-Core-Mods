@@ -20,6 +20,7 @@ void function Toolgun_Shared_Init()
 	PrecacheModel( SPAWN_MODEL );
 	PrecacheParticleSystem( EMP_GRENADE_BEAM_EFFECT );
 	PrecacheParticleSystem( TOOLGUN_GRAB_EFFECT );
+	PrecacheParticleSystem( $"P_wpn_lasertrip_beam" );
 
 	for (int i = 0; i < CurrentLevelSpawnList.len(); i++)
 	{
@@ -34,6 +35,8 @@ void function Toolgun_Shared_Init()
 	Toolgun_Client_Init();
 	Toolgun_UI_Init();
 	#endif
+
+	thread Toolgun_Shared_Think();
 }
 
 void function Toolgun_RegisterTools()
@@ -49,6 +52,18 @@ void function Toolgun_RegisterTools()
 table function Toolgun_GetCurrentMode()
 {
 	return ToolGunTools[ ToolGunSettings.CurrentModeIdx ]
+}
+
+void function Toolgun_Shared_Think()
+{
+	while( true )
+	{
+		if( "OnThink" in Toolgun_GetCurrentMode() )
+		{
+			Toolgun_GetCurrentMode().OnThink();
+		}
+		WaitFrame();
+	}
 }
 
 // #includefolder scripts/tools/sh_*.nut
