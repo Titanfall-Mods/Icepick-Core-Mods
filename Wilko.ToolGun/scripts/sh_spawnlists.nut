@@ -3,6 +3,14 @@ array<asset> CurrentLevelSpawnList = [];
 
 void function SpawnList_Shared_Init()
 {
+	thread SpawnList_Shared_DelayedInit();
+}
+
+void function SpawnList_Shared_DelayedInit()
+{
+	// HACK: Game crashes when changing levels if GetMapName() is called in init, so delay it by a short while
+	wait 2.0;
+
 	switch ( GetMapName() )
 	{
 		case "sp_training":
