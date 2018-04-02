@@ -27,6 +27,10 @@
 				"scripts/sh_spawnlists.nut",
 				"scripts/saves/spawned_ents.nut"
 			]
+		},
+		{
+			"Chunk" : "sp/sh_sp_objective.gnut",
+			"Replacement" : "game_scripts/sh_sp_objective.gnut"
 		}
 	]
 
