@@ -17,8 +17,8 @@ global function Toolgun_Client_PrimaryAttack
 
 // CUSTOM GAUNTLET START
 #if CLIENT
-global function ServerCallback_Gauntlet_StartRun
-global function ServerCallback_Gauntlet_FinishRun
+// global function ServerCallback_Gauntlet_StartRun
+// global function ServerCallback_Gauntlet_FinishRun
 #endif
 // CUSTOM GAUNTLET END
 
@@ -32,6 +32,9 @@ void function SPMP_Shared_Init()
 	Console_Shared_Init();
 	SpawnList_Shared_Init();
 	Toolgun_Shared_Init();
+	#if SERVER
+	ModelPicker_Server_Init();
+	#endif
 	#if CLIENT
 	ModelPicker_Client_Init();
 	#endif

@@ -24,6 +24,7 @@
 				"scripts/cl_toolgun.nut",
 				"scripts/ui_toolgun.nut",
 				"scripts/cl_model_picker.nut",
+				"scripts/sv_model_picker.nut",
 				"scripts/sh_spawnlists.nut",
 				"scripts/saves/spawned_ents.nut"
 			]
@@ -31,7 +32,19 @@
 		{
 			"Chunk" : "sp/sh_sp_objective.gnut",
 			"Replacement" : "game_scripts/sh_sp_objective.gnut"
-		}
+		},
+		{
+            "Chunk" : "weapons/mp_weapon_shotgun_pistol.nut",
+            "Replacement" : "game_scripts/mp_weapon_shotgun_pistol.nut"
+        },
+        {
+            "Chunk" : "_remote_functions_sp.gnut",
+            "Replacement" : "game_scripts/_remote_functions_sp.gnut"
+        },
+        {
+        	"Chunk" : "sp/_sp_loadouts.nut",
+        	"Replacement" : "game_scripts/_sp_loadouts.nut"
+        }
 	]
 
 

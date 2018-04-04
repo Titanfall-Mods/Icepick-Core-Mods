@@ -129,11 +129,13 @@ void function ModelPicker_ToggleEnabled()
 
 	if( ModelPickerSettings.IsInputting )
 	{
+		GetLocalClientPlayer().ClientCommand( "ModelPicker_OnOpenPicker" );
 		GetLocalClientPlayer().FreezeControlsOnClient();
 		ModelPicker_UpdateSearch();
 	}
 	else
 	{
+		GetLocalClientPlayer().ClientCommand( "ModelPicker_OnClosePicker" );
 		GetLocalClientPlayer().UnfreezeControlsOnClient();
 		ModelPicker_ClearUi();
 	}
@@ -226,6 +228,17 @@ void function ModelPicker_UpdateSearch()
 		}
 	}
 
+	if( ModelPickerSettings.SearchResults.len() > 0 )
+	{
+		string AssetName = "" + ModelPickerSettings.SearchResults[0]; // Hack: convert to string easily
+		AssetName = AssetName.slice( 2, AssetName.len() - 1 ); // Cutoff the $""
+		GetLocalClientPlayer().ClientCommand( "ModelPicker_UpdatePreviewModel " + AssetName );
+	}
+	else
+	{
+		GetLocalClientPlayer().ClientCommand( "ModelPicker_ClearPreviewModel" );
+	}
+
 	ModelPicker_UpdateUi();
 }
 
@@ -254,7 +267,7 @@ void function ModelPicker_UpdateUi()
 			RuiSetFloat( rui, "msgFontSize", MODEL_PICKER_TEXT_SIZE );
 			RuiSetFloat( rui, "msgAlpha", 1.0 );
 			RuiSetFloat( rui, "thicken", 0.0 );
-			RuiSetFloat3( rui, "msgColor", <1.0, 1.0, 1.0> );
+			RuiSetFloat3( rui, "msgColor", Idx == 0 ? <1.0, 1.0, 0.0> : <1.0, 1.0, 1.0> );
 			ModelPickerUi.ResultsRuis.append(rui);
 			Idx++;
 		}
