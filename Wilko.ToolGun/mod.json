@@ -34,18 +34,21 @@
 			"Replacement" : "game_scripts/sh_sp_objective.gnut"
 		},
 		{
-            "Chunk" : "weapons/mp_weapon_shotgun_pistol.nut",
-            "Replacement" : "game_scripts/mp_weapon_shotgun_pistol.nut"
-        },
-        {
-            "Chunk" : "_remote_functions_sp.gnut",
-            "Replacement" : "game_scripts/_remote_functions_sp.gnut"
-        },
-        {
-        	"Chunk" : "sp/_sp_loadouts.nut",
-        	"Replacement" : "game_scripts/_sp_loadouts.nut"
-        }
+			"Chunk" : "weapons/mp_weapon_shotgun_pistol.nut",
+			"Replacement" : "game_scripts/mp_weapon_shotgun_pistol.nut"
+		},
+		{
+			"Chunk" : "_remote_functions_sp.gnut",
+			"Replacement" : "game_scripts/_remote_functions_sp.gnut"
+		},
+		{
+			"Chunk" : "sp/_sp_loadouts.nut",
+			"Replacement" : "game_scripts/_sp_loadouts.nut"
+		},
+		{
+			"Chunk" : "sh_utility_all.gnut",
+			"Replacement" : "game_scripts/sh_utility_all.gnut"
+		}
 	]
-
 
 }

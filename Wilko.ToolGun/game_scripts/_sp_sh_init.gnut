@@ -22,6 +22,8 @@ global function Toolgun_Client_PrimaryAttack
 #endif
 // CUSTOM GAUNTLET END
 
+global array<asset> CurrentLevelSpawnList = [];
+
 void function SPMP_Shared_Init()
 {
 //	Settings_Init()

@@ -1,16 +1,7 @@
 
-array<asset> CurrentLevelSpawnList = [];
-
 void function SpawnList_Shared_Init()
 {
-	thread SpawnList_Shared_DelayedInit();
-}
-
-void function SpawnList_Shared_DelayedInit()
-{
-	// HACK: Game crashes when changing levels if GetMapName() is called in init, so delay it by a short while
-	wait 2.0;
-
+	// Find the correct spawn list
 	switch ( GetMapName() )
 	{
 		case "sp_training":
@@ -42,6 +33,9 @@ void function SpawnList_Shared_DelayedInit()
 		case "sp_s2s":
 			break;
 		case "sp_skyway_v1":
+			break;
+		default:
+			print("[Error] Missing spawnlist for level '" + GetMapName() + "'!");
 			break;
 	}
 }
