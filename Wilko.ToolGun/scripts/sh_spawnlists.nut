@@ -5,10 +5,13 @@ void function SpawnList_Shared_Init()
 	switch ( GetMapName() )
 	{
 		case "sp_training":
+			// #include scripts/spawnlists/sp_training.nut
 			break;
 		case "sp_crashsite":
+			// #include scripts/spawnlists/sp_crashsite.nut
 			break;
 		case "sp_sewers1":
+			// #include scripts/spawnlists/sp_sewers1.nut
 			break;
 		case "sp_boomtown":
 		case "sp_boomtown_start":
@@ -22,8 +25,10 @@ void function SpawnList_Shared_Init()
 		case "sp_beacon":
 		case "sp_beacon_spoke0":
 		case "sp_beacon_spoke2":
+			// #include scripts/spawnlists/sp_beacon_spoke0.nut
 			break;
 		case "sp_tday":
+			// #include scripts/spawnlists/sp_tday.nut
 			break;
 		case "sp_ship_01":
 		case "sp_ship_02":
@@ -31,8 +36,10 @@ void function SpawnList_Shared_Init()
 		case "sp_ship_04":
 		case "sp_ship_05":
 		case "sp_s2s":
+			// #include scripts/spawnlists/sp_s2s.nut
 			break;
 		case "sp_skyway_v1":
+			// #include scripts/spawnlists/sp_skyway_v1.nut
 			break;
 		default:
 			print("[Error] Missing spawnlist for level '" + GetMapName() + "'!");
