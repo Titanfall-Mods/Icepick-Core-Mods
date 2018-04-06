@@ -25,6 +25,14 @@ struct
 
 void function Toolgun_UI_Init()
 {
+	thread Toolgun_UI_DelayedInit();
+}
+
+void function Toolgun_UI_DelayedInit()
+{
+	// Wait a single frame at the start so that all tools for the toolgun can be created and added by extensions
+	WaitFrame();
+
 	RegisterButtonPressedCallback( KEY_TAB, ToolgunUI_KeyPressed_ToggleToolUI );
 	RegisterButtonReleasedCallback( KEY_TAB, ToolgunUI_KeyReleased_ToggleToolUI );
 	RegisterButtonPressedCallback( KEY_W, ToolgunUI_KeyPressed_NextTool );

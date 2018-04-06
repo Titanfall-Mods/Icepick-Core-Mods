@@ -26,7 +26,13 @@
 				"scripts/cl_model_picker.nut",
 				"scripts/sv_model_picker.nut",
 				"scripts/sh_spawnlists.nut",
-				"scripts/saves/spawned_ents.nut"
+				"scripts/saves/spawned_ents.nut",
+
+				"scripts/sh_beam_helper.nut",
+
+				"scripts/gauntlet/sh_custom_gauntlet.nut",
+				"scripts/gauntlet/sv_custom_gauntlet.nut",
+				"scripts/gauntlet/cl_custom_gauntlet.nut"
 			]
 		},
 		{
