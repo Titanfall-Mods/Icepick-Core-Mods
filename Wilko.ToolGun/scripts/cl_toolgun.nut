@@ -10,6 +10,8 @@ struct {
 
 void function Toolgun_Client_Init()
 {
+	RegisterButtonPressedCallback( KEY_HOME, KeyPress_ToolgunToggleEnabled );
+
 	RegisterButtonPressedCallback( KEY_PAD_MINUS, KeyPress_ToolgunPrevMode );
 	RegisterButtonPressedCallback( KEY_PAD_PLUS, KeyPress_ToolgunNextMode );
 
@@ -48,6 +50,13 @@ bool function Toolgun_Client_PrimaryAttack( entity player )
 		Toolgun_GetCurrentMode().OnFire();
 	}
 	return false;
+}
+
+void function KeyPress_ToolgunToggleEnabled( var button )
+{
+	ToolgunModeEnabled = !ToolgunModeEnabled;
+	GetLocalClientPlayer().ClientCommand( "Toolgun_ToggleEnabled " + (ToolgunModeEnabled ? 1 : 0) );
+	EmitSoundOnEntity( GetLocalClientPlayer(), "menu_click" );
 }
 
 void function KeyPress_ToolgunNextMode( var button )

@@ -10,6 +10,8 @@ global function printc
 global bool printc_running
 global const bool TOOLGUN_ENABLE_MOUSE_ROTATE = false
 
+global bool ToolgunModeEnabled = true;
+
 #if CLIENT
 global function Toolgun_Client_PrimaryAttack
 #endif

@@ -19,6 +19,7 @@ struct {
 
 void function Toolgun_Server_Init()
 {
+	AddClientCommandCallback( "Toolgun_ToggleEnabled", ClientCommand_Toolgun_ToggleEnabled )
 	AddClientCommandCallback( "Toolgun_SetMode", ClientCommand_Toolgun_SetMode )
 	AddClientCommandCallback( "Toolgun_PrimaryAttack", ClientCommand_Toolgun_PrimaryAttack )
 	AddClientCommandCallback( "Toolgun_GrabEntity", ClientCommand_Toolgun_GrabEntity )
@@ -84,6 +85,12 @@ void function Toolgun_Utils_FireToolTracer( entity player )
 	zapBeam.Fire( "StopPlayEndCap", "", lifeDuration )
 	zapBeam.Kill_Deprecated_UseDestroyInstead( lifeDuration )
 	cpEnd.Kill_Deprecated_UseDestroyInstead( lifeDuration )
+}
+
+bool function ClientCommand_Toolgun_ToggleEnabled( entity player, array<string> args )
+{
+	ToolgunModeEnabled = args[0] == "1";
+	return true;
 }
 
 bool function ClientCommand_Toolgun_SetMode( entity player, array<string> args )
