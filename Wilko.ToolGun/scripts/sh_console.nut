@@ -32,6 +32,11 @@ void function Console_RegisterFunctions()
 	Console_RegisterFunc( "list_weapons", Console_Command_ListPrecachedWeapons, "list_weapons", "Lists available weapons for this level in the console" );
 	Console_RegisterFunc( "play", Console_Command_PlaySound, "play sound_name", "Play the sound on the local player" );
 
+	Console_RegisterFunc( "concmd", Console_Command_ConCommand, "concmd original_command arg", "Perform a standard console command" );
+	Console_RegisterFunc( "cc", Console_Command_ConCommand, "cc original_command arg", "Perform a standard console command" );
+	Console_RegisterFunc( "firstperson", Console_Command_FirstPerson, "firstperson", "Enable first person mode" );
+	Console_RegisterFunc( "thirdperson", Console_Command_ThirdPerson, "thirdperson", "Enable third person mode. Enables cheats!" );
+
 	Console_RegisterFunc( "save_ents", Console_Command_DumpSpawnedEnts, "save_ents", "Save all player spawned entities to a file in the Titanfall folder" );
 	Console_RegisterFunc( "load_ents", Console_Command_LoadEntsFromFile, "load_ents", "Load all ents from a file in the Toolgun mod" );
 }
@@ -334,6 +339,41 @@ void function Console_Command_ListPrecachedWeapons( array<string> args, string c
 		Output += weapon + "\n";
 	}
 	printc( Output );
+	#endif
+}
+
+void function Console_Command_ConCommand( array<string> args, string command )
+{
+	#if CLIENT
+	string FullArgs = "";
+	for( int i = 0; i < args.len(); ++i )
+	{
+		if( i > 0 )
+		{
+			FullArgs += " ";
+		}
+		FullArgs += args[i];
+	}
+	GetLocalClientPlayer().ClientCommand( FullArgs );
+	#endif
+}
+
+void function Console_Command_FirstPerson( array<string> args, string command )
+{
+	#if CLIENT
+	entity player = GetLocalClientPlayer();
+	player.ClientCommand( "firstperson" );
+	#endif
+}
+
+void function Console_Command_ThirdPerson( array<string> args, string command )
+{
+	#if CLIENT
+	entity player = GetLocalClientPlayer();
+	player.ClientCommand( "sv_cheats 1" );
+	player.ClientCommand( "thirdperson" );
+	player.ClientCommand( "thirdperson_mayamode 1" );
+	player.ClientCommand( "thirdperson_screenspace 1" );
 	#endif
 }
 
