@@ -46,6 +46,8 @@ void function Toolgun_RegisterTools()
 	Toolgun_RegisterTool_NudgeProp();
 	Toolgun_RegisterTool_Stacker();
 	Toolgun_RegisterTool_TimeshiftMirror();
+	Toolgun_RegisterTool_ZiplineSpawner();
+	Toolgun_RegisterTool_CameraPlacer();
 	Toolgun_RegisterTool_PropInfo();
 }
 

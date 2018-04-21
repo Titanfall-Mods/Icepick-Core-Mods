@@ -84,7 +84,6 @@ bool function ClientCommand_ModelPicker_Close( entity player, array<string> args
 		ModelPickerSettings.CameraOverride = null;
 		if ( IsValid( player ) )
 		{
-			player.ClearParent();
 			player.ClearViewEntity();
 			player.MakeVisible();
 			DeployAndEnableWeapons( player )

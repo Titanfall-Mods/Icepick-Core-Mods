@@ -59,6 +59,20 @@ void function Test_RemoveTriggers( string classname )
 	}
 }
 
+bool function Toolgun_IsHoldingToolgun()
+{
+	entity player = GetPlayerByIndex( 0 );
+	if( player )
+	{
+		entity plyWeapon = player.GetActiveWeapon();
+		if( plyWeapon != null )
+		{
+			return plyWeapon.GetWeaponClassName() == "mp_weapon_shotgun_pistol";
+		}
+	}
+	return false;
+}
+
 void function Toolgun_Utils_FireToolTracer( entity player )
 {
 	var lifeDuration = 0.1
