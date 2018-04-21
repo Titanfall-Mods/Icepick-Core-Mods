@@ -16,7 +16,8 @@ struct TargetEnemy
 {
 	vector Position,
 	vector Rotation,
-	string EnemyType
+	string EnemyType,
+	entity SpawnedEnemy
 };
 
 struct GauntletTrack
@@ -31,6 +32,8 @@ struct
 {
 	array<GauntletTrack> RegisteredTracks,
 	GauntletTrack DevelopmentTrack,
+
+	bool EditModeActive = true,
 } CustomGauntletsGlobal;
 
 void function CustomGauntlet_Shared_Init()
@@ -40,6 +43,7 @@ void function CustomGauntlet_Shared_Init()
 #endif
 #if CLIENT
 	CustomGauntlet_Client_Init();
+	CustomGauntlet_UI_Init();
 #endif
 
 	CustomGauntlet_Shared_RegisterTools();
@@ -56,25 +60,6 @@ void function CustomGauntlet_Shared_Think()
 {
 	while( true )
 	{
-		// Update all trigger helper positions
-		CustomGauntlet_UpdateTriggerLineSavedPosition( CustomGauntletsGlobal.DevelopmentTrack.StartLine, "0 140 255" );
-		CustomGauntlet_UpdateTriggerLineSavedPosition( CustomGauntletsGlobal.DevelopmentTrack.FinishLine, "255 180 0" );
-		for( int i = CustomGauntletsGlobal.DevelopmentTrack.Checkpoints.len() - 1; i >= 0; --i )
-		{
-			CustomGauntlet_UpdateTriggerLineSavedPosition( CustomGauntletsGlobal.DevelopmentTrack.Checkpoints[i], "190 230 160" );
-		}
-
-		// Check if any trigger helper entities were removed
-		CustomGauntlet_WatchForTriggerLineCleanup( CustomGauntletsGlobal.DevelopmentTrack.StartLine );
-		CustomGauntlet_WatchForTriggerLineCleanup( CustomGauntletsGlobal.DevelopmentTrack.FinishLine );
-		for( int i = CustomGauntletsGlobal.DevelopmentTrack.Checkpoints.len() - 1; i >= 0; --i )
-		{
-			if( CustomGauntlet_WatchForTriggerLineCleanup( CustomGauntletsGlobal.DevelopmentTrack.Checkpoints[i] ) )
-			{
-				CustomGauntletsGlobal.DevelopmentTrack.Checkpoints.remove( i );
-			}
-		}
-
 		WaitFrame();
 	}
 }
@@ -91,53 +76,6 @@ bool function CustomGauntlet_HasTriggerLine( GauntletTriggerLine TriggerLine )
 bool function CustomGauntlet_HasTriggerLineEntities( GauntletTriggerLine TriggerLine )
 {
 	return IsValid( TriggerLine.FromEnt ) || IsValid( TriggerLine.ToEnt );
-}
-
-bool function CustomGauntlet_WatchForTriggerLineCleanup( GauntletTriggerLine TriggerLine )
-{
-#if SERVER
-	if( !IsValid( TriggerLine.FromEnt ) || !IsValid( TriggerLine.ToEnt ) )
-	{
-		if( IsValid( TriggerLine.FromEnt ) )
-		{
-			TriggerLine.FromEnt.Destroy();
-			TriggerLine.FromEnt = null;
-		}
-		if( IsValid( TriggerLine.ToEnt ) )
-		{
-			TriggerLine.ToEnt.Destroy();
-			TriggerLine.ToEnt = null;
-		}
-		DestroyBeam( TriggerLine.BeamHelper );
-		TriggerLine.IsValid = false;
-		return true;
-	}
-#endif
-	return false;
-}
-
-void function CustomGauntlet_UpdateTriggerLineSavedPosition( GauntletTriggerLine TriggerLine, string BeamColorString )
-{
-#if SERVER
-	if( IsValid( TriggerLine.FromEnt ) && IsValid( TriggerLine.ToEnt ) )
-	{
-		TriggerLine.From = TriggerLine.FromEnt.GetOrigin() + TriggerLineOffset;
-		TriggerLine.To = TriggerLine.ToEnt.GetOrigin() + TriggerLineOffset;
-		TriggerLine.IsValid = true;
-
-		// Update visualizer beam
-		if( !IsBeamEntityValid( TriggerLine.BeamHelper ) )
-		{
-			CreateBeamHelper( TriggerLine.BeamHelper, BeamColorString, TriggerLine.FromEnt, TriggerLine.ToEnt );
-		}
-		else
-		{
-			UpdateBeamEmitterPosition( TriggerLine.BeamHelper, TriggerLine.From );
-			UpdateBeamTargetPosition( TriggerLine.BeamHelper, TriggerLine.To );
-		}
-
-	}
-#endif
 }
 
 // -----------------------------------------------------------------------------
@@ -165,5 +103,3 @@ bool function CustomGauntlet_HasFinishLineEntities( GauntletTrack Track )
 }
 
 // -----------------------------------------------------------------------------
-
-

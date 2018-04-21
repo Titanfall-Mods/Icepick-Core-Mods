@@ -4,6 +4,7 @@ enum GauntletTriggerPlacement
 	StartLine,
 	FinishLine,
 	Checkpoint,
+	Target,
 	MAX
 }
 
@@ -12,7 +13,7 @@ table ToolGauntletTrigger = {};
 void function Toolgun_RegisterTool_GauntletPlaceTrigger()
 {
 	// Create convars
-	RegisterConVar( "gauntlet_trigger_mode", 0, "gauntlet_trigger_mode mode_idx", "Set the mode used on the Gauntlet Trigger tool" );
+	RegisterConVar( "gauntlet_trigger_mode", 0, "gauntlet_trigger_mode mode_idx", "Set the mode used on the Gauntlet Objects tool" );
 
 	// Create the tool
 	ToolGauntletTrigger.id <- "gauntlet_trigger";
@@ -32,13 +33,16 @@ void function Toolgun_RegisterTool_GauntletPlaceTrigger()
 			case GauntletTriggerPlacement.Checkpoint:
 				Name = "Checkpoint";
 				break;
+			case GauntletTriggerPlacement.Target:
+				Name = "Target";
+				break;
 		}
 		return "Gauntlet " + Name;
 	}
 
 	ToolGauntletTrigger.GetRawName <- function()
 	{
-		return "Gauntlet Trigger";
+		return "Gauntlet Objects";
 	}
 
 	ToolGauntletTrigger.GetHelp <- function()
@@ -115,6 +119,9 @@ void function ToolGauntletPlaceTrigger_CreateTriggerEnts( vector Pos, vector Ang
 		case GauntletTriggerPlacement.Checkpoint:
 			ToolGauntletPlaceTrigger_SetupCheckpointLine( Pos, Angles );
 			break;
+		case GauntletTriggerPlacement.Target:
+			ToolGauntletPlaceTrigger_PlaceTarget( Pos, Angles );
+			break;
 	}
 #endif
 }
@@ -177,5 +184,33 @@ void function ToolGauntletPlaceTrigger_SetupCheckpointLine( vector Pos, vector A
 	NewTrigger.FromEnt = ToolGauntletPlaceTrigger_CreateTriggerEntity( Pos, Angles, 100.0 );
 	NewTrigger.ToEnt = ToolGauntletPlaceTrigger_CreateTriggerEntity( Pos, Angles, -100.0 );
 	CustomGauntletsGlobal.DevelopmentTrack.Checkpoints.append( NewTrigger );
+#endif
+}
+
+void function ToolGauntletPlaceTrigger_PlaceTarget( vector Pos, vector Angles )
+{
+#if SERVER
+	entity HologramGrunt = CreateSoldier( TEAM_IMC, Pos, Angles + < 0.0, 180.0, 0.0 > );
+	DispatchSpawn( HologramGrunt );
+
+	Highlight_SetEnemyHighlightWithParam1( HologramGrunt, "gauntlet_target_highlight", HologramGrunt.EyePosition() );
+	HologramGrunt.SetSkin( 1 );
+	HologramGrunt.SetHealth( 1 );
+	HologramGrunt.SetCanBeMeleeExecuted( false );
+	HologramGrunt.SetNoTarget( true );
+	HologramGrunt.SetEfficientMode( true );
+	HologramGrunt.SetHologram();
+	HologramGrunt.SetDeathActivity( "ACT_DIESIMPLE" );
+	if( !HologramGrunt.IsFrozen() )
+	{
+		HologramGrunt.Freeze();
+	}
+
+	TargetEnemy newTarget;
+	newTarget.Position = HologramGrunt.GetOrigin();
+	newTarget.Rotation = HologramGrunt.GetAngles();
+	newTarget.EnemyType = "grunt";
+	newTarget.SpawnedEnemy = HologramGrunt;
+	CustomGauntletsGlobal.DevelopmentTrack.Targets.append( newTarget );
 #endif
 }
