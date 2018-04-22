@@ -21,7 +21,12 @@ global function Toolgun_Client_PrimaryAttack
 #if CLIENT
 // global function ServerCallback_Gauntlet_StartRun
 // global function ServerCallback_Gauntlet_FinishRun
-global function ServerCallback_CustomGauntlet_ShowError
+
+global function ServerCallback_CustomGauntlet_Start;
+global function ServerCallback_CustomGauntlet_Finish;
+global function ServerCallback_CustomGauntlet_ShowError;
+global function ServerCallback_CustomGauntlet_SendScoreboardEnt;
+global function ServerCallback_CustomGauntlet_SendStatsBoardEnt;
 #endif
 // CUSTOM GAUNTLET END
 

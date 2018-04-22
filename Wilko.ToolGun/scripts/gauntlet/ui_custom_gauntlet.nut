@@ -3,7 +3,8 @@
 
 struct 
 {
-	var EditModeRui
+	var EditModeRui,
+	var PlayerHudRui
 } CustomGauntletsUI;
 
 void function CustomGauntlet_UI_Init()
@@ -33,6 +34,51 @@ void function CustomGauntlet_UI_Think()
 
 		WaitFrame();
 	}
+}
+
+void function CustomGauntlet_UI_CreatePlayerHud()
+{
+	CustomGauntlet_UI_RemovePlayerHud();
+
+	CustomGauntletsUI.PlayerHudRui = RuiCreate( $"ui/gauntlet_hud.rpak", clGlobal.topoCockpitHud, RUI_DRAW_COCKPIT, 0 );
+	RuiSetGameTime( CustomGauntletsUI.PlayerHudRui, "startTime", Time() );
+}
+
+void function CustomGauntlet_UI_RemovePlayerHud()
+{
+	if( CustomGauntletsUI.PlayerHudRui != null )
+	{
+		RuiDestroyIfAlive( CustomGauntletsUI.PlayerHudRui );
+	}
+	CustomGauntletsUI.PlayerHudRui = null;
+}
+
+void function CustomGauntlet_UI_EndOfRun( float TotalTime, float BestTime, float MissedTargetsPenalty )
+{
+	if( CustomGauntletsUI.PlayerHudRui != null )
+	{
+		RuiSetBool( CustomGauntletsUI.PlayerHudRui, "runFinished", true );
+		RuiSetFloat( CustomGauntletsUI.PlayerHudRui, "finalTime", TotalTime );
+		RuiSetFloat( CustomGauntletsUI.PlayerHudRui, "bestTime", BestTime );
+		RuiSetFloat( CustomGauntletsUI.PlayerHudRui, "enemiesMissedTimePenalty", MissedTargetsPenalty );
+	}
+
+	wait 4.0;
+	CustomGauntlet_UI_RemovePlayerHud();
+}
+
+// -----------------------------------------------------------------------------
+
+void function CustomGauntlet_DoGauntletSplash( string MessageText )
+{
+	float Duration = 1.8;
+
+	var splashRUI = RuiCreate( $"ui/gauntlet_splash.rpak", clGlobal.topoCockpitHud, RUI_DRAW_COCKPIT, 0 );
+	RuiSetFloat( splashRUI, "duration", Duration );
+	RuiSetString( splashRUI, "message", MessageText );
+	
+	wait Duration + 0.1;
+	RuiDestroyIfAlive( splashRUI );
 }
 
 #endif

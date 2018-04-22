@@ -69,4 +69,22 @@ void function KeyPress_CustomGauntlet_ToggleEditMode( var button )
 	GetLocalClientPlayer().ClientCommand( "CustomGauntlet_SetEditMode " + ActiveStr );
 }
 
+// -----------------------------------------------------------------------------
+
+void function ServerCallback_CustomGauntlet_Start()
+{
+	thread CustomGauntlet_DoGauntletSplash( "#GAUNTLET_START_TEXT" );
+	CustomGauntlet_UI_CreatePlayerHud();
+}
+
+void function ServerCallback_CustomGauntlet_Finish( float TotalTime, float BestTime, int TotalNumTargets, int NumTargetsMissed, float MissedTargetsPenalty )
+{
+	thread CustomGauntlet_DoGauntletSplash( "#GAUNTLET_FINISH_TEXT" );
+	thread CustomGauntlet_UI_EndOfRun( TotalTime, BestTime, MissedTargetsPenalty );
+
+	int NumKilledTargets = TotalNumTargets - NumTargetsMissed;
+	CustomGauntlet_UpdateStatBoards( CustomGauntletsGlobal.DevelopmentTrack, true, TotalTime, BestTime, MissedTargetsPenalty, TotalNumTargets, NumKilledTargets );
+	CustomGauntlet_RandomizeStatBoardTips( CustomGauntletsGlobal.DevelopmentTrack );
+}
+
 #endif

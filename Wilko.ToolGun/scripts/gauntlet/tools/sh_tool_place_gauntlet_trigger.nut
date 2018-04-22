@@ -219,6 +219,7 @@ void function ToolGauntletPlaceTrigger_PlaceTarget( vector Pos, vector Angles )
 	{
 		HologramGrunt.Freeze();
 	}
+	TakeAllWeapons( HologramGrunt );
 
 	TargetEnemy newTarget;
 	newTarget.Position = HologramGrunt.GetOrigin();

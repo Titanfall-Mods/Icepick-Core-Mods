@@ -792,11 +792,12 @@ function RemoteFunctions_Init()
 	#endif
 	
 // CUSTOM GAUNTLET START
-	Remote_RegisterFunction( "ServerCallback_Gauntlet_StartRun" );
-	Remote_RegisterFunction( "ServerCallback_Gauntlet_FinishRun" );
 	Remote_RegisterFunction( "ServerCallback_Gauntlet_Reset" );
 	Remote_RegisterFunction( "ServerCallback_Gauntlet_UpdateEnemiesKilled" );
 	
+	Remote_RegisterFunction( "ServerCallback_CustomGauntlet_Start" );
+	Remote_RegisterFunction( "ServerCallback_CustomGauntlet_Finish" );
+
 	Remote_RegisterFunction( "ServerCallback_CustomGauntlet_ShowError" );
 	Remote_RegisterFunction( "ServerCallback_CustomGauntlet_SendScoreboardEnt" );
 	Remote_RegisterFunction( "ServerCallback_CustomGauntlet_SendStatsBoardEnt" );
