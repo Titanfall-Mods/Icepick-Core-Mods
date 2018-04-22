@@ -1,6 +1,11 @@
 
 #if CLIENT
 
+struct
+{
+	bool IsActive,
+} GauntletRuntimeData
+
 void function CustomGauntlet_Client_Init()
 {
 	RegisterButtonPressedCallback( KEY_HOME, KeyPress_CustomGauntlet_ToggleEditMode );
@@ -73,8 +78,11 @@ void function KeyPress_CustomGauntlet_ToggleEditMode( var button )
 
 void function ServerCallback_CustomGauntlet_Start()
 {
+	GauntletRuntimeData.IsActive = true;
+	
 	thread CustomGauntlet_DoGauntletSplash( "#GAUNTLET_START_TEXT" );
 	CustomGauntlet_UI_CreatePlayerHud();
+	thread CustomGauntlet_TrackPlayerSpeed();
 }
 
 void function ServerCallback_CustomGauntlet_Finish( float TotalTime, float BestTime, int TotalNumTargets, int NumTargetsMissed, float MissedTargetsPenalty )
@@ -85,6 +93,8 @@ void function ServerCallback_CustomGauntlet_Finish( float TotalTime, float BestT
 	int NumKilledTargets = TotalNumTargets - NumTargetsMissed;
 	CustomGauntlet_UpdateStatBoards( CustomGauntletsGlobal.DevelopmentTrack, true, TotalTime, BestTime, MissedTargetsPenalty, TotalNumTargets, NumKilledTargets );
 	CustomGauntlet_RandomizeStatBoardTips( CustomGauntletsGlobal.DevelopmentTrack );
+
+	GauntletRuntimeData.IsActive = false;
 }
 
 #endif
