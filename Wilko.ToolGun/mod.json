@@ -57,6 +57,14 @@
 		{
 			"Chunk" : "sh_utility_all.gnut",
 			"Replacement" : "game_scripts/sh_utility_all.gnut"
+		},
+		{
+			"Chunk" : "ui/menu_single_player.nut",
+			"Replacement" : "game_scripts/menu_single_player.nut"
+		},
+		{
+			"Chunk" : "sp/sh_start_points.nut",
+			"Replacement" : "game_scripts/sh_start_points.nut"
 		}
 	]
 
