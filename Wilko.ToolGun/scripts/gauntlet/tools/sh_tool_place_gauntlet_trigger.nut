@@ -5,6 +5,8 @@ enum GauntletTriggerPlacement
 	FinishLine,
 	Checkpoint,
 	Target,
+	Leaderboard,
+	Stats,
 	MAX
 }
 
@@ -35,6 +37,12 @@ void function Toolgun_RegisterTool_GauntletPlaceTrigger()
 				break;
 			case GauntletTriggerPlacement.Target:
 				Name = "Target";
+				break;
+			case GauntletTriggerPlacement.Leaderboard:
+				Name = "Leaderboard";
+				break;
+			case GauntletTriggerPlacement.Stats:
+				Name = "Stats Board";
 				break;
 		}
 		return "Gauntlet " + Name;
@@ -121,6 +129,12 @@ void function ToolGauntletPlaceTrigger_CreateTriggerEnts( vector Pos, vector Ang
 			break;
 		case GauntletTriggerPlacement.Target:
 			ToolGauntletPlaceTrigger_PlaceTarget( Pos, Angles );
+			break;
+		case GauntletTriggerPlacement.Leaderboard:
+			ToolGauntletPlaceTrigger_PlaceLeaderboard( Pos, Angles );
+			break;
+		case GauntletTriggerPlacement.Stats:
+			ToolGauntletPlaceTrigger_PlaceStats( Pos, Angles );
 			break;
 	}
 #endif
@@ -212,5 +226,47 @@ void function ToolGauntletPlaceTrigger_PlaceTarget( vector Pos, vector Angles )
 	newTarget.EnemyType = "grunt";
 	newTarget.SpawnedEnemy = HologramGrunt;
 	CustomGauntletsGlobal.DevelopmentTrack.Targets.append( newTarget );
+#endif
+}
+
+void function ToolGauntletPlaceTrigger_PlaceLeaderboard( vector Pos, vector Angles )
+{
+#if SERVER
+	entity ScoreboardEnt = ToolGauntletPlaceTrigger_CreateTriggerEntity( Pos, Angles, 0.0 );
+
+	GauntletWorldUI NewScoreboard;
+	NewScoreboard.UIType = GauntletWorldUIType.Scoreboard;
+	NewScoreboard.Position = Pos;
+	NewScoreboard.Rotation = Angles;
+	NewScoreboard.ReferenceEnt = ScoreboardEnt;
+	CustomGauntletsGlobal.DevelopmentTrack.Scoreboards.append( NewScoreboard );
+
+	thread ToolGauntletPlaceTrigger_DelayedTransmit( "ServerCallback_CustomGauntlet_SendScoreboardEnt", ScoreboardEnt );
+#endif
+}
+
+void function ToolGauntletPlaceTrigger_PlaceStats( vector Pos, vector Angles )
+{
+#if SERVER
+	entity StatsEnt = ToolGauntletPlaceTrigger_CreateTriggerEntity( Pos, Angles, 0.0 );
+
+	GauntletWorldUI NewStatsBoard;
+	NewStatsBoard.UIType = GauntletWorldUIType.StatsBoard;
+	NewStatsBoard.Position = Pos;
+	NewStatsBoard.Rotation = Angles;
+	NewStatsBoard.ReferenceEnt = StatsEnt;
+	CustomGauntletsGlobal.DevelopmentTrack.Scoreboards.append( NewStatsBoard );
+
+	thread ToolGauntletPlaceTrigger_DelayedTransmit( "ServerCallback_CustomGauntlet_SendStatsBoardEnt", StatsEnt );
+#endif
+}
+
+// -----------------------------------------------------------------------------
+
+void function ToolGauntletPlaceTrigger_DelayedTransmit( string CallbackFuncName, entity Ent )
+{
+#if SERVER
+	WaitFrame(); // Wait one frame to transmit to client or else the entity is not valid yet
+	Remote_CallFunction_NonReplay( GetPlayerByIndex( 0 ), CallbackFuncName, Ent.GetEncodedEHandle() );
 #endif
 }

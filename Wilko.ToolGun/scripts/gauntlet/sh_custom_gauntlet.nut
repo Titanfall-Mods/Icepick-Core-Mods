@@ -1,6 +1,13 @@
 
 const vector TriggerLineOffset = < 0.0, 0.0, 46.0 >;
 
+enum GauntletWorldUIType
+{
+	Scoreboard,
+	StatsBoard,
+	MAX
+}
+
 struct GauntletTriggerLine
 {
 	bool IsValid,
@@ -20,12 +27,24 @@ struct TargetEnemy
 	entity SpawnedEnemy
 };
 
+struct GauntletWorldUI
+{
+	vector Position,
+	vector Rotation,
+	int UIType,
+	var Topology,
+	var Rui,
+	entity ReferenceEnt
+};
+
 struct GauntletTrack
 {
 	GauntletTriggerLine StartLine,
 	GauntletTriggerLine FinishLine,
 	array<GauntletTriggerLine> Checkpoints,
 	array<TargetEnemy> Targets,
+	array<GauntletWorldUI> Scoreboards,
+	array<GauntletWorldUI> StatsBoards,
 };
 
 struct
@@ -103,3 +122,15 @@ bool function CustomGauntlet_HasFinishLineEntities( GauntletTrack Track )
 }
 
 // -----------------------------------------------------------------------------
+
+bool function CustomGauntlet_HasScoreboard( GauntletTrack Track )
+{
+	return Track.Scoreboards.len() > 0;
+}
+
+// -----------------------------------------------------------------------------
+
+bool function CustomGauntlet_HasStatsBoards( GauntletTrack Track )
+{
+	return Track.StatsBoards.len() > 0;
+}

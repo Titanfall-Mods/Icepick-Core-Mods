@@ -798,6 +798,8 @@ function RemoteFunctions_Init()
 	Remote_RegisterFunction( "ServerCallback_Gauntlet_UpdateEnemiesKilled" );
 	
 	Remote_RegisterFunction( "ServerCallback_CustomGauntlet_ShowError" );
+	Remote_RegisterFunction( "ServerCallback_CustomGauntlet_SendScoreboardEnt" );
+	Remote_RegisterFunction( "ServerCallback_CustomGauntlet_SendStatsBoardEnt" );
 // CUSTOM GAUNTLET END
 
 	Remote_EndRegisteringFunctions()
