@@ -37,6 +37,8 @@ void function Console_RegisterFunctions()
 	Console_RegisterFunc( "firstperson", Console_Command_FirstPerson, "firstperson", "Enable first person mode" );
 	Console_RegisterFunc( "thirdperson", Console_Command_ThirdPerson, "thirdperson", "Enable third person mode. Enables cheats!" );
 
+	Console_RegisterFunc( "changelevel", Console_Command_ChangeLevel, "changelevel map startpoint", "Change to the specified level" );
+
 	Console_RegisterFunc( "save_ents", Console_Command_DumpSpawnedEnts, "save_ents", "Save all player spawned entities to a file in the Titanfall folder" );
 	Console_RegisterFunc( "load_ents", Console_Command_LoadEntsFromFile, "load_ents", "Load all ents from a file in the Toolgun mod" );
 }
@@ -374,6 +376,22 @@ void function Console_Command_ThirdPerson( array<string> args, string command )
 	player.ClientCommand( "thirdperson" );
 	player.ClientCommand( "thirdperson_mayamode 1" );
 	player.ClientCommand( "thirdperson_screenspace 1" );
+	#endif
+}
+
+void function Console_Command_ChangeLevel( array<string> args, string command )
+{
+	#if SERVER
+	entity player = GetPlayerByIndex( 0 );
+	LevelTransitionStruct trans;
+	if( args.len() < 2 )
+	{
+		PlayerTransitionsToLevel( player, args[0], "", trans );
+	}
+	else
+	{
+		PlayerTransitionsToLevel( player, args[0], args[1], trans );
+	}
 	#endif
 }
 

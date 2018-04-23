@@ -68,7 +68,7 @@ int function GetStartPointLoadImageIndex( string map, string startpoint )
 		if ( startPointCSV.name == startpoint )
 			return startPointCSV.loadScreenIndex
 	}
-	unreachable
+	return 0;
 }
 
 string function GetStartPointSpLog( string map, string startpoint )
@@ -80,7 +80,7 @@ string function GetStartPointSpLog( string map, string startpoint )
 		if ( startPointCSV.name == startpoint )
 			return startPointCSV.spLog
 	}
-	unreachable
+	return "No log.";
 }
 
 string function GetStartPointSpLogTitle( string map, string startpoint )
@@ -92,7 +92,7 @@ string function GetStartPointSpLogTitle( string map, string startpoint )
 		if ( startPointCSV.name == startpoint )
 			return startPointCSV.spLogTitle
 	}
-	unreachable
+	return "No log title";
 }
 
 bool function StartPointSPLogIsLeft( string map, string startpoint )
@@ -104,7 +104,7 @@ bool function StartPointSPLogIsLeft( string map, string startpoint )
 		if ( startPointCSV.name == startpoint )
 			return startPointCSV.isLeft
 	}
-	unreachable
+	return false;
 }
 
 bool function StartPointHasDetente( string map, string startpoint )
@@ -116,7 +116,7 @@ bool function StartPointHasDetente( string map, string startpoint )
 		if ( startPointCSV.name == startpoint )
 			return startPointCSV.hasDetente
 	}
-	unreachable
+	return false;
 }
 
 bool function MapHasStartPoint( string map, string startPoint )
