@@ -1,4 +1,22 @@
 
+const vector ZIPLINE_ANCHOR_OFFSET = Vector( 0.0, 0.0, 50.0 );
+const int ZIPLINE_autoDetachDistance = 150;
+const float ZIPLINE_MoveSpeedScale = 1.0;
+
+struct PlacedZipline
+{
+	entity start,
+	entity mid,
+	entity end,
+
+	entity AnchorStart,
+	entity AnchorEnd,
+	vector StartLocation,
+	vector EndLocation
+}
+
+array< PlacedZipline > PlacedZiplines;
+
 table ToolZipline = {};
 
 void function Toolgun_RegisterTool_ZiplineSpawner()
@@ -83,6 +101,8 @@ void function Toolgun_RegisterTool_ZiplineSpawner()
 
 	#if SERVER
 	AddClientCommandCallback( "ToolZipline_AddZipline", ClientCommand_ToolZipline_AddZipline );
+
+	thread ToolZipline_UpdateZiplines();
 	#endif
 
 }
@@ -93,10 +113,93 @@ bool function ClientCommand_ToolZipline_AddZipline( entity player, array<string>
 	vector StartPos = Vector( float(args[0]), float(args[1]), float(args[2]) );
 	vector EndPos = Vector( float(args[3]), float(args[4]), float(args[5]) );
 
-	print("Zipline from " + StartPos + " to " + EndPos);
+	entity AnchorStart = ToolZipline_CreateAnchorEntity( StartPos, Vector( 0, 0, 0 ), 0.0 );
+	entity AnchorEnd = ToolZipline_CreateAnchorEntity( EndPos, Vector( 0, 0, 0 ), 0.0 );
+	ZipLine z = CreateZipLine( StartPos + ZIPLINE_ANCHOR_OFFSET, EndPos + ZIPLINE_ANCHOR_OFFSET, ZIPLINE_autoDetachDistance, ZIPLINE_MoveSpeedScale );
 
-	ZipLine z = CreateZipLine( StartPos, EndPos, 150, 1.0 );
+	PlacedZipline NewZipline;
+	NewZipline.StartLocation = StartPos;
+	NewZipline.EndLocation = EndPos;
+	NewZipline.AnchorStart = AnchorStart;
+	NewZipline.AnchorEnd = AnchorEnd;
+	NewZipline.start = z.start;
+	NewZipline.mid = z.mid;
+	NewZipline.end = z.end;
+	PlacedZiplines.append( NewZipline );
 
 	return true;
+}
+
+entity function ToolZipline_CreateAnchorEntity( vector Pos, vector Angles, float Offset )
+{
+	entity prop_dynamic = CreateEntity( "prop_dynamic" );
+	prop_dynamic.SetValueForModelKey( $"models/weapons/titan_trip_wire/titan_trip_wire.mdl" );
+	prop_dynamic.kv.fadedist = -1;
+	prop_dynamic.kv.renderamt = 255;
+	prop_dynamic.kv.rendercolor = "255 255 255";
+	prop_dynamic.kv.solid = 6; // 0 = no collision, 2 = bounding box, 6 = use vPhysics, 8 = hitboxes only
+	SetTeam( prop_dynamic, TEAM_BOTH );	// need to have a team other then 0 or it won't take impact damage
+
+	prop_dynamic.SetOrigin( Pos - AnglesToRight( Angles ) * Offset );
+	prop_dynamic.SetAngles( Angles );
+	DispatchSpawn( prop_dynamic );
+	return prop_dynamic;
+}
+
+void function ToolZipline_UpdateZiplines()
+{
+	while( true )
+	{
+		for( int i = PlacedZiplines.len() - 1; i >= 0; --i )
+		{
+			PlacedZipline CurrentZipline = PlacedZiplines[i];
+			if( !IsValid( CurrentZipline.AnchorStart ) || !IsValid( CurrentZipline.AnchorEnd ) )
+			{
+				ToolZipline_DestroyZipline( CurrentZipline );
+				if( IsValid( CurrentZipline.AnchorStart ) )
+				{
+					CurrentZipline.AnchorStart.Destroy();
+				}
+				if( IsValid( CurrentZipline.AnchorEnd ) )
+				{
+					CurrentZipline.AnchorEnd.Destroy();
+				}
+				PlacedZiplines.remove( i );
+			}
+			else
+			{
+				if( CurrentZipline.AnchorStart.GetOrigin() != CurrentZipline.StartLocation || CurrentZipline.AnchorEnd.GetOrigin() != CurrentZipline.EndLocation )
+				{
+					ToolZipline_DestroyZipline( CurrentZipline );
+
+					CurrentZipline.StartLocation = CurrentZipline.AnchorStart.GetOrigin();
+					CurrentZipline.EndLocation = CurrentZipline.AnchorEnd.GetOrigin();
+
+					ZipLine z = CreateZipLine( CurrentZipline.StartLocation + ZIPLINE_ANCHOR_OFFSET, CurrentZipline.EndLocation + ZIPLINE_ANCHOR_OFFSET, ZIPLINE_autoDetachDistance, ZIPLINE_MoveSpeedScale );
+					CurrentZipline.start = z.start;
+					CurrentZipline.mid = z.mid;
+					CurrentZipline.end = z.end;
+				}
+			}
+		}
+
+		WaitFrame();
+	}
+}
+
+void function ToolZipline_DestroyZipline( PlacedZipline zip )
+{
+	if( IsValid( zip.start ) )
+	{
+		zip.start.Destroy();
+	}
+	if( IsValid( zip.mid ) )
+	{
+		zip.mid.Destroy();
+	}
+	if( IsValid( zip.end ) )
+	{
+		zip.end.Destroy();
+	}
 }
 #endif
