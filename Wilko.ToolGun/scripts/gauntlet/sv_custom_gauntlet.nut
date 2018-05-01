@@ -13,7 +13,7 @@ struct
 void function CustomGauntlet_Server_Init()
 {
 	AddClientCommandCallback( "CustomGauntlet_SetEditMode", ClientCommand_CustomGauntlet_SetEditMode );
-	
+
 	thread CustomGauntlet_Server_Think();
 }
 
@@ -187,9 +187,31 @@ void function CustomGauntlet_Server_Reset()
 	CustomGauntletsGlobal.HasStarted = false;
 	CustomGauntletsGlobal.HasFinished = false;
 	CustomGauntlet_Server_ClearTargets();
-	thread ClearDroppedWeapons( GAUNTLET_TARGET_DISSOLVE_TIME + 0.1 );
+	thread CustomGauntlet_ClearDroppedWeapons();
 
 	print( "Reset gauntlet track!" );
+}
+
+void function CustomGauntlet_ClearDroppedWeapons()
+{
+	// HACK: Wait 10 frames to remove, wait isn't working correctly here?
+	for( int i = 0; i < 10; ++i )
+	{
+		WaitFrame();
+	}
+
+	bool onlyNotOwnedWeapons = true  // don't get the ones in guys' hands
+	array<entity> weapons = GetWeaponArray( onlyNotOwnedWeapons )
+
+	foreach ( weapon in weapons )
+	{
+		// don't clean up weapon pickups that were placed in leveled
+		int spawnflags = expect string( weapon.kv.spawnflags ).tointeger()
+		if ( spawnflags & SF_WEAPON_START_CONSTRAINED )
+			continue
+
+		weapon.Destroy()
+	}
 }
 
 void function CustomGauntlet_Server_Start( GauntletTrack Track )
