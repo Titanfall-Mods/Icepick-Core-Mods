@@ -36,6 +36,7 @@
 				"scripts/gauntlet/cl_custom_gauntlet_topology.nut",
 				"scripts/gauntlet/cl_custom_gauntlet_statboards.nut",
 				"scripts/gauntlet/cl_custom_gauntlet_speedometer.nut",
+				"scripts/gauntlet/cl_custom_gauntlet_leaderboard.nut",
 				"scripts/gauntlet/ui_custom_gauntlet.nut"
 			]
 		},

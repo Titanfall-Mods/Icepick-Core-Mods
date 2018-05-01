@@ -37,4 +37,22 @@ void function CustomGauntlet_RandomizeStatBoardTips( GauntletTrack Track )
 	}
 }
 
+void function CustomGauntlet_SetStatsBoardFloat( GauntletTrack Track, string ValueName, float Value )
+{
+	for( int i = Track.StatsBoards.len() - 1; i >= 0; --i )
+	{
+		GauntletWorldUI CurrentUI = Track.StatsBoards[i];
+		RuiSetFloat( CurrentUI.Rui, ValueName, Value );
+	}
+}
+
+void function CustomGauntlet_SetStatsBoardInt( GauntletTrack Track, string ValueName, int Value )
+{
+	for( int i = Track.StatsBoards.len() - 1; i >= 0; --i )
+	{
+		GauntletWorldUI CurrentUI = Track.StatsBoards[i];
+		RuiSetInt( CurrentUI.Rui, ValueName, Value );
+	}
+}
+
 #endif

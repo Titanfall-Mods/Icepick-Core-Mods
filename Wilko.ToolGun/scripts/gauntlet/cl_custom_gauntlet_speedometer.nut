@@ -62,13 +62,12 @@ void function CustomGauntlet_TrackPlayerSpeed()
 		if ( inchesSinceLastTick <= SPEEDOMETER_MAX_INCHES_PER_TICK && lastTickDuration > 0 && numTicks > 1 )
 		{
 			int enemiesKilledThisTick = 0;
-
-			// @todo: reimplement this
-			// if ( lastEnemiesKilled < CustomGauntlet.NumberOfTargetsKilled )
-			// {
-			// 	enemiesKilledThisTick = CustomGauntlet.NumberOfTargetsKilled - lastEnemiesKilled;
-			// 	lastEnemiesKilled = CustomGauntlet.NumberOfTargetsKilled;
-			// }
+			int TotalKilled = GetLocalClientPlayer().GetPlayerNetInt( "CGEnemiesKilled" );
+			if ( lastEnemiesKilled < TotalKilled )
+			{
+				enemiesKilledThisTick = TotalKilled - lastEnemiesKilled;
+				lastEnemiesKilled = TotalKilled;
+			}
 
 			float milesSinceLastTick = inchesSinceLastTick / inchesPerMile;
 			float hoursSinceLastTick = lastTickDuration / secondsPerHour;
@@ -133,20 +132,19 @@ void function CustomGauntlet_TrackPlayerSpeed()
 
 		if ( tracker.avgSpeed >= 0 )
 		{
-			// RuiSetFloat( CustomGauntlet.ResultsRui, "avgSpeed", tracker.avgSpeed );
+			CustomGauntlet_SetStatsBoardFloat( GauntletRuntimeData.ActiveTrack, "avgSpeed", tracker.avgSpeed );
 		}
 		if ( tracker.topSpeed >= 0 )
 		{
-			// RuiSetFloat( CustomGauntlet.ResultsRui, "topSpeed", tracker.topSpeed );
+			CustomGauntlet_SetStatsBoardFloat( GauntletRuntimeData.ActiveTrack, "topSpeed", tracker.topSpeed );
 		}
 		if ( highSpeedPercent >= 0 )
 		{
-			// RuiSetFloat( CustomGauntlet.ResultsRui, "highSpeedPercent", highSpeedPercent );
+			CustomGauntlet_SetStatsBoardFloat( GauntletRuntimeData.ActiveTrack, "highSpeedPercent", highSpeedPercent );
 		}
 		if ( tracker.highSpeedKills >= 0 )
 		{
-			// Not implemented, having problems networking enemy kills via ServerCallback_Gauntlet_UpdateEnemiesKilled
-			// RuiSetInt( CustomGauntlet.ResultsRui, "highSpeedKills", tracker.highSpeedKills )
+			CustomGauntlet_SetStatsBoardInt( GauntletRuntimeData.ActiveTrack, "highSpeedKills", tracker.highSpeedKills );
 		}
 	}
 }

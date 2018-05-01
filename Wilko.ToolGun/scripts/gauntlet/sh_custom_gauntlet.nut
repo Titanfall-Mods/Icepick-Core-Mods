@@ -81,7 +81,7 @@ struct
 
 	bool HasStarted = false,
 	bool HasFinished = false,
-
+	
 } CustomGauntletsGlobal;
 
 void function CustomGauntlet_Shared_Init()

@@ -4,9 +4,9 @@
 const float SCOREBOARD_SIZE_W = 120.0;
 const float SCOREBOARD_SIZE_H = 120.0;
 const float SCOREBOARD_OFFSET_H = -120.0;
-const float STATS_SIZE_W = 120.0;
-const float STATS_SIZE_H = 72.0;
-const float STATS_OFFSET_H = -100.0;
+const float STATS_SIZE_W = 200.0;
+const float STATS_SIZE_H = 120.0;
+const float STATS_OFFSET_H = -120.0;
 
 void function CustomGauntlet_Think_Topology()
 {

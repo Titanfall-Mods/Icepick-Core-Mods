@@ -4,6 +4,7 @@
 struct
 {
 	bool IsActive,
+	GauntletTrack & ActiveTrack,
 } GauntletRuntimeData
 
 void function CustomGauntlet_Client_Init()
@@ -79,6 +80,7 @@ void function KeyPress_CustomGauntlet_ToggleEditMode( var button )
 void function ServerCallback_CustomGauntlet_Start()
 {
 	GauntletRuntimeData.IsActive = true;
+	GauntletRuntimeData.ActiveTrack = CustomGauntletsGlobal.DevelopmentTrack;
 	
 	thread CustomGauntlet_DoGauntletSplash( "#GAUNTLET_START_TEXT" );
 	CustomGauntlet_UI_CreatePlayerHud();
@@ -91,10 +93,16 @@ void function ServerCallback_CustomGauntlet_Finish( float TotalTime, float BestT
 	thread CustomGauntlet_UI_EndOfRun( TotalTime, BestTime, MissedTargetsPenalty );
 
 	int NumKilledTargets = TotalNumTargets - NumTargetsMissed;
-	CustomGauntlet_UpdateStatBoards( CustomGauntletsGlobal.DevelopmentTrack, true, TotalTime, BestTime, MissedTargetsPenalty, TotalNumTargets, NumKilledTargets );
-	CustomGauntlet_RandomizeStatBoardTips( CustomGauntletsGlobal.DevelopmentTrack );
+	CustomGauntlet_UpdateStatBoards( GauntletRuntimeData.ActiveTrack, true, TotalTime, BestTime, MissedTargetsPenalty, TotalNumTargets, NumKilledTargets );
+	CustomGauntlet_RandomizeStatBoardTips( GauntletRuntimeData.ActiveTrack );
+	CustomGauntlet_AddLeaderboardTime( GauntletRuntimeData.ActiveTrack, TotalTime, GetLocalClientPlayer().GetPlayerName() );
 
 	GauntletRuntimeData.IsActive = false;
+}
+
+void function CustomGauntlet_OnEnemyKilled( entity player, int oldValue, int newValue, bool actuallyChanged )
+{
+	thread CustomGauntlet_DoGauntletSplash( "killed enemy" );
 }
 
 #endif

@@ -13,7 +13,7 @@ struct
 void function CustomGauntlet_Server_Init()
 {
 	AddClientCommandCallback( "CustomGauntlet_SetEditMode", ClientCommand_CustomGauntlet_SetEditMode );
-
+	
 	thread CustomGauntlet_Server_Think();
 }
 
@@ -29,6 +29,7 @@ void function CustomGauntlet_Server_Think()
 		{
 			CustomGauntlet_Server_Think_PlayMode();
 		}
+
 		WaitFrame();
 	}
 }
@@ -204,6 +205,7 @@ void function CustomGauntlet_Server_Start( GauntletTrack Track )
 	entity player = GetPlayerByIndex( 0 );
 	Remote_CallFunction_Replay( player, "ServerCallback_CustomGauntlet_Start" );
 	EmitSoundOnEntityOnlyToPlayer( player, player, "training_scr_gaunlet_start" );
+	player.SetPlayerNetInt( "CGEnemiesKilled", 0 );
 
 	print( "Started track: " + CustomGauntletsGlobal.ActiveTrack.TrackName + "!" );
 }
@@ -337,6 +339,14 @@ void function CustomGauntlet_Server_NPC_Damaged( entity npc, var damageInfo )
 		npc.Unfreeze();
 		EmitSoundAtPosition( TEAM_UNASSIGNED, npc.GetOrigin(), "holopilot_impacts_training" );
 		npc.Dissolve( ENTITY_DISSOLVE_PHASESHIFT, Vector( 0, 0, 0 ), GAUNTLET_TARGET_DISSOLVE_TIME );
+
+		// HACK: Sending an on killed event wasn't working, so use a netint to do it, works just as well
+		entity player = DamageInfo_GetAttacker( damageInfo )
+		if ( IsValid( player ) && player.IsPlayer()  )
+		{
+			int Killed = player.GetPlayerNetInt( "CGEnemiesKilled" );
+			player.SetPlayerNetInt( "CGEnemiesKilled", Killed + 1 );
+		}
 	}
 }
 
