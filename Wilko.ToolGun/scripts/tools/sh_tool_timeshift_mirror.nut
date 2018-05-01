@@ -12,12 +12,12 @@ void function Toolgun_RegisterTool_TimeshiftMirror()
 
 	ToolMirrorProp.GetName <- function()
 	{
-		return "Mirror Prop";
+		return "Timeshift Prop";
 	}
 
 	ToolMirrorProp.GetHelp <- function()
 	{
-		return "Fire to mirror a prop to the other timeline.";
+		return "Fire to place an identical prop in the other timeline.";
 	}
 
 	ToolMirrorProp.OnSelected <- function()
