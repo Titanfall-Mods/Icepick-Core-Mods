@@ -1,5 +1,4 @@
 {
-
 	"Name" : "Icepick Framework",
 	"Description" : "The basic framework to allow Icepick mods to function inside Titanfall 2.",
 	"Authors" : [
@@ -8,13 +7,5 @@
 	"Contacts" : [
 		"jw@jameswilko.com"
 	],
-	"Version" : 1.0,
-
-	"Files" : [
-		{
-			"Chunk" : "ui/panel_mainmenu.nut",
-			"Replacement" : "scripts/panel_mainmenu.nut"
-		}
-	]
-
+	"Version" : "1.0"
 }
