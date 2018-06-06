@@ -10,6 +10,12 @@
 	"Version" : "1.0",
 	"CustomScripts": [
 		{
+			"Path": "spmp_autoprecache.nut",
+			"RunOn": "CLIENT || SERVER",
+			"ClientCallback" : "MP_AutoPrecache",
+			"ServerCallback" : "MP_AutoPrecache"
+		},
+		{
 			"Path": "sh_toolgun_globals.nut",
 			"RunOn": "SERVER || CLIENT"
 		},
