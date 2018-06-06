@@ -32,6 +32,7 @@ void function Console_Shared_Init()
 void function Console_RegisterFunctions()
 {
 	Console_RegisterFunc( "mylocation", Console_Command_PrintPlayerLocation, "mylocation", "Prints current player location to the external console" );
+	Console_RegisterFunc( "currentmap", Console_Command_PrintCurrentMap, "currentmap", "Prints current map to the console" );
 	Console_RegisterFunc( "teleport", Console_Command_TeleportToLocation, "teleport x y z", "Teleports the player to the specified coordinates" );
 	Console_RegisterFunc( "kill_npcs", Console_Command_KillAllNPCs, "kill_npcs", "Removes all NPCs currently in the level" );
 	Console_RegisterFunc( "give", Console_Command_GiveWeapon, "give weapon_name", "Gives the player the specified weapon" );
@@ -119,6 +120,14 @@ void function Console_Command_PrintPlayerLocation( array<string> args, string co
 	#if CLIENT
 	printc( "Location: " + GetLocalClientPlayer().GetOrigin() + "\nEye angles: " + GetLocalClientPlayer().EyeAngles() );
 	AddPlayerHint( 1.0, 0.25, $"", "Location printed to console" );
+	#endif
+}
+
+void function Console_Command_PrintCurrentMap( array<string> args, string command )
+{
+	#if CLIENT
+	printc( "Map: " + GetMapName() );
+	AddPlayerHint( 1.0, 0.25, $"", "Map printed to console" );
 	#endif
 }
 
