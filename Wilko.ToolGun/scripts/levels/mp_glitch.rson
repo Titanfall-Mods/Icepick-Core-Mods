@@ -1,0 +1,12 @@
+
+When: "CLIENT"
+Scripts:
+[
+]
+
+When: "SERVER"
+Scripts:
+[
+	mp/levels/mp_glitch.nut
+	mp/levels/mp_glitch_fd.nut
+]

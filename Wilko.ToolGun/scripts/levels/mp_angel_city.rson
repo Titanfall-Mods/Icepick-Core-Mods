@@ -1,0 +1,19 @@
+//C:\depot\r2dev\game autofastfunction.pl
+
+When: "SERVER"
+Scripts:
+[
+]
+
+When: "CLIENT"
+Scripts:
+[
+	client/levels/cl_mp_angel_city.nut
+	client/cl_carrier.gnut
+]
+
+When: "SERVER || CLIENT"
+Scripts:
+[
+//	cinematic_mp/level_data/mp_angel_city.nut
+]

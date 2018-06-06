@@ -1,0 +1,17 @@
+When: "SERVER"
+Scripts:
+[
+]
+
+When: "CLIENT"
+Scripts:
+[
+	client/levels/cl_mp_rise.nut
+	client/cl_carrier.gnut
+]
+
+When: "SERVER || CLIENT"
+Scripts:
+[
+	mp/levels/sh_mp_rise.nut
+]

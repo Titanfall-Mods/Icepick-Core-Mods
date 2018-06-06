@@ -1,0 +1,12 @@
+
+When: "SERVER"
+Scripts:
+[
+]
+
+When: "CLIENT"
+Scripts:
+[
+	client/levels/cl_mp_skyshow_generic.nut
+	client/cl_carrier.gnut
+]
