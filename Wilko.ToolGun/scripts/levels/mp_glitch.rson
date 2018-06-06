@@ -2,11 +2,10 @@
 When: "CLIENT"
 Scripts:
 [
+	mp/levels/cl_mp_glitch.nut
 ]
 
 When: "SERVER"
 Scripts:
 [
-	mp/levels/mp_glitch.nut
-	mp/levels/mp_glitch_fd.nut
 ]
