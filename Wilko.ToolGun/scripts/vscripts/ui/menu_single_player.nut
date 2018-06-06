@@ -80,29 +80,29 @@ void function InitSinglePlayerMenu()
 		file.allLevels[ data.levelNum ].append( data )
 	}
 
-	AddMPMapToMenu( "mp_black_water_canal", "Black Water Canal", "Test", $"loadscreens/mp_black_water_canal_lobby" );
-	AddMPMapToMenu( "mp_grave", "Boomtown", "Test", $"loadscreens/mp_grave_lobby" );
-	AddMPMapToMenu( "mp_crashsite3", "Crash Site", "Test", $"loadscreens/mp_crashsite3_lobby" );
-	AddMPMapToMenu( "mp_complex3", "Complex", "Test", $"loadscreens/mp_complex3_lobby" );
-	AddMPMapToMenu( "mp_drydock", "Drydock", "Test", $"loadscreens/mp_drydock_lobby" );
-	AddMPMapToMenu( "mp_eden", "Eden", "Test", $"loadscreens/mp_eden_lobby" );
-	AddMPMapToMenu( "mp_thaw", "Exoplanet", "Test", $"loadscreens/mp_thaw_lobby" );
-	AddMPMapToMenu( "mp_forwardbase_kodai", "Forwardbase Kodai", "Test", $"loadscreens/mp_forwardbase_kodai_lobby" );
-	AddMPMapToMenu( "mp_homestead", "Homestead", "Test", $"loadscreens/mp_homestead_lobby" );
-	AddMPMapToMenu( "mp_colony02", "Colony", "Test", $"loadscreens/mp_colony02_lobby" );
-	AddMPMapToMenu( "mp_angel_city", "Angel City", "Test", $"loadscreens/mp_angle_city_r2_lobby" );
-	AddMPMapToMenu( "mp_glitch", "Glitch", "Test", $"loadscreens/mp_glitch_lobby" );
-	AddMPMapToMenu( "mp_relic02", "Relic", "Test", $"loadscreens/mp_relic02_lobby" );
-	AddMPMapToMenu( "mp_wargames", "War Games", "Test", $"loadscreens/mp_wargames_lobby" );
-	AddMPMapToMenu( "mp_rise", "Rise", "Test", $"loadscreens/mp_rise_lobby" );
-	AddMPMapToMenu( "mp_lf_stacks", "Livefire: Stacks", "Test", $"loadscreens/mp_stacks_lobby" );
-	AddMPMapToMenu( "mp_lf_meadow", "Livefire: Meadow", "Test", $"loadscreens/mp_meadow_lobby" );
-	AddMPMapToMenu( "mp_lf_township", "Livefire: Township", "Test", $"loadscreens/mp_lf_township_lobby" );
-	AddMPMapToMenu( "mp_lf_deck", "Livefire: Deck", "Test", $"loadscreens/mp_lf_deck_lobby" );
-	AddMPMapToMenu( "mp_lf_traffic", "Livefire: Traffic", "Test", $"loadscreens/mp_lf_traffic_lobby" );
-	AddMPMapToMenu( "mp_lf_uma", "Livefire: UMA", "Test", $"loadscreens/mp_lf_uma_lobby" );
-	AddMPMapToMenu( "mp_coliseum", "Coliseum", "Test", $"loadscreens/mp_coliseum_lobby" );
-	AddMPMapToMenu( "mp_coliseum_column", "Coliseum: Columns", "Test", $"loadscreens/mp_coliseum_column_lobby" );
+	AddMPMapToMenu( "mp_black_water_canal", "Black Water Canal", "An IMC fueling station nestled deep in the rocky canals of the planet Cibus.", $"loadscreens/mp_black_water_canal_lobby" );
+	AddMPMapToMenu( "mp_grave", "Boomtown", "An underground IMC Simulation Dome, one of many hidden throughout the Frontier.", $"loadscreens/mp_grave_lobby" );
+	AddMPMapToMenu( "mp_crashsite3", "Crash Site", "The wreckage of the MCS James MacAllan on the planet Typhon.", $"loadscreens/mp_crashsite3_lobby" );
+	AddMPMapToMenu( "mp_complex3", "Complex", "An IMC research complex on Typhon, used to test the effects of the Fold Weapon and the Ark.", $"loadscreens/mp_complex3_lobby" );
+	AddMPMapToMenu( "mp_drydock", "Drydock", "A drydock for spacefaring vessels controlled by the IMC.", $"loadscreens/mp_drydock_lobby" );
+	AddMPMapToMenu( "mp_eden", "Eden", "A dilapidated residential community for IMC employees, ravaged by years of fracking.", $"loadscreens/mp_eden_lobby" );
+	AddMPMapToMenu( "mp_thaw", "Exoplanet", "A biological research station on a remote Frontier planet.", $"loadscreens/mp_thaw_lobby" );
+	AddMPMapToMenu( "mp_forwardbase_kodai", "Forwardbase Kodai", "A facility overlooking one of Typhon's interstellar beacons.", $"loadscreens/mp_forwardbase_kodai_lobby" );
+	AddMPMapToMenu( "mp_homestead", "Homestead", "A farming colony occupied by the IMC.", $"loadscreens/mp_homestead_lobby" );
+	AddMPMapToMenu( "mp_colony02", "Colony", "A disputed town on the planet Troy, fought over by the Militia and IMC.", $"loadscreens/mp_colony02_lobby" );
+	AddMPMapToMenu( "mp_angel_city", "Angel City", "One of the largest human settlements in the Frontier. It is tightly controlled by the IMC.", $"loadscreens/mp_angle_city_r2_lobby" );
+	AddMPMapToMenu( "mp_glitch", "Glitch", "A VR simulation based on the planet Harmony.", $"loadscreens/mp_glitch_lobby" );
+	AddMPMapToMenu( "mp_relic02", "Relic", "The wreck of the IMS Odyssey, stripped for materials by it's former crew to build their new colony.", $"loadscreens/mp_relic02_lobby" );
+	AddMPMapToMenu( "mp_wargames", "War Games", "A VR simulation based on Angel City and Airbase Sierra, corrupted by heavy interference.", $"loadscreens/mp_wargames_lobby" );
+	AddMPMapToMenu( "mp_rise", "Rise", "A long range desert partol output setup in an abandoned IMC reservoir.", $"loadscreens/mp_rise_lobby" );
+	AddMPMapToMenu( "mp_lf_stacks", "Livefire: Stacks", "A combat simulation facility with many shipping containers and construction platforms.", $"loadscreens/mp_stacks_lobby" );
+	AddMPMapToMenu( "mp_lf_meadow", "Livefire: Meadow", "A rural combat simulation facility.", $"loadscreens/mp_meadow_lobby" );
+	AddMPMapToMenu( "mp_lf_township", "Livefire: Township", "A combat simulation facility focused on urban combat.", $"loadscreens/mp_lf_township_lobby" );
+	AddMPMapToMenu( "mp_lf_deck", "Livefire: Deck", "A combat simulation facility that specializes in urban and close quarters combat.", $"loadscreens/mp_lf_deck_lobby" );
+	AddMPMapToMenu( "mp_lf_traffic", "Livefire: Traffic", "A combat simulation facility with many vehicles for cover.", $"loadscreens/mp_lf_traffic_lobby" );
+	AddMPMapToMenu( "mp_lf_uma", "Livefire: UMA", "A combat simulation facility with tight corridors and small open spaces.", $"loadscreens/mp_lf_uma_lobby" );
+	AddMPMapToMenu( "mp_coliseum", "Coliseum", "A simulated arena where pilots compete to prove their combat skills.", $"loadscreens/mp_coliseum_lobby" );
+	AddMPMapToMenu( "mp_coliseum_column", "Pillars", "A simulated arena, with three vertical pillars, where pilots compete to prove their combat skills.", $"loadscreens/mp_coliseum_column_lobby" );
 
 	file.gridData.rows = 2
 	file.gridData.columns = 5
