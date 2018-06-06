@@ -178,114 +178,261 @@ void function Console_Command_GiveWeapon( array<string> args, string command )
 {
 	#if SERVER
 	entity player = GetPlayerByIndex( 0 );
-	string weaponName = args[0];
-	switch (weaponName)
+	string giveType = args.len() > 0 ? args[0] : "none";
+	string giveName = args.len() > 1 ? args[1] : "none";
+	array<string> giveMods;
+	for( int i = 2; i < args.len(); ++i )
 	{
+		giveMods.append( args[i] );
+	}
+
+	bool IsOffhand = giveType == "ability" || giveType == "grenade";
+
+	switch (giveName)
+	{
+		// Weapons
 		case "toolgun":
 		case "mozambique":
-			weaponName = "mp_weapon_shotgun_pistol";
+			giveName = "mp_weapon_shotgun_pistol";
+			giveType = "weapon";
 			break;
 		case "car":
-			weaponName = "mp_weapon_car";
+			giveName = "mp_weapon_car";
+			giveType = "weapon";
 			break;
 		case "re45":
-			weaponName = "mp_weapon_autopistol";
+			giveName = "mp_weapon_autopistol";
+			giveType = "weapon";
 			break;
 		case "charge_rifle":
-			weaponName = "mp_weapon_defender";
+			giveName = "mp_weapon_defender";
+			giveType = "weapon";
 			break;
 		case "longbow":
 		case "dmr":
-			weaponName = "mp_weapon_dmr";
+			giveName = "mp_weapon_dmr";
+			giveType = "weapon";
 			break;
 		case "doubletake":
-			weaponName = "mp_weapon_doubletake";
+			giveName = "mp_weapon_doubletake";
+			giveType = "weapon";
 			break;
 		case "epg":
-			weaponName = "mp_weapon_epg";
+			giveName = "mp_weapon_epg";
+			giveType = "weapon";
 			break;
 		case "devotion":
-			weaponName = "mp_weapon_esaw";
+			giveName = "mp_weapon_esaw";
+			giveType = "weapon";
 			break;
 		case "g2":
-			weaponName = "mp_weapon_g2";
+			giveName = "mp_weapon_g2";
+			giveType = "weapon";
 			break;
 		case "hemlok":
-			weaponName = "mp_weapon_hemlok";
+			giveName = "mp_weapon_hemlok";
+			giveType = "weapon";
 			break;
 		case "spitfire":
-			weaponName = "mp_weapon_lmg";
+			giveName = "mp_weapon_lmg";
+			giveType = "weapon";
 			break;
 		case "mastiff":
-			weaponName = "mp_weapon_mastiff";
+			giveName = "mp_weapon_mastiff";
+			giveType = "weapon";
 			break;
 		case "mgl":
-			weaponName = "mp_weapon_mgl";
+			giveName = "mp_weapon_mgl";
+			giveType = "weapon";
 			break;
 		case "r101":
-			weaponName = "mp_weapon_rspn101";
+			giveName = "mp_weapon_rspn101";
+			giveType = "weapon";
 			break;
 		case "r97":
-			weaponName = "mp_weapon_r97";
+			giveName = "mp_weapon_r97";
+			giveType = "weapon";
 			break;
 		case "lstar":
-			weaponName = "mp_weapon_lstar";
+			giveName = "mp_weapon_lstar";
+			giveType = "weapon";
 			break;
 		case "shotgun":
-			weaponName = "mp_weapon_shotgun";
+			giveName = "mp_weapon_shotgun";
+			giveType = "weapon";
 			break;
 		case "smart_pistol":
 		case "sp":
-			weaponName = "mp_weapon_smart_pistol";
+			giveName = "mp_weapon_smart_pistol";
+			giveType = "weapon";
 			break;
 		case "smr":
 		case "sidewinder":
-			weaponName = "mp_weapon_smr";
+			giveName = "mp_weapon_smr";
+			giveType = "weapon";
 			break;
 		case "sniper":
 		case "kraber":
-			weaponName = "mp_weapon_sniper";
+			giveName = "mp_weapon_sniper";
+			giveType = "weapon";
 			break;
 		case "softball":
-			weaponName = "mp_weapon_softball";
+			giveName = "mp_weapon_softball";
+			giveType = "weapon";
 			break;
 		case "flatline":
-			weaponName = "mp_weapon_vinson";
+			giveName = "mp_weapon_vinson";
+			giveType = "weapon";
 			break;
 		case "coldwar":
-			weaponName = "mp_weapon_pulse_lmg";
+			giveName = "mp_weapon_pulse_lmg";
+			giveType = "weapon";
 			break;
 		case "wingman":
-			weaponName = "mp_weapon_wingman";
+			giveName = "mp_weapon_wingman";
+			giveType = "weapon";
 			break;
 		case "pistol":
 		case "p2011":
-			weaponName = "mp_weapon_semipistol";
+			giveName = "mp_weapon_semipistol";
+			giveType = "weapon";
 			break;
 		case "archer":
-			weaponName = "mp_weapon_rocket_launcher";
+			giveName = "mp_weapon_rocket_launcher";
+			giveType = "weapon";
 			break;
 		case "alternator":
-			weaponName = "mp_weapon_alternator_smg";
+			giveName = "mp_weapon_alternator_smg";
+			giveType = "weapon";
 			break;
 		case "volt":
-			weaponName = "mp_weapon_hemlok_smg";
+			giveName = "mp_weapon_hemlok_smg";
+			giveType = "weapon";
+			break;
+
+		// Abilities
+		case "cloak":
+			giveName = "mp_ability_cloak";
+			giveType = IsOffhand ? giveType : "ability";
+			break;
+		case "grapple":
+			giveName = "mp_ability_grapple";
+			giveType = IsOffhand ? giveType : "ability";
+			break;
+		case "heal":
+		case "stim":
+			giveName = "mp_ability_heal";
+			giveType = IsOffhand ? giveType : "ability";
+			break;
+		case "holopilot":
+			giveName = "mp_ability_holopilot";
+			giveType = IsOffhand ? giveType : "ability";
+			break;
+		case "phase":
+		case "phaseshift":
+			giveName = "mp_ability_shifter";
+			giveType = IsOffhand ? giveType : "ability";
+			break;
+		case "phaseshiftsuper":
+			giveName = "mp_ability_shifter_super";
+			giveType = IsOffhand ? giveType : "ability";
+			break;
+		case "timeshift":
+			giveName = "mp_ability_timeshift";
+			giveType = IsOffhand ? giveType : "ability";
+			break;
+		case "arcblast":
+			giveName = "mp_ability_arc_blast";
+			giveType = IsOffhand ? giveType : "ability";
+			break;
+		case "sonar":
+		case "pulse":
+		case "pulseblade":
+			giveName = "mp_weapon_grenade_sonar";
+			giveType = IsOffhand ? giveType : "ability";
+			break;
+		case "cover":
+		case "deployablecover":
+			giveName = "mp_weapon_deployable_cover";
+			giveType = IsOffhand ? giveType : "grenade";
+			break;
+
+		// Grenades
+		case "grenade":
+		case "frag":
+		case "fraggrenade":
+			giveName = "mp_weapon_frag_grenade";
+			giveType = IsOffhand ? giveType : "grenade";
+			break;
+		case "firestar":
+			giveName = "mp_weapon_thermite_grenade";
+			giveType = IsOffhand ? giveType : "grenade";
+			break;
+		case "electricsmoke":
+		case "esmoke":
+			giveName = "mp_weapon_grenade_electric_smoke";
+			giveType = IsOffhand ? giveType : "grenade";
+			break;
+		case "empgrenade":
+		case "emp":
+		case "arc":
+		case "arcgrenade":
+			giveName = "mp_weapon_grenade_emp";
+			giveType = IsOffhand ? giveType : "grenade";
+			break;
+		case "gravity":
+		case "gravitystar":
+			giveName = "mp_weapon_grenade_gravity";
+			giveType = IsOffhand ? giveType : "grenade";
+			break;
+		case "satchel":
+		case "c4":
+			giveName = "mp_weapon_satchel";
+			giveType = IsOffhand ? giveType : "grenade";
+			break;
+
+		// Melee
+		case "melee_sword":
+			giveName = "melee_pilot_sword";
+			giveType = "melee";
+			break;
+		case "melee":
+			giveName = "melee_pilot_emptyhanded";
+			giveType = "melee";
 			break;
 	}
 
-	if( PlayerHasWeapon( player, weaponName ) )
+	if( giveType == "weapon" )
 	{
-		printc( "Player already has weapon, " + weaponName );
-		return;
+		player.TakeWeaponNow( player.GetActiveWeapon().GetWeaponClassName() );
+		player.GiveWeapon( giveName, giveMods );
+		player.SetActiveWeaponByName( giveName );
 	}
-	if( GetAllPrecachedSPWeapons().find( weaponName ) == -1 )
+	else if( giveType == "ability" )
 	{
-		printc( "Could not use weapon " + weaponName + " as it is not precached in this level." );
-		return;
+		entity weapon = player.GetOffhandWeapon( OFFHAND_SPECIAL );
+		player.TakeWeaponNow( weapon.GetWeaponClassName() );
+		player.GiveOffhandWeapon( giveName, OFFHAND_SPECIAL, giveMods );
 	}
-	player.TakeWeaponNow( player.GetActiveWeapon().GetWeaponClassName() );
-	player.GiveWeapon( weaponName );
-	player.SetActiveWeaponByName( weaponName );
+	else if( giveType == "grenade" )
+	{
+		entity weapon = player.GetOffhandWeapon( OFFHAND_ORDNANCE );
+		player.TakeWeaponNow( weapon.GetWeaponClassName() );
+		player.GiveOffhandWeapon( giveName, OFFHAND_ORDNANCE, giveMods );
+	}
+	else if( giveType == "melee" )
+	{
+		entity weapon = player.GetOffhandWeapon( OFFHAND_MELEE );
+		player.TakeWeaponNow( weapon.GetWeaponClassName() );
+		player.GiveOffhandWeapon( giveName, OFFHAND_MELEE, giveMods );
+	}
+	else
+	{
+		printt( "Could not give item to player, unsupported type!", giveName, giveType );
+	}
+
+	// weapon.SetWeaponSkin( storedWeapon.skinIndex )
+	// weapon.SetWeaponCamo( storedWeapon.camoIndex )
 	#endif
 }
 
