@@ -347,5 +347,9 @@ void function MP_AutoPrecache()
 	ClTitanStryder_Init( $"models/titans/light/titan_light_raptor.mdl" )
 	ClTitanStryder_Init( $"models/titans/light/titan_light_ronin_prime.mdl" )
 #endif
+
+#if CLIENT || SERVER
+	FlagSet( "FlightPath_TitanDrop" ) // Allows titanfall in level
+#endif
 }
 
