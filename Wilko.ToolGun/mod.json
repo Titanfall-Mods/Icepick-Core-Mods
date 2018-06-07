@@ -173,5 +173,11 @@
 			"Path": "gauntlet/ui_custom_gauntlet.nut",
 			"RunOn": "CLIENT"
 		},
+		{
+			"Path": "toolgun/sh_spawnmenu.nut",
+			"RunOn": "SERVER || CLIENT",
+			"ClientCallback" : "Spawnmenu_Init",
+			"ServerCallback": "Spawnmenu_Init"
+		},
 	],
 }
