@@ -1,5 +1,6 @@
 untyped
 global function Toolgun_Client_Init
+global function Toolgun_Client_SelectTool
 global function Toolgun_Client_ChangeTool
 global function Toolgun_Client_PrimaryAttack
 global function Toolgun_CanUseKeyboardInput
@@ -70,6 +71,18 @@ void function KeyPress_ToolgunNextMode( var button )
 void function KeyPress_ToolgunPrevMode( var button )
 {
 	Toolgun_Client_ChangeTool( -1 );
+}
+
+void function Toolgun_Client_SelectTool( string id )
+{
+	for( int i = 0; i < ToolGunTools.len(); ++i )
+	{
+		if( ToolGunTools[i].id == id )
+		{
+			Toolgun_Client_ChangeTool( i - ToolGunSettings.CurrentModeIdx );
+			break;
+		}
+	}
 }
 
 void function Toolgun_Client_ChangeTool( int Change )
