@@ -6,9 +6,7 @@ global function Spawnmenu_GiveAbility
 global function Spawnmenu_GiveGrenade
 global function Spawnmenu_GiveMelee
 global function Spawnmenu_SpawnModel
-
-
-global function Spawnmenu_SpawnGrunt
+global function Spawnmenu_SpawnNpc
 
 struct
 {
@@ -23,6 +21,7 @@ void function Spawnmenu_Init()
 	#endif
 	#if SERVER
 	AddClientCommandCallback( "Spawnmenu_PerformSpawnModel", ClientCommand_Spawnmenu_PerformSpawnModel );
+	AddClientCommandCallback( "Spawnmenu_PerformSpawnNpc", ClientCommand_Spawnmenu_PerformSpawnNpc );
 	#endif
 }
 
@@ -112,23 +111,6 @@ void function Spawnmenu_GiveMelee( string abilityId )
 #endif
 }
 
-void function Spawnmenu_SpawnGrunt( string gruntId )
-{
-#if SERVER
-	entity player = GetPlayerByIndex( 0 );
-	vector origin = player.EyePosition()
-	vector angles = player.EyeAngles()
-	vector forward = AnglesToForward( angles )
-	TraceResults result = TraceLine( origin, origin + forward * 2000, player )
-	angles.x = 0
-	angles.z = 0
-
-	int team = gruntId == "imc" ? TEAM_IMC : TEAM_MILITIA;
-	entity guy = CreateSoldier( team, result.endPos, angles )
-	DispatchSpawn( guy )
-#endif
-}
-
 void function Spawnmenu_SpawnModel( string modelName )
 {
 #if CLIENT
@@ -182,6 +164,108 @@ bool function ClientCommand_Spawnmenu_PerformSpawnModel( entity player, array<st
 
 	ToolgunData.SpawnedEntities.append( prop_dynamic );
 	DisableExternalSpawnMode();
+#endif
+	return true;
+}
+
+void function Spawnmenu_SpawnNpc( string npcId )
+{
+#if CLIENT
+	// HACK: bullshit way to get around issue where spawning from SDK code directly doesn't override precaching
+	GetLocalClientPlayer().ClientCommand( "Spawnmenu_PerformSpawnNpc \"" + npcId + "\"" );
+#endif
+}
+
+bool function ClientCommand_Spawnmenu_PerformSpawnNpc( entity player, array<string> args )
+{
+#if SERVER
+	entity player = GetPlayerByIndex( 0 );
+	vector origin = player.EyePosition();
+	vector angles = player.EyeAngles();
+	vector forward = AnglesToForward( angles );
+	TraceResults result = TraceLine( origin, origin + forward * 2000, player );
+	angles.x = 0;
+	angles.z = 0;
+
+	string npcId = args[0];
+	vector spawnPos = result.endPos;
+	vector spawnAng = angles;
+	int team = TEAM_IMC;
+
+	entity spawnNpc = null;
+	switch( npcId )
+	{
+		case "npc_soldier":
+			spawnNpc = CreateSoldier( team, spawnPos, spawnAng );
+			break;
+		case "npc_soldier_shotgun":
+			spawnNpc = CreateSoldier( team, spawnPos, spawnAng );
+			SetSpawnOption_Weapon( spawnNpc, "mp_weapon_shotgun" );
+			break;
+		case "npc_soldier_smg":
+			spawnNpc = CreateSoldier( team, spawnPos, spawnAng );
+			SetSpawnOption_Weapon( spawnNpc, "mp_weapon_car" );
+			break;
+		case "npc_soldier_sniper":
+			spawnNpc = CreateSoldier( team, spawnPos, spawnAng );
+			SetSpawnOption_Weapon( spawnNpc, "mp_weapon_dmr" );
+			break;
+		case "npc_spectre":
+			spawnNpc = CreateSpectre( team, spawnPos, spawnAng );
+			break;
+		case "npc_stalker":
+			spawnNpc = CreateStalker( team, spawnPos, spawnAng );
+			break;
+		case "npc_stalker_zombie":
+			spawnNpc = CreateZombieStalker( team, spawnPos, spawnAng );
+			break;
+		case "npc_stalker_zombie_mossy":
+			spawnNpc = CreateZombieStalkerMossy( team, spawnPos, spawnAng );
+			break;
+		case "npc_super_spectre":
+			spawnNpc = CreateSuperSpectre( team, spawnPos, spawnAng );
+			break;
+		case "npc_frag_drone":
+			spawnNpc = CreateFragDrone( team, spawnPos, spawnAng );
+			break;
+		case "npc_drone":
+			spawnNpc = CreateGenericDrone( team, spawnPos, spawnAng );
+			break;
+		case "npc_drone_rocket":
+			spawnNpc = CreateRocketDrone( team, spawnPos, spawnAng );
+			break;
+		case "npc_drone_shield":
+			spawnNpc = CreateShieldDrone( team, spawnPos, spawnAng );
+			break;
+		case "npc_drone_plasma":
+			spawnNpc = CreateRocketDrone( team, spawnPos, spawnAng );
+			SetSpawnOption_Weapon( spawnNpc, "mp_weapon_droneplasma" );
+			break;
+		case "npc_drone_worker":
+			spawnNpc = CreateWorkerDrone( team, spawnPos, spawnAng );
+			break;
+		case "npc_titan_bt":
+			spawnNpc = CreateNPCTitan( "titan_buddy", TEAM_MILITIA, spawnPos, spawnAng, [] );
+			SetSpawnOption_AISettings( spawnNpc, "npc_titan_buddy" );
+			break;
+		case "npc_titan_bt_spare":
+			spawnNpc = CreateNPCTitan( "titan_buddy", TEAM_MILITIA, spawnPos, spawnAng, [] );
+			SetSpawnOption_AISettings( spawnNpc, "npc_titan_buddy" );
+			break;
+		case "npc_titan_styder":
+			spawnNpc = CreateNPCTitan( "titan_stryder", team, spawnPos, spawnAng, [] );
+			SetSpawnOption_AISettings( spawnNpc, "npc_titan_stryder_rocketeer" );
+			break;
+		case "npc_titan_ogre":
+			spawnNpc = CreateNPCTitan( "titan_ogre", team, spawnPos, spawnAng, [] );
+			SetSpawnOption_AISettings( spawnNpc, "npc_titan_ogre" );
+			break;
+		case "npc_titan_atlas":
+			spawnNpc = CreateNPCTitan( "titan_atlas", team, spawnPos, spawnAng, [] );
+			SetSpawnOption_AISettings( spawnNpc, "npc_titan_atlas" );
+			break;
+	}
+	DispatchSpawn( spawnNpc );
 #endif
 	return true;
 }
