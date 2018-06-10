@@ -20,6 +20,7 @@ global function ServerRestartMission
 global function DisableFriendlyHighlight
 global function EnableFriendlyHighlight
 global function SP_PlayerLastSlideTime
+global function GetRandomHumanStartPoint
 
 //global function CodeCallback_Ping
 
@@ -61,6 +62,10 @@ void function GamemodeSp_Init()
 	RegisterSignal( "TitanSavesPlayer" )
 
 	FlagSet( "PilotBot" )
+	if( IsMultiplayerLevel() )
+	{
+		FlagSet( "TitanDeathPenalityDisabled")
+	}
 
 	AddSoulDeathCallback( SoulDeath_ReloadOnPetTitanDeath )
 	AddClientCommandCallback( "RestartMission", ClientCommand_RestartMission )
@@ -183,6 +188,14 @@ void function EntitiesDidLoad_SpGameState()
  ######   #######  ##    ## ##    ## ########  ######     ##
 
 \************************************************************************************************/
+entity function GetRandomHumanStartPoint()
+{
+	array<entity> StartPoints;
+	StartPoints.extend( GetEntArrayByClass_Expensive( "info_spawnpoint_human" ) );
+	StartPoints.extend( GetEntArrayByClass_Expensive( "info_spawnpoint_human_start" ) );
+	return StartPoints[RandomIntRange( 0, StartPoints.len() - 1 )];
+}
+
 void function SpPlayerConnecting( entity player )
 {
 	if ( GetPlayerArray().len() > 1 )
@@ -204,14 +217,7 @@ void function SpPlayerConnecting( entity player )
 	if( IsMultiplayerLevel )
 	{
 		// Pick random start points in multiplayer
-		array<entity> StartPoints;
-		if( !IsColiseum )
-		{
-			StartPoints.extend( GetEntArrayByClass_Expensive( "info_player_start" ) );
-		}
-		StartPoints.extend( GetEntArrayByClass_Expensive( "info_spawnpoint_human" ) );
-		StartPoints.extend( GetEntArrayByClass_Expensive( "info_spawnpoint_human_start" ) );
-		start = StartPoints[RandomIntRange( 0, StartPoints.len() - 1 )];
+		start = GetRandomHumanStartPoint();
 	}
 	else
 	{
@@ -233,7 +239,7 @@ void function GameStateSP_OnPlayerRespawn( entity player )
 {
 	UpdateSpDifficulty( player )
 	thread TrackPlayerLastSlideTime( player )
-
+	
 	if ( !IsTestMap() )
 	{
 		CheckPoint_ForcedSilent()
@@ -761,6 +767,12 @@ void function ServerRestartMission( entity player )
 	{
 		ServerCommand( "reload" )
 		return
+	}
+
+	if( GetMapName().find( "mp_" ) == 0 )
+	{
+		DoRespawnPlayer( player, GetRandomHumanStartPoint() );
+		return;
 	}
 
 	string mapName = GetMapName()

@@ -89,6 +89,11 @@ void function BaseGametypeEntitiesDidLoad()
 	TriggerHurtSetup()
 }
 
+bool function IsMultiplayerLevel()
+{
+	return file.isMultiplayerLevel;
+}
+
 function CreateTeamColorControlPoints()
 {
 	Assert( !( "fx_CP_color_enemy" in level ) )
@@ -1080,6 +1085,8 @@ function DoRespawnPlayer( entity player, entity spawnPoint )
 {
 	player.p.lastSpawnPoint = spawnPoint
 	player.RespawnPlayer( spawnPoint ) //This will send "OnRespawned" signal, killing the thread if started from PostDeathThread
+	UnMuteAll( player );
+	ScreenFadeFromBlack( player, 0.5, 0.0 );
 }
 
 function SetupPilotSpawnOnRematch( entity player )
