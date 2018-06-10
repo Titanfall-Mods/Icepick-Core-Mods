@@ -52,9 +52,26 @@ void function Spawnmenu_GiveWeapon( string weaponId )
 {
 #if SERVER
 	entity player = GetPlayerByIndex( 0 );
-	player.TakeWeaponNow( player.GetActiveWeapon().GetWeaponClassName() );
-	player.GiveWeapon( weaponId );
-	player.SetActiveWeaponByName( weaponId );
+	array<entity> weapons = player.GetMainWeapons()
+	string weaponToSwitch = player.GetLatestPrimaryWeapon().GetWeaponClassName()
+
+	if ( player.GetActiveWeapon() != player.GetAntiTitanWeapon() )
+	{
+		foreach ( weapon in weapons )
+		{
+			string weaponClassName = weapon.GetWeaponClassName()
+			if ( weaponClassName == weaponId )
+			{
+				weaponToSwitch = weaponClassName
+				break
+			}
+		}
+	}
+
+	player.TakeWeaponNow( weaponToSwitch )
+	player.GiveWeapon( weaponId )
+	player.SetActiveWeaponByName( weaponId )
+
 #endif
 }
 
@@ -73,10 +90,8 @@ void function Spawnmenu_GiveGrenade( string abilityId )
 #if SERVER
 	entity player = GetPlayerByIndex( 0 );
 	entity weapon = player.GetOffhandWeapon( OFFHAND_ORDNANCE );
-	printt("take", weapon.GetWeaponClassName());
 	if( weapon.GetWeaponClassName() != abilityId )
 	{
-		printt("take weapon >:(");
 		player.TakeWeaponNow( weapon.GetWeaponClassName() );
 		player.GiveOffhandWeapon( abilityId, OFFHAND_ORDNANCE );
 	}
