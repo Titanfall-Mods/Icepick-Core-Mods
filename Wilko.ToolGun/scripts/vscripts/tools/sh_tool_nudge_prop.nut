@@ -7,11 +7,16 @@ void function Toolgun_RegisterTool_NudgeProp()
 {
 	// Register convars
 	RegisterConVar( "nudge_distance", 1, "nudge_distance distance", "Set distance of the Nudge tool" );
+	AddOnToolOptionUpdateCallback( ToolNudgeProp_UpdateToolOption );
 
 	// Create the tool
 	ToolNudgeProp.id <- "nudge_prop";
 	ToolNudgeProp.NudgeDistances <- [ 1, 2, 5, 10 ];
 	ToolNudgeProp.NudgeDistanceIdx <- 0;
+
+	ToolNudgeProp.Options <- [
+		[ 2, "nudge_distance", "Distance", 5, 1, 100 ]
+	];
 
 	ToolNudgeProp.GetName <- function()
 	{
@@ -25,21 +30,7 @@ void function Toolgun_RegisterTool_NudgeProp()
 
 	ToolNudgeProp.GetHelp <- function()
 	{
-		return "Fire to nudge a prop in the opposite direction.\nTab to change nudge size.";
-	}
-
-	ToolNudgeProp.OnSelected <- function()
-	{
-		#if CLIENT
-		RegisterButtonPressedCallback( KEY_TAB, ToolNudgeProp_ToggleNudgeDistance );
-		#endif
-	}
-
-	ToolNudgeProp.OnDeselected <- function()
-	{
-		#if CLIENT
-		DeregisterButtonPressedCallback( KEY_TAB, ToolNudgeProp_ToggleNudgeDistance );
-		#endif
+		return "Fire to nudge a prop in the opposite direction.";
 	}
 
 	ToolNudgeProp.OnFire <- function()
@@ -71,21 +62,14 @@ void function Toolgun_RegisterTool_NudgeProp()
 
 	// Register the tool
 	ToolGunTools.append( ToolNudgeProp );
-
 }
 
-void function ToolNudgeProp_ToggleNudgeDistance( var button )
+void function ToolNudgeProp_UpdateToolOption( string id, var value )
 {
 #if CLIENT
-	ToolNudgeProp.NudgeDistanceIdx += 1;
-	if( ToolNudgeProp.NudgeDistanceIdx >= ToolNudgeProp.NudgeDistances.len() )
+	if( id == "nudge_distance" )
 	{
-		ToolNudgeProp.NudgeDistanceIdx = 0;
+		SetConVarValue( "nudge_distance", float(value) );
 	}
-
-	float NudgeDistance = float( ToolNudgeProp.NudgeDistances[ ToolNudgeProp.NudgeDistanceIdx ] );
-	SetConVarValue( "nudge_distance", NudgeDistance );
-
-	EmitSoundOnEntity( GetLocalClientPlayer(), "menu_click" );
 #endif
 }

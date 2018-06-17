@@ -18,10 +18,19 @@ void function Toolgun_RegisterTool_Stacker()
 {
 	// Register convars
 	RegisterConVar( "stacker_dir", 0, "stacker_dir direction", "Set direction of the Stacker tool" );
+	AddOnToolOptionUpdateCallback( ToolStackProp_UpdateToolOption );
 
 	// Create the tool
 	ToolStackProp.id <- "stack_prop";
 	ToolStackProp.StackDir <- StackDirection.Up;
+	ToolStackProp.Options <- [
+		[ 0, "stacker_up", "Up" ],
+		[ 0, "stacker_down", "Down" ],
+		[ 0, "stacker_left", "Left" ],
+		[ 0, "stacker_right", "Right" ],
+		[ 0, "stacker_forward", "Forward" ],
+		[ 0, "stacker_backward", "Backward" ],
+	];
 
 	ToolStackProp.GetName <- function()
 	{
@@ -92,10 +101,6 @@ void function Toolgun_RegisterTool_Stacker()
 
 	ToolStackProp.OnSelected <- function()
 	{
-	#if CLIENT
-		RegisterButtonPressedCallback( KEY_TAB, ToolStackProp_ToggleStackSurface );
-	#endif
-
 	#if SERVER
 		ToolStackProp.DirBeamTarget <- ToolStackProp.CreateBeamTarget();
 		ToolStackProp.DirBeam <- ToolStackProp.CreateGuideBeam();
@@ -104,10 +109,6 @@ void function Toolgun_RegisterTool_Stacker()
 
 	ToolStackProp.OnDeselected <- function()
 	{
-	#if CLIENT
-		DeregisterButtonPressedCallback( KEY_TAB, ToolStackProp_ToggleStackSurface );
-	#endif
-
 	#if SERVER
 		if( "DirBeam" in ToolStackProp )
 		{
@@ -274,16 +275,34 @@ void function Toolgun_RegisterTool_Stacker()
 	
 }
 
-void function ToolStackProp_ToggleStackSurface( var button )
+void function ToolStackProp_UpdateToolOption( string id, var value )
 {
 #if CLIENT
-	float NewStackDir = floor( GetConVarValue( "stacker_dir", 0 ) ) + 1;
-	if( NewStackDir >= StackDirection.MAX )
+	if( id.find( "stacker_" ) != null )
 	{
-		NewStackDir = 0;
+		var newDir = StackDirection.Up;
+		switch( id )
+		{
+			case "stacker_up":
+				newDir = StackDirection.Up;
+				break;
+			case "stacker_down":
+				newDir = StackDirection.Down;
+				break;
+			case "stacker_left":
+				newDir = StackDirection.Left;
+				break;
+			case "stacker_right":
+				newDir = StackDirection.Right;
+				break;
+			case "stacker_forward":
+				newDir = StackDirection.Forward;
+				break;
+			case "stacker_backward":
+				newDir = StackDirection.Backward;
+				break;
+		}
+		SetConVarValue( "stacker_dir", float( newDir ) );
 	}
-	SetConVarValue( "stacker_dir", NewStackDir );
-
-	EmitSoundOnEntity( GetLocalClientPlayer(), "menu_click" );
 #endif
 }

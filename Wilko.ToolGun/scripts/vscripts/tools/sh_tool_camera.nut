@@ -47,6 +47,7 @@ void function Toolgun_RegisterTool_CameraPlacer()
 #if SERVER
 	AddClientCommandCallback( "CameraTool_ViewCamera", ClientCommand_CameraTool_ViewCamera );
 #endif
+	AddOnToolOptionUpdateCallback( ToolCameraPlacer_UpdateToolOption );
 
 	// Register camera input
 #if CLIENT
@@ -67,6 +68,13 @@ void function Toolgun_RegisterTool_CameraPlacer()
 	ToolCamera.CameraModel <- $"models/humans/pilots/pilot_light_ged_m_head_gib.mdl";
 	ToolCamera.IsEquipped <- false;
 	ToolCamera.IsViewing <- -1;
+
+	ToolCamera.Options <- [
+		[ 0, "camera_type_static", "Static Camera" ],
+		[ 0, "camera_type_tracking", "Tracking Camera" ],
+		[ -1, "camera_divider", "" ],
+		[ 2, "camera_id", "Camera", 0, 0, 9 ]
+	];
 
 	ToolCamera.GetName <- function()
 	{
@@ -104,19 +112,11 @@ void function Toolgun_RegisterTool_CameraPlacer()
 	#if SERVER
 		PrecacheModel( ToolCamera.CameraModel );
 	#endif
-
-	#if CLIENT
-		RegisterButtonPressedCallback( KEY_TAB, ToolCameraPlacer_ToggleCameraType );
-	#endif
 	}
 
 	ToolCamera.OnDeselected <- function()
 	{
 		ToolCamera.IsEquipped <- false;
-
-	#if CLIENT
-		DeregisterButtonPressedCallback( KEY_TAB, ToolCameraPlacer_ToggleCameraType );
-	#endif
 	}
 
 	ToolCamera.OnFire <- function()
@@ -181,28 +181,11 @@ void function Toolgun_RegisterTool_CameraPlacer()
 }
 
 #if CLIENT
-void function ToolCameraPlacer_ToggleCameraType( var button )
-{
-	float NewCameraType = floor( GetConVarValue( "camera_type", 0 ) ) + 1;
-	if( NewCameraType >= ToolCameraType.MAX )
-	{
-		NewCameraType = 0;
-	}
-	SetConVarValue( "camera_type", NewCameraType );
-
-	EmitSoundOnEntity( GetLocalClientPlayer(), "menu_click" );
-}
-
 void function ToolCameraPlacer_NumpadInput( int id )
 {
 	if( Toolgun_CanUseKeyboardInput() )
 	{
-		if( Toolgun_IsHoldingToolgun() && ToolCamera.IsEquipped )
-		{
-			// Camera tool is equipped, so set the camera id
-			SetConVarValue( "camera_id", id.tofloat() );
-		}
-		else
+		if( !(Toolgun_IsHoldingToolgun() && ToolCamera.IsEquipped) )
 		{
 			// Camera tool is not equipped, so set view to the camera
 			ToolCameraPlacer_ToggleCamera( id );
@@ -220,8 +203,25 @@ void function ToolCameraPlacer_SetCameraID_6( var button ){ ToolCameraPlacer_Num
 void function ToolCameraPlacer_SetCameraID_7( var button ){ ToolCameraPlacer_NumpadInput( 7 ); }
 void function ToolCameraPlacer_SetCameraID_8( var button ){ ToolCameraPlacer_NumpadInput( 8 ); }
 void function ToolCameraPlacer_SetCameraID_9( var button ){ ToolCameraPlacer_NumpadInput( 9 ); }
-
 #endif
+
+void function ToolCameraPlacer_UpdateToolOption( string id, var value )
+{
+#if CLIENT
+	if( id == "camera_type_static" )
+	{
+		SetConVarValue( "camera_type", float( ToolCameraType.Static ) );
+	}
+	if( id == "camera_type_tracking" )
+	{
+		SetConVarValue( "camera_type", float( ToolCameraType.Tracking ) );
+	}
+	if( id == "camera_id" )
+	{
+		SetConVarValue( "camera_id", float( value ) );
+	}
+#endif
+}
 
 #if SERVER
 bool function ClientCommand_CameraTool_ViewCamera( entity player, array<string> args )

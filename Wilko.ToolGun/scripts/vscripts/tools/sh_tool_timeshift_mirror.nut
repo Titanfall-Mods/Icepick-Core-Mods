@@ -12,6 +12,10 @@ void function Toolgun_RegisterTool_TimeshiftMirror()
 	// Create the tool
 	ToolMirrorProp.id <- "mirror_prop";
 
+	ToolMirrorProp.Options <- [
+		[ 3, "help", "This tool only functions in Effect and Cause." ]
+	];
+
 	ToolMirrorProp.GetName <- function()
 	{
 		return "Timeshift Prop";

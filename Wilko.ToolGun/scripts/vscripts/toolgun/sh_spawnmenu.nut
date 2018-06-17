@@ -1,4 +1,5 @@
 
+
 global function Spawnmenu_Init
 global function Spawnmenu_SelectTool
 global function Spawnmenu_GiveWeapon
@@ -8,11 +9,14 @@ global function Spawnmenu_GiveMelee
 global function Spawnmenu_SpawnModel
 global function Spawnmenu_SpawnNpc
 
+global function AddOnToolOptionUpdateCallback
+global function Spawnmenu_UpdateToolOption
+
 struct
 {
 	bool isSpawnMenuOpen
+	array<void functionref(string id, var value)> onToolOptionChangedCallbacks
 } file
-
 
 void function Spawnmenu_Init()
 {
@@ -244,4 +248,18 @@ void function Spawnmenu_SpawnNpc( string npcId )
 	}
 	DispatchSpawn( spawnNpc );
 #endif
+}
+
+void function AddOnToolOptionUpdateCallback( void functionref(string id, var value) callbackFunc )
+{
+	Assert( !file.onToolOptionChangedCallbacks.contains( callbackFunc ), "Already added " + string( callbackFunc ) + " with AddOnToolOptionUpdateCallback" );
+	file.onToolOptionChangedCallbacks.append( callbackFunc );
+}
+
+void function Spawnmenu_UpdateToolOption( string id, var value )
+{
+	foreach ( callbackFunc in file.onToolOptionChangedCallbacks )
+	{
+		callbackFunc( id, value );
+	}
 }
