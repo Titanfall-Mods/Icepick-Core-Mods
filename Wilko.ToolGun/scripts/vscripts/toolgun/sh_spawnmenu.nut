@@ -8,8 +8,6 @@ global function Spawnmenu_GiveMelee
 global function Spawnmenu_SpawnModel
 global function Spawnmenu_SpawnNpc
 
-global function Spawnmenu_SpawnModel_Broke
-
 struct
 {
 	bool isSpawnMenuOpen
@@ -20,10 +18,6 @@ void function Spawnmenu_Init()
 {
 	#if CLIENT
 	RegisterButtonPressedCallback( KEY_F1, Spawnmenu_ToggleOpen );
-	#endif
-	#if SERVER
-	AddClientCommandCallback( "Spawnmenu_PerformSpawnModel", ClientCommand_Spawnmenu_PerformSpawnModel );
-	AddClientCommandCallback( "Spawnmenu_PerformSpawnNpc", ClientCommand_Spawnmenu_PerformSpawnNpc );
 	#endif
 }
 
@@ -115,16 +109,7 @@ void function Spawnmenu_GiveMelee( string abilityId )
 
 void function Spawnmenu_SpawnModel( string modelName )
 {
-#if CLIENT
-	// HACK: bullshit way to get around issue where spawning from SDK code directly doesn't override precaching
-	GetLocalClientPlayer().ClientCommand( "Spawnmenu_PerformSpawnModel \"" + modelName + "\"" );
-#endif
-}
-
-bool function ClientCommand_Spawnmenu_PerformSpawnModel( entity player, array<string> args )
-{
 #if SERVER
-	string modelName = args[0];
 	asset spawnAsset = $"";
 	// HACK: Awful, slow way to find asset
 	foreach( a in CurrentLevelSpawnList )
@@ -138,7 +123,7 @@ bool function ClientCommand_Spawnmenu_PerformSpawnModel( entity player, array<st
 
 	if( spawnAsset == $"" )
 	{
-		return false;
+		return;
 	}
 
 	entity player = GetPlayerByIndex( 0 );
@@ -167,18 +152,9 @@ bool function ClientCommand_Spawnmenu_PerformSpawnModel( entity player, array<st
 	ToolgunData.SpawnedEntities.append( prop_dynamic );
 	DisableExternalSpawnMode();
 #endif
-	return true;
 }
 
 void function Spawnmenu_SpawnNpc( string npcId )
-{
-#if CLIENT
-	// HACK: bullshit way to get around issue where spawning from SDK code directly doesn't override precaching
-	GetLocalClientPlayer().ClientCommand( "Spawnmenu_PerformSpawnNpc \"" + npcId + "\"" );
-#endif
-}
-
-bool function ClientCommand_Spawnmenu_PerformSpawnNpc( entity player, array<string> args )
 {
 #if SERVER
 	entity player = GetPlayerByIndex( 0 );
@@ -189,7 +165,6 @@ bool function ClientCommand_Spawnmenu_PerformSpawnNpc( entity player, array<stri
 	angles.x = 0;
 	angles.z = 0;
 
-	string npcId = args[0];
 	vector spawnPos = result.endPos;
 	vector spawnAng = angles;
 	int team = TEAM_IMC;
@@ -268,53 +243,5 @@ bool function ClientCommand_Spawnmenu_PerformSpawnNpc( entity player, array<stri
 			break;
 	}
 	DispatchSpawn( spawnNpc );
-#endif
-	return true;
-}
-
-void function Spawnmenu_SpawnModel_Broke( string modelName )
-{
-#if SERVER
-	asset spawnAsset = $"";
-	// HACK: Awful, slow way to find asset
-	foreach( a in CurrentLevelSpawnList )
-	{
-		string assetName = "" + a;
-		if( assetName.find( modelName ) != null )
-		{
-			spawnAsset = a;
-		}
-	}
-
-	if( spawnAsset == $"" )
-	{
-		return;
-	}
-
-	entity player = GetPlayerByIndex( 0 );
-	vector origin = player.EyePosition();
-	vector angles = player.EyeAngles();
-	vector forward = AnglesToForward( angles );
-	TraceResults traceResults = TraceLine( origin, angles + forward * 10000, player, TRACE_MASK_PLAYERSOLID | TRACE_MASK_TITANSOLID | TRACE_MASK_NPCWORLDSTATIC | TRACE_MASK_SHOT, TRACE_COLLISION_GROUP_NONE );
-
-	vector Pos = traceResults.endPos;
-	vector Ang = Vector( 0, player.EyeAngles().y, 0 );
-	
-	EnableExternalSpawnMode();
-
-	entity prop_dynamic = CreateEntity( "prop_dynamic" );
-	prop_dynamic.SetValueForModelKey( spawnAsset );
-	prop_dynamic.kv.fadedist = -1;
-	prop_dynamic.kv.renderamt = 255;
-	prop_dynamic.kv.rendercolor = "255 255 255";
-	prop_dynamic.kv.solid = 6; // 0 = no collision, 2 = bounding box, 6 = use vPhysics, 8 = hitboxes only
-	SetTeam( prop_dynamic, TEAM_BOTH );	// need to have a team other then 0 or it won't take impact damage
-
-	prop_dynamic.SetOrigin( Pos );
-	prop_dynamic.SetAngles( Ang );
-	DispatchSpawn( prop_dynamic );
-
-	ToolgunData.SpawnedEntities.append( prop_dynamic );
-	DisableExternalSpawnMode();
 #endif
 }
