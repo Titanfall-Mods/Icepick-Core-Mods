@@ -31,11 +31,11 @@ void function Spawnmenu_ToggleOpen( var button )
 	file.isSpawnMenuOpen = !file.isSpawnMenuOpen;
 	if( file.isSpawnMenuOpen )
 	{
-		ShowCursor();
+		GetLocalClientPlayer().ClientCommand( "show_icepick_menu");
 	}
 	else
 	{
-		HideCursor();
+		GetLocalClientPlayer().ClientCommand( "hide_icepick_menu" );
 	}
 }
 #endif
