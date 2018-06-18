@@ -5,7 +5,8 @@ global function Toolgun_IsHoldingToolgun
 
 global struct ToolgunDataStruct {
 	array<entity> SpawnedEntities,
-	float LastSpawnTime
+	float LastSpawnTime,
+	bool HasRegisteredToolgunTools
 }
 
 global ToolgunDataStruct ToolgunData
@@ -23,6 +24,8 @@ struct {
 
 void function Toolgun_Server_Init()
 {
+	AddSpawnCallback( "player", ToolgunSv_OnPlayerSpawned );
+
 	AddClientCommandCallback( "Toolgun_ToggleEnabled", ClientCommand_Toolgun_ToggleEnabled )
 	AddClientCommandCallback( "Toolgun_SetMode", ClientCommand_Toolgun_SetMode )
 	AddClientCommandCallback( "Toolgun_PrimaryAttack", ClientCommand_Toolgun_PrimaryAttack )
@@ -52,6 +55,36 @@ void function Toolgun_Server_Init()
 	// Test_RemoveTriggers( "trigger_hurt" )
 	// Test_RemoveTriggers( "trigger_out_of_bounds" )
 	// Test_RemoveTriggers( "trigger_level_transition" )
+}
+
+void function ToolgunSv_OnPlayerSpawned( entity player )
+{
+	if( ToolgunData.HasRegisteredToolgunTools )
+	{
+		return;
+	}
+
+	for( int i = 0; i < ToolGunTools.len(); ++i )
+	{
+		var tool = ToolGunTools[i];
+
+		// Register each tool
+		var name = tool.GetName();
+		if( "GetRawName" in tool )
+		{
+			name = tool.GetRawName();
+		}
+		RegisterTool( tool.id, name, tool.GetHelp() );
+
+		// Register tool options
+		if( "RegisterOptions" in tool )
+		{
+			tool.RegisterOptions();
+		}
+	}
+
+	// Only register tools once
+	ToolgunData.HasRegisteredToolgunTools = true;
 }
 
 void function Test_RemoveTriggers( string classname )

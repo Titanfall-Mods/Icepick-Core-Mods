@@ -1,5 +1,4 @@
 
-
 global function Spawnmenu_Init
 global function Spawnmenu_SelectTool
 global function Spawnmenu_GiveWeapon
@@ -31,7 +30,7 @@ void function Spawnmenu_ToggleOpen( var button )
 	file.isSpawnMenuOpen = !file.isSpawnMenuOpen;
 	if( file.isSpawnMenuOpen )
 	{
-		GetLocalClientPlayer().ClientCommand( "show_icepick_menu");
+		GetLocalClientPlayer().ClientCommand( "show_icepick_menu" );
 	}
 	else
 	{

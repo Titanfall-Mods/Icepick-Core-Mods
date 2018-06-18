@@ -179,5 +179,17 @@
 			"ClientCallback" : "Spawnmenu_Init",
 			"ServerCallback": "Spawnmenu_Init"
 		},
+		{
+			"Path": "toolgun/sh_spawnmenu_entities.nut",
+			"RunOn": "SERVER || CLIENT",
+			"ClientCallback" : "Spawnmenu_Init_Entities",
+			"ServerCallback": "Spawnmenu_Init_Entities"
+		},
+		{
+			"Path": "toolgun/sh_spawnmenu_weapons.nut",
+			"RunOn": "SERVER || CLIENT",
+			"ClientCallback" : "Spawnmenu_Init_Weapons",
+			"ServerCallback": "Spawnmenu_Init_Weapons"
+		},
 	],
 }

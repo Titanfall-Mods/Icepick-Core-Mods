@@ -69,12 +69,15 @@ void function Toolgun_RegisterTool_CameraPlacer()
 	ToolCamera.IsEquipped <- false;
 	ToolCamera.IsViewing <- -1;
 
-	ToolCamera.Options <- [
-		[ 0, "camera_type_static", "Static Camera" ],
-		[ 0, "camera_type_tracking", "Tracking Camera" ],
-		[ -1, "camera_divider", "" ],
-		[ 2, "camera_id", "Camera", 0, 0, 9 ]
-	];
+	ToolCamera.RegisterOptions <- function()
+	{
+		#if SERVER
+		AddButtonOption( "camera", "camera_type_static", "Static Camera" );
+		AddButtonOption( "camera", "camera_type_tracking", "Tracking Camera" );
+		AddDividerOption( "camera" );
+		AddIntSliderOption( "camera", "camera_id", "Camera", 0, 0, 9 );
+		#endif
+	}
 
 	ToolCamera.GetName <- function()
 	{

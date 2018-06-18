@@ -23,14 +23,18 @@ void function Toolgun_RegisterTool_Stacker()
 	// Create the tool
 	ToolStackProp.id <- "stack_prop";
 	ToolStackProp.StackDir <- StackDirection.Up;
-	ToolStackProp.Options <- [
-		[ 0, "stacker_up", "Up" ],
-		[ 0, "stacker_down", "Down" ],
-		[ 0, "stacker_left", "Left" ],
-		[ 0, "stacker_right", "Right" ],
-		[ 0, "stacker_forward", "Forward" ],
-		[ 0, "stacker_backward", "Backward" ],
-	];
+	
+	ToolStackProp.RegisterOptions <- function()
+	{
+		#if SERVER
+		AddButtonOption( "stack_prop", "stacker_up", "Up" );
+		AddButtonOption( "stack_prop", "stacker_down", "Down" );
+		AddButtonOption( "stack_prop", "stacker_left", "Left" );
+		AddButtonOption( "stack_prop", "stacker_right", "Right" );
+		AddButtonOption( "stack_prop", "stacker_forward", "Forward" );
+		AddButtonOption( "stack_prop", "stacker_backward", "Backward" );
+		#endif
+	}
 
 	ToolStackProp.GetName <- function()
 	{

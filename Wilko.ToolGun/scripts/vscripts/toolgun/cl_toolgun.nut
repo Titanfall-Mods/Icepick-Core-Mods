@@ -13,12 +13,9 @@ global struct ToolgunGrabStruct {
 };
 
 global ToolgunGrabStruct ToolgunGrab;
-global bool HasRegisteredToolgunTools;
 
 void function Toolgun_Client_Init()
 {
-	AddCallback_LocalViewPlayerSpawned( OnLocalViewPlayerSpawned );
-
 	RegisterButtonPressedCallback( KEY_HOME, KeyPress_ToolgunToggleEnabled );
 
 	RegisterButtonPressedCallback( KEY_PAD_MINUS, KeyPress_ToolgunPrevMode );
@@ -43,54 +40,6 @@ void function Toolgun_Client_Init()
 	RegisterButtonPressedCallback( KEY_PAD_7, KeyPress_ToolgunRotate_RollLeft );
 	RegisterButtonPressedCallback( KEY_PAD_9, KeyPress_ToolgunRotate_RollRight );
 	RegisterButtonPressedCallback( KEY_PAD_5, KeyPress_ToolgunRotate_Reset );
-}
-
-void function OnLocalViewPlayerSpawned( entity player )
-{
-	if( !HasRegisteredToolgunTools )
-	{
-		// Register all tools in the spawn menu
-		for( int i = 0; i < ToolGunTools.len(); ++i )
-		{
-			// RegiserTool( toolId, name, tooltip )
-			var tool = ToolGunTools[i];
-			var name = tool.GetName();
-			if( "GetRawName" in tool )
-			{
-				name = tool.GetRawName();
-			}
-			string command = "register_tool " + tool.id + " \"" + name + "\" \"" + tool.GetHelp() + "\"";
-			player.ClientCommand( command );
-
-			if( "Options" in tool )
-			{
-				for( int k = 0; k < tool.Options.len(); ++k )
-				{
-					// RegisterToolOption( toolId, optionId, name, type )
-					var option = tool.Options[k];
-					string optionCommand = "register_option " + tool.id + " " + option[1] + " \"" + option[2] + "\" " + option[0];
-					player.ClientCommand( optionCommand );
-
-					// Set default value
-					if( option.len() > 4 )
-					{
-						var type = IsNumber( option[3] ) ? 0 : 1;
-						optionCommand = "option_set_default " + tool.id + " " + option[1] + " " + option[3] + " " + type;
-						player.ClientCommand( optionCommand );
-					}
-
-					// Set min-max values
-					if( option.len() > 5 )
-					{
-						optionCommand = "option_set_minmax " + tool.id + " " + option[1] + " " + option[4] + " " + option[5];
-						player.ClientCommand( optionCommand );
-					}
-				}
-			}
-		}
-
-		HasRegisteredToolgunTools = true;
-	}
 }
 
 bool function Toolgun_CanUseKeyboardInput()

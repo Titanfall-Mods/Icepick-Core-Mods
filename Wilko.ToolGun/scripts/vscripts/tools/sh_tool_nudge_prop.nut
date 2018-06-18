@@ -13,10 +13,13 @@ void function Toolgun_RegisterTool_NudgeProp()
 	ToolNudgeProp.id <- "nudge_prop";
 	ToolNudgeProp.NudgeDistances <- [ 1, 2, 5, 10 ];
 	ToolNudgeProp.NudgeDistanceIdx <- 0;
-
-	ToolNudgeProp.Options <- [
-		[ 2, "nudge_distance", "Distance", 5, 1, 100 ]
-	];
+	
+	ToolNudgeProp.RegisterOptions <- function()
+	{
+		#if SERVER
+		AddIntSliderOption( "nudge_prop", "nudge_distance", "Distance", 5, 1, 100 );
+		#endif
+	}
 
 	ToolNudgeProp.GetName <- function()
 	{
