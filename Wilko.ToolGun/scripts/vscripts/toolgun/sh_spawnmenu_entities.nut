@@ -3,7 +3,7 @@ global function Spawnmenu_Init_Entities
 
 void function Spawnmenu_Init_Entities()
 {
-	#if SERVER
+	#if CLIENT
 	RegisterSpawnmenuPage( "entities", "Entities" );
 
 	RegisterPageCategory( "entities", "npcs_humans", "Humans", "Spawnmenu_SpawnNpc" );

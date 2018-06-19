@@ -45,6 +45,8 @@ void function ToolgunSv_OnPlayerSpawned( entity player )
 		return;
 	}
 
+	ClearTools(); // Clear tools from previous session
+
 	for( int i = 0; i < ToolGunTools.len(); ++i )
 	{
 		var tool = ToolGunTools[i];

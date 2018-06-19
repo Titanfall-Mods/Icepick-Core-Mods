@@ -5,11 +5,18 @@ global function Spawnmenu_GiveWeapon
 global function Spawnmenu_GiveAbility
 global function Spawnmenu_GiveGrenade
 global function Spawnmenu_GiveMelee
+global function Spawnmenu_GiveTitanDefensive
+global function Spawnmenu_GiveTitanTactical
+global function Spawnmenu_GiveTitanCore
+global function Spawnmenu_GiveTitanAntirodeo
 global function Spawnmenu_SpawnModel
 global function Spawnmenu_SpawnNpc
 
 global function AddOnToolOptionUpdateCallback
 global function Spawnmenu_UpdateToolOption
+
+// OFFHAND_EQUIPMENT = titan core
+// OFFHAND_ANTIRODEO = electric smoke
 
 struct
 {
@@ -20,7 +27,10 @@ struct
 void function Spawnmenu_Init()
 {
 	#if CLIENT
+	ClearSpawnmenu(); // Clear spawnmenu items from previous session
+
 	RegisterButtonPressedCallback( KEY_F1, Spawnmenu_ToggleOpen );
+	RegisterButtonPressedCallback( KEY_F2, Spawnmenu_ToggleOpen );
 	#endif
 }
 
@@ -107,6 +117,46 @@ void function Spawnmenu_GiveMelee( string abilityId )
 	entity weapon = player.GetOffhandWeapon( OFFHAND_MELEE );
 	player.TakeWeaponNow( weapon.GetWeaponClassName() );
 	player.GiveOffhandWeapon( abilityId, OFFHAND_MELEE );
+#endif
+}
+
+void function Spawnmenu_GiveTitanDefensive( string abilityId )
+{
+#if SERVER
+	entity player = GetPlayerByIndex( 0 );
+	entity weapon = player.GetOffhandWeapon( OFFHAND_LEFT );
+	player.TakeWeaponNow( weapon.GetWeaponClassName() );
+	player.GiveOffhandWeapon( abilityId, OFFHAND_LEFT );
+#endif
+}
+
+void function Spawnmenu_GiveTitanTactical( string abilityId )
+{
+#if SERVER
+	entity player = GetPlayerByIndex( 0 );
+	entity weapon = player.GetOffhandWeapon( OFFHAND_RIGHT );
+	player.TakeWeaponNow( weapon.GetWeaponClassName() );
+	player.GiveOffhandWeapon( abilityId, OFFHAND_RIGHT );
+#endif
+}
+
+void function Spawnmenu_GiveTitanCore( string abilityId )
+{
+#if SERVER
+	entity player = GetPlayerByIndex( 0 );
+	entity weapon = player.GetOffhandWeapon( OFFHAND_EQUIPMENT );
+	player.TakeWeaponNow( weapon.GetWeaponClassName() );
+	player.GiveOffhandWeapon( abilityId, OFFHAND_EQUIPMENT );
+#endif
+}
+
+void function Spawnmenu_GiveTitanAntirodeo( string abilityId )
+{
+#if SERVER
+	entity player = GetPlayerByIndex( 0 );
+	entity weapon = player.GetOffhandWeapon( OFFHAND_ANTIRODEO );
+	player.TakeWeaponNow( weapon.GetWeaponClassName() );
+	player.GiveOffhandWeapon( abilityId, OFFHAND_ANTIRODEO );
 #endif
 }
 
