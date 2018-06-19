@@ -36,25 +36,6 @@ void function Toolgun_Server_Init()
 	AddClientCommandCallback( "Toolgun_Grab_PerformRotation", ClientCommand_Toolgun_Grab_PerformRotation )
 	AddClientCommandCallback( "Toolgun_ChangeModel", ClientCommand_Toolgun_ChangeModel )
 	AddClientCommandCallback( "Toolgun_UndoSpawn", ClientCommand_Toolgun_UndoSpawn )
-
-	// Test_RemoveTriggers( "trigger_cylinder" )
-	// Test_RemoveTriggers( "trigger_multiple" )
-	// Test_RemoveTriggers( "trigger_once" )
-	// Test_RemoveTriggers( "trigger_flag_set" )
-	// Test_RemoveTriggers( "trigger_flag_clear" )
-	// Test_RemoveTriggers( "trigger_flag_touching" )
-	// Test_RemoveTriggers( "trigger_movetarget" )
-	// Test_RemoveTriggers( "trigger_checkpoint" )
-	// Test_RemoveTriggers( "trigger_checkpoint_silent" )
-	// Test_RemoveTriggers( "trigger_checkpoint_safe" )
-	// Test_RemoveTriggers( "trigger_checkpoint_forced" )
-	// Test_RemoveTriggers( "trigger_checkpoint_to_safe_spots" )
-	// Test_RemoveTriggers( "trigger_teleporter" )
-	// Test_RemoveTriggers( "trigger_quickdeath_checkpoint" )
-	// Test_RemoveTriggers( "trigger_quickdeath" )
-	// Test_RemoveTriggers( "trigger_hurt" )
-	// Test_RemoveTriggers( "trigger_out_of_bounds" )
-	// Test_RemoveTriggers( "trigger_level_transition" )
 }
 
 void function ToolgunSv_OnPlayerSpawned( entity player )
@@ -85,15 +66,6 @@ void function ToolgunSv_OnPlayerSpawned( entity player )
 
 	// Only register tools once
 	ToolgunData.HasRegisteredToolgunTools = true;
-}
-
-void function Test_RemoveTriggers( string classname )
-{
-	array<entity> triggers = GetEntArrayByClass_Expensive( classname )
-	foreach ( trigger in triggers )
-	{
-		trigger.Destroy()
-	}
 }
 
 bool function Toolgun_IsHoldingToolgun()
