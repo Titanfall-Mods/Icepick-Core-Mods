@@ -11,6 +11,7 @@ global function Spawnmenu_GiveTitanCore
 global function Spawnmenu_GiveTitanAntirodeo
 global function Spawnmenu_SpawnModel
 global function Spawnmenu_SpawnNpc
+global function Spawnmenu_SaveGame
 
 global function AddOnToolOptionUpdateCallback
 global function Spawnmenu_UpdateToolOption
@@ -29,8 +30,7 @@ void function Spawnmenu_Init()
 	#if CLIENT
 	ClearSpawnmenu(); // Clear spawnmenu items from previous session
 
-	RegisterButtonPressedCallback( KEY_F1, Spawnmenu_ToggleOpen );
-	RegisterButtonPressedCallback( KEY_F2, Spawnmenu_ToggleOpen );
+	RegisterButtonPressedCallback( KEY_TAB, Spawnmenu_ToggleOpen );
 	#endif
 }
 
@@ -296,6 +296,14 @@ void function Spawnmenu_SpawnNpc( string npcId )
 			break;
 	}
 	DispatchSpawn( spawnNpc );
+#endif
+}
+
+void function Spawnmenu_SaveGame()
+{
+#if SERVER
+	// Save the game using the inbuilt checkpoint system so that we can come back to things later
+	CheckPoint_Forced();
 #endif
 }
 
