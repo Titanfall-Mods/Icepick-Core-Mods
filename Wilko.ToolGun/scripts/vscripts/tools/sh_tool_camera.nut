@@ -105,7 +105,7 @@ void function Toolgun_RegisterTool_CameraPlacer()
 
 	ToolCamera.GetHelp <- function()
 	{
-		return "Fire to place a camera that you can look through.\nUse numpad to select camera ID.\nTab to change camera type.";
+		return "Fire to place a camera that you can look through.\nPress numpad while not using the toolgun to view the camera.";
 	}
 
 	ToolCamera.OnSelected <- function()

@@ -1,4 +1,6 @@
+
 untyped
+
 global function Toolgun_UI_Init
 global function Toolgun_IsHoldingToolgun
 
@@ -7,22 +9,9 @@ array<var> grabModeRuis = [];
 var ruiToolgunMode = null;
 var ruiToolgunHelp = null;
 
-struct
-{
-	int ChangingTool = 0,
-	int ChangeToolDir = 0
-} ToolgunUISettings;
-
-struct ToolNameRui
-{
-	var Rui,
-	vector Position
-}
-
 struct 
 {
-	var ToolgunTitle,
-	array<ToolNameRui> ToolNames = []
+	var ToolgunTitle
 } ToolgunUIRuis;
 
 void function Toolgun_UI_Init()
@@ -35,33 +24,8 @@ void function Toolgun_UI_DelayedInit()
 	// Wait a single frame at the start so that all tools for the toolgun can be created and added by extensions
 	WaitFrame();
 
-	RegisterButtonPressedCallback( KEY_TAB, ToolgunUI_KeyPressed_ToggleToolUI );
-	RegisterButtonReleasedCallback( KEY_TAB, ToolgunUI_KeyReleased_ToggleToolUI );
-	RegisterButtonPressedCallback( KEY_W, ToolgunUI_KeyPressed_NextTool );
-	RegisterButtonPressedCallback( KEY_S, ToolgunUI_KeyPressed_PrevTool );
-
 	var rui;
 
-	// Tool select ui
-	for ( int i = 0; i < ToolGunTools.len(); i++ )
-	{
-		vector Pos = <0.0, 0.0 + 0.05 * i, 0.0>;
-		var rui = RuiCreate( $"ui/cockpit_console_text_center.rpak", clGlobal.topoFullScreen, RUI_DRAW_HUD, 10000 )
-		RuiSetInt( rui, "maxLines", 1 )
-		RuiSetInt( rui, "lineNum", 1 )
-		RuiSetFloat2( rui, "msgPos", Pos )
-		RuiSetString( rui, "msgText", ToolGunTools[i].GetName() )
-		RuiSetFloat( rui, "msgFontSize", 36.0 )
-		RuiSetFloat( rui, "msgAlpha", 0.9 )
-		RuiSetFloat( rui, "thicken", 0.0 )
-		RuiSetFloat3( rui, "msgColor", <1.0, 1.0, 1.0> )
-
-		ToolNameRui NewToolName;
-		NewToolName.Rui = rui;
-		NewToolName.Position = Pos;
-		ToolgunUIRuis.ToolNames.append( NewToolName );
-	}
-	
 	// Current tool ui
 	rui = RuiCreate( $"ui/cockpit_console_text_top_left.rpak", clGlobal.topoCockpitHudPermanent, RUI_DRAW_COCKPIT, 0 )
 	RuiSetInt( rui, "maxLines", 1 )
@@ -261,7 +225,6 @@ void function ToolgunUI_Think()
 		{
 			if( ToolgunModeEnabled )
 			{
-				ToolgunUI_Think_UpdateActive();
 				RuiSetString( ToolgunUIRuis.ToolgunTitle, "msgText", "Toolgun" );
 				RuiSetFloat( ToolgunUIRuis.ToolgunTitle, "msgFontSize", 48.0 );
 				RuiSetFloat( ToolgunUIRuis.ToolgunTitle, "msgAlpha", 0.9 );
@@ -282,83 +245,9 @@ void function ToolgunUI_Think()
 	}
 }
 
-void function ToolgunUI_Think_UpdateActive()
-{
-	for ( int i = 0; i < ToolgunUIRuis.ToolNames.len(); i++ )
-	{
-		ToolNameRui ToolRui = ToolgunUIRuis.ToolNames[i];
-		ToolRui.Position = VectorStepTowards( ToolRui.Position, <0.0, 0.0 + 0.05 * (i - ToolGunSettings.CurrentModeIdx), 0.0>, 1.0 * FrameTime() );
-		float Alpha = 0.9 - clamp( abs(ToolGunSettings.CurrentModeIdx - i), 0, 5) * 0.1;
-		float FontSize = 36 - clamp( abs(ToolGunSettings.CurrentModeIdx - i), 0, 5) * 2;
-		var Name = ToolGunTools[i].GetName();
-		if( "GetRawName" in ToolGunTools[i] )
-		{
-			Name = ToolGunTools[i].GetRawName();
-		}
-
-		RuiSetFloat( ToolRui.Rui, "msgAlpha", (ToolgunUISettings.ChangingTool > 0) ? Alpha : 0.0 )
-		RuiSetFloat3( ToolRui.Rui, "msgColor", (ToolGunSettings.CurrentModeIdx == i) ? <1.0, 1.0, 0.0> : <1.0, 1.0, 1.0> )
-		RuiSetFloat2( ToolRui.Rui, "msgPos", ToolRui.Position )
-		RuiSetFloat( ToolRui.Rui, "msgFontSize", FontSize )
-		if( i == ToolGunSettings.CurrentModeIdx + 1 )
-		{
-			RuiSetString( ToolRui.Rui, "msgText", "[S] " + Name )
-		}
-		else if( i == ToolGunSettings.CurrentModeIdx - 1 )
-		{
-			RuiSetString( ToolRui.Rui, "msgText", "[W] " + Name )
-		}
-		else
-		{
-			RuiSetString( ToolRui.Rui, "msgText", Name )
-		}
-	}
-
-	if( ToolgunUISettings.ChangingTool > 0 && ToolgunUISettings.ChangeToolDir != 0 )
-	{
-		Toolgun_Client_ChangeTool( ToolgunUISettings.ChangeToolDir );
-		ToolgunUISettings.ChangeToolDir = 0;
-	}
-}
-
 void function ToolgunUI_Think_HideUi()
 {
 	RuiSetFloat( ToolgunUIRuis.ToolgunTitle, "msgAlpha", 0.0 );
 	RuiSetFloat( ruiToolgunMode, "msgAlpha", 0.0 );
 	RuiSetFloat( ruiToolgunHelp, "msgAlpha", 0.0 );
-
-	// Hide selection UI
-	for ( int i = 0; i < ToolgunUIRuis.ToolNames.len(); i++ )
-	{
-		ToolNameRui ToolRui = ToolgunUIRuis.ToolNames[i];
-		RuiSetFloat( ToolRui.Rui, "msgAlpha", 0.0 )
-	}
-}
-
-// -----------------------------------------------------------------------------
-
-void function ToolgunUI_KeyPressed_ToggleToolUI( var button )
-{
-	ToolgunUISettings.ChangingTool++;
-}
-
-void function ToolgunUI_KeyReleased_ToggleToolUI( var button )
-{
-	ToolgunUISettings.ChangingTool--;
-}
-
-void function ToolgunUI_KeyPressed_NextTool( var button )
-{
-	if( ToolgunUISettings.ChangingTool > 0 )
-	{
-		ToolgunUISettings.ChangeToolDir = -1
-	}
-}
-
-void function ToolgunUI_KeyPressed_PrevTool( var button )
-{
-	if( ToolgunUISettings.ChangingTool > 0 )
-	{
-		ToolgunUISettings.ChangeToolDir = 1
-	}
 }

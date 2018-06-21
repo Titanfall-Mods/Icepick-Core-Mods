@@ -72,7 +72,7 @@ void function Toolgun_RegisterTool_Stacker()
 
 	ToolStackProp.GetHelp <- function()
 	{
-		return "Fire to duplicate a prop on its surface.\nTab to change stack direction.";
+		return "Fire to duplicate a prop on its surface.";
 	}
 
 	ToolStackProp.CreateBeamTarget <- function()
