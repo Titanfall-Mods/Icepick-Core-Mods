@@ -44,7 +44,7 @@ void function Toolgun_Client_Init()
 
 bool function Toolgun_CanUseKeyboardInput()
 {
-	return (!ConsoleSettings.IsInputting && !ModelPickerSettings.IsInputting);
+	return (!ConsoleSettings.IsInputting);
 }
 
 bool function Toolgun_Client_PrimaryAttack( entity player )
