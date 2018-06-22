@@ -13,6 +13,9 @@ global function Spawnmenu_SpawnModel
 global function Spawnmenu_SpawnNpc
 global function Spawnmenu_SaveGame
 
+global function Spawnmenu_ToggleEditMode
+global function AddOnEditModeChangedCallback
+
 global function AddOnToolOptionUpdateCallback
 global function Spawnmenu_UpdateToolOption
 
@@ -23,6 +26,7 @@ struct
 {
 	bool isSpawnMenuOpen
 	array<void functionref(string id, var value)> onToolOptionChangedCallbacks
+	array<void functionref()> onToolEditModeChangedCallbacks
 } file
 
 void function Spawnmenu_Init()
@@ -297,6 +301,24 @@ void function Spawnmenu_SpawnNpc( string npcId )
 	}
 	DispatchSpawn( spawnNpc );
 #endif
+}
+
+void function Spawnmenu_ToggleEditMode()
+{
+#if CLIENT
+	Toolgun_Client_ToggleEditMode();
+
+	foreach ( callbackFunc in file.onToolEditModeChangedCallbacks )
+	{
+		callbackFunc();
+	}
+#endif
+}
+
+void function AddOnEditModeChangedCallback( void functionref() callbackFunc )
+{
+	Assert( !file.onToolEditModeChangedCallbacks.contains( callbackFunc ), "Already added " + string( callbackFunc ) + " with AddOnEditModeChangedCallback" );
+	file.onToolEditModeChangedCallbacks.append( callbackFunc );
 }
 
 void function Spawnmenu_SaveGame()

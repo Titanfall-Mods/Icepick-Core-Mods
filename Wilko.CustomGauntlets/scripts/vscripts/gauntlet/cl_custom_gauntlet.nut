@@ -17,7 +17,7 @@ global GauntletRuntimeDataStruct GauntletRuntimeData;
 
 void function CustomGauntlet_Client_Init()
 {
-	RegisterButtonPressedCallback( KEY_HOME, KeyPress_CustomGauntlet_ToggleEditMode );
+	AddOnEditModeChangedCallback( OnToolgunEditModeChanged );
 
 	thread CustomGauntlet_Think_Topology();
 }
@@ -117,4 +117,11 @@ void function ServerCallback_CustomGauntlet_Finish( float TotalTime, float BestT
 void function CustomGauntlet_OnEnemyKilled( entity player, int oldValue, int newValue, bool actuallyChanged )
 {
 	thread CustomGauntlet_DoGauntletSplash( "killed enemy" );
+}
+
+void function OnToolgunEditModeChanged()
+{
+	CustomGauntletsGlobal.EditModeActive = ToolgunModeEnabled;
+	string ActiveStr = CustomGauntletsGlobal.EditModeActive ? "1" : "0";
+	GetLocalClientPlayer().ClientCommand( "CustomGauntlet_SetEditMode " + ActiveStr );
 }

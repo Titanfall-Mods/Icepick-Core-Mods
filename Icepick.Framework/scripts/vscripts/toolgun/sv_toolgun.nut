@@ -115,6 +115,17 @@ void function Toolgun_Utils_FireToolTracer( entity player )
 bool function ClientCommand_Toolgun_ToggleEnabled( entity player, array<string> args )
 {
 	ToolgunModeEnabled = args[0] == "1";
+
+	// Set edit mode in the SDK so we can toggle it using a menu item
+	if( ToolgunModeEnabled )
+	{
+		EnableEditMode();
+	}
+	else
+	{
+		DisableEditMode();
+	}
+
 	return true;
 }
 

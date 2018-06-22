@@ -4,6 +4,7 @@ global function Toolgun_Client_SelectTool
 global function Toolgun_Client_ChangeTool
 global function Toolgun_Client_PrimaryAttack
 global function Toolgun_CanUseKeyboardInput
+global function Toolgun_Client_ToggleEditMode
 
 global struct ToolgunGrabStruct {
 	entity GrabbedEntity,
@@ -57,6 +58,11 @@ bool function Toolgun_Client_PrimaryAttack( entity player )
 }
 
 void function KeyPress_ToolgunToggleEnabled( var button )
+{
+	Toolgun_Client_ToggleEditMode();
+}
+
+void function Toolgun_Client_ToggleEditMode()
 {
 	ToolgunModeEnabled = !ToolgunModeEnabled;
 	GetLocalClientPlayer().ClientCommand( "Toolgun_ToggleEnabled " + (ToolgunModeEnabled ? 1 : 0) );
