@@ -3,6 +3,16 @@ global function CustomGauntlet_Server_Init
 const float GAUNTLET_ENEMY_MISSED_TIME_PENALTY = 2.0;
 const float GAUNTLET_TARGET_DISSOLVE_TIME = 1.0 * 100;
 
+global enum GauntletTriggerEntity
+{
+	StartLine,
+	FinishLine,
+	Target,
+	Leaderboard,
+	Stats,
+	MAX
+}
+
 struct 
 {
 	float StartTime,
@@ -36,11 +46,11 @@ void function CustomGauntlet_Server_Think()
 void function CustomGauntlet_Server_Think_EditMode()
 {
 	// Update all trigger helper positions
-	CustomGauntlet_UpdateTriggerLineSavedPosition( CustomGauntletsGlobal.DevelopmentTrack.StartLine, GauntletTriggerPlacement.StartLine, "0 140 255" );
-	CustomGauntlet_UpdateTriggerLineSavedPosition( CustomGauntletsGlobal.DevelopmentTrack.FinishLine, GauntletTriggerPlacement.FinishLine, "255 180 0" );
+	CustomGauntlet_UpdateTriggerLineSavedPosition( CustomGauntletsGlobal.DevelopmentTrack.StartLine, GauntletTriggerEntity.StartLine, "0 140 255" );
+	CustomGauntlet_UpdateTriggerLineSavedPosition( CustomGauntletsGlobal.DevelopmentTrack.FinishLine, GauntletTriggerEntity.FinishLine, "255 180 0" );
 	for( int i = CustomGauntletsGlobal.DevelopmentTrack.Checkpoints.len() - 1; i >= 0; --i )
 	{
-		CustomGauntlet_UpdateTriggerLineSavedPosition( CustomGauntletsGlobal.DevelopmentTrack.Checkpoints[i], GauntletTriggerPlacement.Checkpoint, "190 230 160" );
+		CustomGauntlet_UpdateTriggerLineSavedPosition( CustomGauntletsGlobal.DevelopmentTrack.Checkpoints[i], GauntletTriggerEntity.Checkpoint, "190 230 160" );
 	}
 
 	// Check if any trigger helper entities were removed
@@ -104,15 +114,15 @@ void function CustomGauntlet_UpdateTriggerLineSavedPosition( GauntletTriggerLine
 			CreateBeamHelper( TriggerLine.BeamHelper, BeamColorString, TriggerLine.FromEnt, TriggerLine.ToEnt );
 			switch( TriggerType )
 			{
-				case GauntletTriggerPlacement.StartLine:
+				case GauntletTriggerEntity.StartLine:
 					TriggerLine.BeamHelper.Laser.ConnectOutput( "OnTouchedByEntity", CustomGauntlet_StartLine_OnTouchedByEntity );
 					TriggerLine.BeamHelper.Laser2.ConnectOutput( "OnTouchedByEntity", CustomGauntlet_StartLine_OnTouchedByEntity );
 					break;
-				case GauntletTriggerPlacement.FinishLine:
+				case GauntletTriggerEntity.FinishLine:
 					TriggerLine.BeamHelper.Laser.ConnectOutput( "OnTouchedByEntity", CustomGauntlet_FinishLine_OnTouchedByEntity );
 					TriggerLine.BeamHelper.Laser2.ConnectOutput( "OnTouchedByEntity", CustomGauntlet_FinishLine_OnTouchedByEntity );
 					break;
-				case GauntletTriggerPlacement.Checkpoint:
+				case GauntletTriggerEntity.Checkpoint:
 					TriggerLine.BeamHelper.Laser.ConnectOutput( "OnTouchedByEntity", CustomGauntlet_Checkpoint_OnTouchedByEntity );
 					TriggerLine.BeamHelper.Laser2.ConnectOutput( "OnTouchedByEntity", CustomGauntlet_Checkpoint_OnTouchedByEntity );
 					break;

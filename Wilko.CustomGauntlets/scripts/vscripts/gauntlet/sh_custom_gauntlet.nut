@@ -1,3 +1,4 @@
+
 global function CustomGauntlet_Shared_Init
 global function CustomGauntlet_HasTriggerLine
 global function CustomGauntlet_HasTriggerLineEntities
@@ -10,6 +11,8 @@ global function CustomGauntlet_HasStatsBoards
 global function CustomGauntlet_FindParentTrack
 global function CustomGauntlet_IsEntPartOfTrack
 global function CustomGauntlet_IsEntPartOfGauntletTriggerLine
+global function ToolGauntlet_CreateTriggerEntity
+global function ToolGauntlet_DelayedTransmit
 
 global struct GauntletTriggerLine
 {
@@ -231,4 +234,33 @@ bool function CustomGauntlet_IsEntPartOfGauntletTriggerLine( GauntletTriggerLine
 		return true;
 
 	return false;
+}
+
+entity function ToolGauntlet_CreateTriggerEntity( vector Pos, vector Angles, float Offset )
+{
+#if SERVER
+	entity prop_dynamic = CreateEntity( "prop_dynamic" );
+	prop_dynamic.SetValueForModelKey( $"models/weapons/titan_trip_wire/titan_trip_wire.mdl" );
+	prop_dynamic.kv.fadedist = -1;
+	prop_dynamic.kv.renderamt = 255;
+	prop_dynamic.kv.rendercolor = "255 255 255";
+	prop_dynamic.kv.solid = 6; // 0 = no collision, 2 = bounding box, 6 = use vPhysics, 8 = hitboxes only
+	SetTeam( prop_dynamic, TEAM_BOTH );	// need to have a team other then 0 or it won't take impact damage
+
+	prop_dynamic.SetOrigin( Pos - AnglesToRight( Angles ) * Offset );
+	prop_dynamic.SetAngles( Angles );
+	DispatchSpawn( prop_dynamic );
+	return prop_dynamic;
+#endif
+#if CLIENT
+	return null;
+#endif
+}
+
+void function ToolGauntlet_DelayedTransmit( string CallbackFuncName, entity Ent )
+{
+#if SERVER
+	WaitFrame(); // Wait one frame to transmit to client or else the entity is not valid yet
+	Remote_CallFunction_NonReplay( GetPlayerByIndex( 0 ), CallbackFuncName, Ent.GetEncodedEHandle() );
+#endif
 }

@@ -1,0 +1,77 @@
+{
+	"Name" : "Custom Gauntlets",
+	"Description" : "Allows you to make and race custom gauntlets!",
+	"Authors" : [
+		"James Wilkinson"
+	],
+	"Contacts" : [
+		"titanfall@jameswilko.com"
+	],
+	"Version" : "1.0",
+	"CustomScripts": [
+		{
+			"Path": "gauntlet/sh_custom_gauntlet.nut",
+			"RunOn": "SERVER || CLIENT",
+			"ClientCallback": "CustomGauntlet_Shared_Init",
+			"ServerCallback": "CustomGauntlet_Shared_Init"
+		},
+		{
+			"Path": "gauntlet/sv_custom_gauntlet.nut",
+			"RunOn": "SERVER"
+		},
+		{
+			"Path": "gauntlet/cl_custom_gauntlet.nut",
+			"RunOn": "CLIENT"
+		},
+		{
+			"Path": "gauntlet/cl_custom_gauntlet_topology.nut",
+			"RunOn": "CLIENT"
+		},
+		{
+			"Path": "gauntlet/cl_custom_gauntlet_statboards.nut",
+			"RunOn": "CLIENT"
+		},
+		{
+			"Path": "gauntlet/cl_custom_gauntlet_speedometer.nut",
+			"RunOn": "CLIENT"
+		},
+		{
+			"Path": "gauntlet/cl_custom_gauntlet_leaderboard.nut",
+			"RunOn": "CLIENT"
+		},
+		{
+			"Path": "gauntlet/ui_custom_gauntlet.nut",
+			"RunOn": "CLIENT"
+		},
+		{
+			"Path": "gauntlet/tools/sh_tool_gauntlet_start_line.nut",
+			"RunOn": "SERVER || CLIENT",
+			"ClientCallback": "Toolgun_RegisterTool_GauntletPlaceStart",
+			"ServerCallback": "Toolgun_RegisterTool_GauntletPlaceStart"
+		},
+		{
+			"Path": "gauntlet/tools/sh_tool_gauntlet_finish_line.nut",
+			"RunOn": "SERVER || CLIENT",
+			"ClientCallback": "Toolgun_RegisterTool_GauntletPlaceFinish",
+			"ServerCallback": "Toolgun_RegisterTool_GauntletPlaceFinish"
+		},
+		{
+			"Path": "gauntlet/tools/sh_tool_gauntlet_target.nut",
+			"RunOn": "SERVER || CLIENT",
+			"ClientCallback": "Toolgun_RegisterTool_GauntletPlaceTarget",
+			"ServerCallback": "Toolgun_RegisterTool_GauntletPlaceTarget"
+		},
+		{
+			"Path": "gauntlet/tools/sh_tool_gauntlet_stats_board.nut",
+			"RunOn": "SERVER || CLIENT",
+			"ClientCallback": "Toolgun_RegisterTool_GauntletPlaceStats",
+			"ServerCallback": "Toolgun_RegisterTool_GauntletPlaceStats"
+		},
+		{
+			"Path": "gauntlet/tools/sh_tool_gauntlet_leaderboard.nut",
+			"RunOn": "SERVER || CLIENT",
+			"ClientCallback": "Toolgun_RegisterTool_GauntletPlaceLeaderboard",
+			"ServerCallback": "Toolgun_RegisterTool_GauntletPlaceLeaderboard"
+		},
+	],
+}

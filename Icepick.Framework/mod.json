@@ -124,46 +124,6 @@
 			"RunOn": "SERVER || CLIENT"
 		},
 		{
-			"Path": "gauntlet/sh_custom_gauntlet.nut",
-			"RunOn": "SERVER || CLIENT",
-			"ClientCallback": "CustomGauntlet_Shared_Init",
-			"ServerCallback": "CustomGauntlet_Shared_Init"
-		},
-		{
-			"Path": "gauntlet/tools/sh_tool_place_gauntlet_trigger.nut",
-			"RunOn": "SERVER || CLIENT",
-			"ClientCallback": "Toolgun_RegisterTool_GauntletPlaceTrigger",
-			"ServerCallback": "Toolgun_RegisterTool_GauntletPlaceTrigger"
-		},
-		{
-			"Path": "gauntlet/sv_custom_gauntlet.nut",
-			"RunOn": "SERVER"
-		},
-		{
-			"Path": "gauntlet/cl_custom_gauntlet.nut",
-			"RunOn": "CLIENT"
-		},
-		{
-			"Path": "gauntlet/cl_custom_gauntlet_topology.nut",
-			"RunOn": "CLIENT"
-		},
-		{
-			"Path": "gauntlet/cl_custom_gauntlet_statboards.nut",
-			"RunOn": "CLIENT"
-		},
-		{
-			"Path": "gauntlet/cl_custom_gauntlet_speedometer.nut",
-			"RunOn": "CLIENT"
-		},
-		{
-			"Path": "gauntlet/cl_custom_gauntlet_leaderboard.nut",
-			"RunOn": "CLIENT"
-		},
-		{
-			"Path": "gauntlet/ui_custom_gauntlet.nut",
-			"RunOn": "CLIENT"
-		},
-		{
 			"Path": "toolgun/sh_spawnmenu.nut",
 			"RunOn": "SERVER || CLIENT",
 			"ClientCallback" : "Spawnmenu_Init",
