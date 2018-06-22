@@ -742,6 +742,13 @@ PilotLoadoutDef function GetPilotLoadoutForCurrentMapSP()
 
 	}
 
+	// Automatically give toolgun in multiplayer levels, do this afterwards in case people mess with the default loadout
+	if( IsMultiplayerLevel() )
+	{
+		pilotLoadout.secondary = pilotLoadout.primary
+		pilotLoadout.primary = "mp_weapon_shotgun_pistol"
+	}
+
 	return pilotLoadout
 }
 
