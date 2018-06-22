@@ -97,14 +97,20 @@ void function ServerCallback_CustomGauntlet_Start()
 
 void function ServerCallback_CustomGauntlet_Finish( float TotalTime, float BestTime, int TotalNumTargets, int NumTargetsMissed, float MissedTargetsPenalty )
 {
-	thread CustomGauntlet_DoGauntletSplash( "#GAUNTLET_FINISH_TEXT" );
-	thread CustomGauntlet_UI_EndOfRun( TotalTime, BestTime, MissedTargetsPenalty );
+	if( TotalTime > 0 )
+	{
+		thread CustomGauntlet_DoGauntletSplash( "#GAUNTLET_FINISH_TEXT" );
+		thread CustomGauntlet_UI_EndOfRun( TotalTime, BestTime, MissedTargetsPenalty );
 
-	int NumKilledTargets = TotalNumTargets - NumTargetsMissed;
-	CustomGauntlet_UpdateStatBoards( GauntletRuntimeData.ActiveTrack, true, TotalTime, BestTime, MissedTargetsPenalty, TotalNumTargets, NumKilledTargets );
-	CustomGauntlet_RandomizeStatBoardTips( GauntletRuntimeData.ActiveTrack );
-	CustomGauntlet_AddLeaderboardTime( GauntletRuntimeData.ActiveTrack, TotalTime, GetLocalClientPlayer().GetPlayerName() );
-
+		int NumKilledTargets = TotalNumTargets - NumTargetsMissed;
+		CustomGauntlet_UpdateStatBoards( GauntletRuntimeData.ActiveTrack, true, TotalTime, BestTime, MissedTargetsPenalty, TotalNumTargets, NumKilledTargets );
+		CustomGauntlet_RandomizeStatBoardTips( GauntletRuntimeData.ActiveTrack );
+		CustomGauntlet_AddLeaderboardTime( GauntletRuntimeData.ActiveTrack, TotalTime, GetLocalClientPlayer().GetPlayerName() );
+	}
+	else
+	{
+		CustomGauntlet_UI_RemovePlayerHud();
+	}
 	GauntletRuntimeData.IsActive = false;
 }
 

@@ -1,6 +1,7 @@
 global function CustomGauntlet_UI_Init
 global function CustomGauntlet_UI_CreatePlayerHud
 global function CustomGauntlet_UI_EndOfRun
+global function CustomGauntlet_UI_RemovePlayerHud
 global function CustomGauntlet_DoGauntletSplash
 
 global struct CustomGauntletsUIStruct

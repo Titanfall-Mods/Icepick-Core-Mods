@@ -146,6 +146,7 @@ bool function ClientCommand_CustomGauntlet_SetEditMode( entity player, array<str
 	{
 		entity player = GetPlayerByIndex( 0 );
 		EmitSoundOnEntityOnlyToPlayer( player, player, "training_scr_gaunlet_abort" );
+		Remote_CallFunction_Replay( player, "ServerCallback_CustomGauntlet_Finish", -1, -1, 0, 0, 0 );
 	}
 	CustomGauntlet_Server_Reset();
 	return true;
