@@ -746,7 +746,9 @@ PilotLoadoutDef function GetPilotLoadoutForCurrentMapSP()
 	if( IsMultiplayerLevel() )
 	{
 		pilotLoadout.secondary = pilotLoadout.primary
+		pilotLoadout.secondaryMods = pilotLoadout.primaryMods
 		pilotLoadout.primary = "mp_weapon_shotgun_pistol"
+		pilotLoadout.primaryMods = []
 	}
 
 	return pilotLoadout
