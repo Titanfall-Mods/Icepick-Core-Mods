@@ -7,20 +7,17 @@ global function Spawnmenu_GiveGrenade
 global function Spawnmenu_GiveMelee
 global function Spawnmenu_GiveTitanDefensive
 global function Spawnmenu_GiveTitanTactical
-global function Spawnmenu_GiveTitanCore
-global function Spawnmenu_GiveTitanAntirodeo
+global function Spawnmenu_GiveCore
 global function Spawnmenu_SpawnModel
 global function Spawnmenu_SpawnNpc
 global function Spawnmenu_SaveGame
+global function Spawnmenu_SaveGameToFile
 
 global function Spawnmenu_ToggleEditMode
 global function AddOnEditModeChangedCallback
 
 global function AddOnToolOptionUpdateCallback
 global function Spawnmenu_UpdateToolOption
-
-// OFFHAND_EQUIPMENT = titan core
-// OFFHAND_ANTIRODEO = electric smoke
 
 struct
 {
@@ -128,9 +125,9 @@ void function Spawnmenu_GiveTitanDefensive( string abilityId )
 {
 #if SERVER
 	entity player = GetPlayerByIndex( 0 );
-	entity weapon = player.GetOffhandWeapon( OFFHAND_LEFT );
+	entity weapon = player.GetOffhandWeapon( OFFHAND_SPECIAL );
 	player.TakeWeaponNow( weapon.GetWeaponClassName() );
-	player.GiveOffhandWeapon( abilityId, OFFHAND_LEFT );
+	player.GiveOffhandWeapon( abilityId, OFFHAND_SPECIAL );
 #endif
 }
 
@@ -138,29 +135,36 @@ void function Spawnmenu_GiveTitanTactical( string abilityId )
 {
 #if SERVER
 	entity player = GetPlayerByIndex( 0 );
-	entity weapon = player.GetOffhandWeapon( OFFHAND_RIGHT );
+	entity weapon = player.GetOffhandWeapon( OFFHAND_TITAN_CENTER );
 	player.TakeWeaponNow( weapon.GetWeaponClassName() );
-	player.GiveOffhandWeapon( abilityId, OFFHAND_RIGHT );
+	player.GiveOffhandWeapon( abilityId, OFFHAND_TITAN_CENTER );
 #endif
 }
 
-void function Spawnmenu_GiveTitanCore( string abilityId )
+void function Spawnmenu_GiveCore( string abilityId )
 {
+	printt("Spawnmenu_GiveCore!", abilityId)
 #if SERVER
 	entity player = GetPlayerByIndex( 0 );
-	entity weapon = player.GetOffhandWeapon( OFFHAND_EQUIPMENT );
-	player.TakeWeaponNow( weapon.GetWeaponClassName() );
-	player.GiveOffhandWeapon( abilityId, OFFHAND_EQUIPMENT );
-#endif
-}
+	entity titan =  player.GetPetTitan();
 
-void function Spawnmenu_GiveTitanAntirodeo( string abilityId )
-{
-#if SERVER
-	entity player = GetPlayerByIndex( 0 );
-	entity weapon = player.GetOffhandWeapon( OFFHAND_ANTIRODEO );
-	player.TakeWeaponNow( weapon.GetWeaponClassName() );
-	player.GiveOffhandWeapon( abilityId, OFFHAND_ANTIRODEO );
+	if( abilityId == "recharge" )
+	{
+		// recharge titan core
+		entity soul = titan.GetTitanSoul();
+		SoulTitanCore_SetNextAvailableTime( soul, 0.0 );
+
+		printt("RECHARGE CORE");
+		return;
+	}
+
+	entity weapon = titan.GetOffhandWeapon( OFFHAND_EQUIPMENT );
+	titan.TakeWeaponNow( weapon.GetWeaponClassName() );
+	titan.GiveOffhandWeapon( abilityId, OFFHAND_EQUIPMENT );
+
+	CoreActivate( player );
+
+	printt("ACTIVATE CORE");
 #endif
 }
 
@@ -325,6 +329,13 @@ void function Spawnmenu_SaveGame()
 {
 #if SERVER
 	// Save the game using the inbuilt checkpoint system so that we can come back to things later
+	CheckPoint_Forced();
+#endif
+}
+
+void function Spawnmenu_SaveGameToFile( string saveName )
+{
+#if SERVER
 	CheckPoint_Forced();
 #endif
 }

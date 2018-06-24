@@ -69,22 +69,37 @@ void function Spawnmenu_Init_Weapons()
 	RegisterCategoryItem( "wep_pilot_melee", "melee_pilot_sword", "Sword" );
 
 	RegisterPageCategory( "weapons", "wep_titan_defensive", "Titan Defensive Abilities", "Spawnmenu_GiveTitanDefensive" );
-	RegisterCategoryItem( "wep_titan_defensive", "mp_titanability_gun_shield", "gun_shield" );
-	RegisterCategoryItem( "wep_titan_defensive", "mp_titanability_phase_dash", "phase_dash" );
+	RegisterCategoryItem( "wep_titan_defensive", "mp_titanability_gun_shield", Localize("#WPN_TITAN_GUN_SHIELD") );
+	RegisterCategoryItem( "wep_titan_defensive", "mp_titanweapon_vortex_shield", Localize("#WPN_TITAN_VORTEX_SHIELD") );
+	RegisterCategoryItem( "wep_titan_defensive", "mp_titanweapon_heat_shield", Localize("#WPN_TITAN_HEAT_SHIELD") );
+	RegisterCategoryItem( "wep_titan_defensive", "mp_titanability_tether_trap", Localize("#WPN_TITAN_TETHER_TRAP") );
+	RegisterCategoryItem( "wep_titan_defensive", "mp_titanability_basic_block", Localize("#WPN_TITAN_BASIC_BLOCK") );
+	RegisterCategoryItem( "wep_titan_defensive", "mp_titanability_particle_wall", Localize("#WPN_TITAN_SHIELD_WALL") );
+	RegisterCategoryItem( "wep_titan_defensive", "mp_titanweapon_stun_laser", Localize("#WPN_TITAN_STUN_LASER") );
 	RegisterCategoryItem( "wep_titan_defensive", "mp_titanability_timeshift", "Timeshift [Effect and Cause]" );
 
 	RegisterPageCategory( "weapons", "wep_titan_ordnance", "Titan Ordnances", "Spawnmenu_GiveGrenade" );
-	RegisterCategoryItem( "wep_titan_ordnance", "mp_titanability_power_shot", "power_shot" );
+	RegisterCategoryItem( "wep_titan_ordnance", "mp_titanweapon_flame_wall", Localize("#WPN_TITAN_FIREWALL") );
+	RegisterCategoryItem( "wep_titan_ordnance", "mp_titanweapon_laser_lite", Localize("#WPN_TITAN_LASER_LITE") );
+	RegisterCategoryItem( "wep_titan_ordnance", "mp_titanweapon_arc_wave", Localize("#WPN_TITAN_ARC_WAVE") );
+	RegisterCategoryItem( "wep_titan_ordnance", "mp_titanweapon_tracker_rockets", Localize("#WPN_TITAN_TRACKER_ROCKETS") );
+	RegisterCategoryItem( "wep_titan_ordnance", "mp_titanweapon_dumbfire_rockets", Localize("#WPN_TITAN_DUMB_SHOULDER_ROCKETS") );
+	RegisterCategoryItem( "wep_titan_ordnance", "mp_titanweapon_shoulder_rockets", Localize("#WPN_TITAN_SHOULDER_ROCKETS") );
+	RegisterCategoryItem( "wep_titan_ordnance", "mp_titanability_power_shot", Localize("#WPN_TITAN_POWER_SHOT") );
+	RegisterCategoryItem( "wep_titan_ordnance", "mp_titanweapon_salvo_rockets", Localize("#WPN_TITAN_SALVO_ROCKETS") );
 
 	RegisterPageCategory( "weapons", "wep_titan_tactical", "Titan Tactical Abilities", "Spawnmenu_GiveTitanTactical" );
-	RegisterCategoryItem( "wep_titan_tactical", "mp_titanability_ammo_swap", "ammo_swap" );
-	RegisterCategoryItem( "wep_titan_tactical", "mp_titanability_electric_smoke", "electric_smoke" );
-	RegisterCategoryItem( "wep_titan_tactical", "mp_titanability_smoke", "smoke" );
+	RegisterCategoryItem( "wep_titan_tactical", "mp_titanability_ammo_swap", Localize("#WPN_TITAN_AMMO_SWAP") );
+	RegisterCategoryItem( "wep_titan_tactical", "mp_titanability_slow_trap", Localize("#WPN_TITAN_SLOW_TRAP") );
+	RegisterCategoryItem( "wep_titan_tactical", "mp_titanability_laser_trip", Localize("#WPN_TITAN_TRIPWIRE") );
+	RegisterCategoryItem( "wep_titan_tactical", "mp_titanability_phase_dash", Localize("#WPN_TITAN_PHASE_DASH") );
+	RegisterCategoryItem( "wep_titan_tactical", "mp_titanability_sonar_pulse", Localize("#WPN_TITANABILITY_SONAR_PULSE") );
+	RegisterCategoryItem( "wep_titan_tactical", "mp_titanability_hover", Localize("#WPN_TITAN_HOVER") );
+	RegisterCategoryItem( "wep_titan_tactical", "mp_titanability_rearm", Localize("#WPN_TITANABILITY_REARM") );
+	RegisterCategoryItem( "wep_titan_tactical", "mp_titanability_electric_smoke", Localize("#WPN_TITAN_ELECTRIC_SMOKE") );
 
-	RegisterPageCategory( "weapons", "wep_titan_antirodeo", "Titan Anti-Rodeo", "Spawnmenu_GiveTitanAntirodeo" );
-	RegisterCategoryItem( "wep_titan_antirodeo", "mp_titanability_electric_smoke", "electric_smoke" );
-
-	RegisterPageCategory( "weapons", "wep_titan_core", "Titan Cores", "Spawnmenu_GiveTitanCore" );
+	RegisterPageCategory( "weapons", "wep_titan_core", "Titan Cores", "Spawnmenu_GiveCore" );
+	RegisterCategoryItem( "wep_titan_core", "recharge", "Recharge Core" );
 	RegisterCategoryItem( "wep_titan_core", "mp_titancore_laser_cannon", Localize("#WPN_CHEST_LASER") );
 	RegisterCategoryItem( "wep_titan_core", "mp_titancore_salvo_core", Localize("#WPN_TITAN_SALVO_CORE") );
 	RegisterCategoryItem( "wep_titan_core", "mp_titancore_flame_wave", Localize("#TITANCORE_FLAME_WAVE") );
@@ -92,8 +107,10 @@ void function Spawnmenu_Init_Weapons()
 	RegisterCategoryItem( "wep_titan_core", "mp_titancore_flight_core", Localize("#TITANCORE_FLIGHT") );
 	RegisterCategoryItem( "wep_titan_core", "mp_titancore_shift_core", Localize("#WPN_TITAN_SWORD") );
 	RegisterCategoryItem( "wep_titan_core", "mp_titancore_upgrade", Localize("#WPN_TITAN_UPGRADE_CORE") );
+	RegisterCategoryItem( "wep_titan_core", "mp_titancore_amp_core", Localize("#TITANCORE_AMP_CORE") );
 
 	RegisterPageCategory( "weapons", "wep_titan_melee", "Titan Melees", "Spawnmenu_GiveMelee" );
+	RegisterCategoryItem( "wep_titan_melee", "melee_titan_punch", "Titan Punch" );
 	RegisterCategoryItem( "wep_titan_melee", "melee_titan_sword", "Titan Sword" );
 #endif
 }
