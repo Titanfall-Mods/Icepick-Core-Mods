@@ -203,14 +203,14 @@ bool function ClientCommand_Toolgun_ReleaseEntity( entity player, array<string> 
 
 bool function ClientCommand_Toolgun_Grab_StartRotate( entity player, array<string> args )
 {
-	ToolgunGrab.IsRotating = true;
-	ToolgunGrab.LockViewAngle = Vector( args[0].tofloat(), args[1].tofloat(), args[2].tofloat() );
+	// ToolgunGrab.IsRotating = true;
+	// ToolgunGrab.LockViewAngle = Vector( args[0].tofloat(), args[1].tofloat(), args[2].tofloat() );
 	return true;
 }
 
 bool function ClientCommand_Toolgun_Grab_StopRotate( entity player, array<string> args )
 {
-	ToolgunGrab.IsRotating = false;
+	// ToolgunGrab.IsRotating = false;
 	return true;
 }
 
@@ -250,7 +250,7 @@ bool function ClientCommand_Toolgun_Grab_PerformRotation( entity player, array<s
 		}
 		else
 		{
-			float rotateSpeed = 15;
+			float rotateSpeed = 1;
 			vector rotationInput = Vector( pitchInput, yawInput, rollInput ) * rotateSpeed;
 
 			vector entAngles = ToolgunGrab.GrabbedEntity.GetAngles();

@@ -27,11 +27,9 @@ void function Toolgun_Client_Init()
 
 	RegisterButtonPressedCallback( KEY_BACKSPACE, KeyPress_Toolgun_UndoSpawn );
 
-#if TOOLGUN_ENABLE_MOUSE_ROTATE
-	// Renable for toolgun mouse rotation
+	// Toolgun mouse rotation
 	RegisterButtonPressedCallback( KEY_E, KeyPress_ToolgunRotate );
 	RegisterButtonReleasedCallback( KEY_E, KeyRelease_ToolgunRotate );
-#endif
 
 	// todo: better prop rotation
 	RegisterButtonPressedCallback( KEY_PAD_8, KeyPress_ToolgunRotate_PitchUp );
@@ -163,14 +161,11 @@ void function KeyPress_ToolgunRotate( var button )
 
 	ToolgunGrab.IsRotating = true;
 
-#if TOOLGUN_ENABLE_MOUSE_ROTATE
-	ToolgunGrab.OriginalSensitivity = GetConVarFloat( "mouse_sensitivity_zoomed" );
-	SetConVarFloat( "mouse_sensitivity_zoomed", 0.001 );
-#endif
-
 	entity player = GetLocalClientPlayer();
 	vector angles = player.EyeAngles();
 	ToolgunGrab.LastEyeAngles = angles;
+
+	GetLocalClientPlayer().FreezeControlsOnClient();
 
 	GetLocalClientPlayer().ClientCommand( "Toolgun_Grab_StartRotate " + angles.x + " " + angles.y + " " + angles.z );
 }
@@ -179,12 +174,9 @@ void function KeyRelease_ToolgunRotate( var button )
 {
 	AddPlayerHint( 0.5, 0.25, $"", "Toolgun rotate off" );
 
-#if TOOLGUN_ENABLE_MOUSE_ROTATE
-	SetConVarFloat( "mouse_sensitivity_zoomed", ToolgunGrab.OriginalSensitivity );
-#endif
-
 	ToolgunGrab.IsRotating = false;
 	GetLocalClientPlayer().ClientCommand( "Toolgun_Grab_StopRotate" );
+	GetLocalClientPlayer().UnfreezeControlsOnClient();
 }
 
 void function Toolgun_PerformRotate( float x, float y, float z )
@@ -240,13 +232,15 @@ void function ToolgunGrab_Think()
 		vector angles = player.EyeAngles();
 		vector forward = AnglesToForward( angles );
 
-#if TOOLGUN_ENABLE_MOUSE_ROTATE
 		if( ToolgunGrab.IsRotating )
 		{
-			vector diff = ToolgunGrab.LastEyeAngles - angles;
-			player.ClientCommand( "Toolgun_Grab_PerformRotation " + diff.x + " " + diff.y + " " + diff.z );
+			float deltaX = GetMouseDeltaX() * 1.0;
+			float deltaY = GetMouseDeltaX() * 1.0;
+
+			printt( "mouse delta", deltaX, deltaY );
+
+			player.ClientCommand( "Toolgun_Grab_PerformRotation " + deltaX + " " + 0 + " " + 0 );
 		}
-#endif
 
 		WaitFrame();
 	}
