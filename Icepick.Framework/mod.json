@@ -16,6 +16,10 @@
 			"ServerCallback" : "MP_AutoPrecache"
 		},
 		{
+			"Path": "sh_quaternions.nut",
+			"RunOn": "CLIENT || SERVER"
+		},
+		{
 			"Path": "sh_toolgun_globals.nut",
 			"RunOn": "SERVER || CLIENT"
 		},

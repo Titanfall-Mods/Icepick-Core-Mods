@@ -235,11 +235,9 @@ void function ToolgunGrab_Think()
 		if( ToolgunGrab.IsRotating )
 		{
 			float deltaX = GetMouseDeltaX() * 1.0;
-			float deltaY = GetMouseDeltaX() * 1.0;
+			float deltaY = GetMouseDeltaY() * 1.0;
 
-			printt( "mouse delta", deltaX, deltaY );
-
-			player.ClientCommand( "Toolgun_Grab_PerformRotation " + deltaX + " " + 0 + " " + 0 );
+			player.ClientCommand( "Toolgun_Grab_PerformRotation " + deltaY + " " + deltaX + " " + 0 );
 		}
 
 		WaitFrame();

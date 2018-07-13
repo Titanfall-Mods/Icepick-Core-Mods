@@ -218,37 +218,17 @@ bool function ClientCommand_Toolgun_Grab_PerformRotation( entity player, array<s
 {
 	if( ToolgunGrab.GrabbedEntity != null )
 	{
-#if TOOLGUN_ENABLE_MOUSE_ROTATE
-		// bad but working mouse rotation
-		/*
-		vector rotation = Vector( args[0].tofloat() * 100, args[1].tofloat() * 100, args[2].tofloat() * 100 );
-		vector angles = AnglesCompose( ToolgunGrab.GrabbedEntity.GetAngles(), Vector( 0.0, args[1].tofloat() * 10.0, 0.0 ) );
-		angles = AnglesCompose( angles, Vector( args[0].tofloat() * 10.0, 0.0, 0.0 ) );
-		*/
-
-		// better, but still bad mouse rotation
-		float xInput = args[0].tofloat() * 50;
-		float yInput = args[1].tofloat() * 50;
-		vector entAngles = ToolgunGrab.GrabbedEntity.GetAngles();
-		if ( fabs( xInput ) + fabs( yInput ) >= 0.05 )
-		{
-			if ( fabs( yInput ) > fabs( xInput ) )
-				entAngles = AnglesCompose( entAngles, Vector( xInput, 0.0, 0.0 ) )
-			else
-				entAngles = AnglesCompose( entAngles, Vector( 0.0, yInput, 0.0 ) )
-
-			ToolgunGrab.GrabbedEntity.SetAngles( entAngles )
-		}
-#else
 		float pitchInput = args[0].tofloat();
 		float yawInput = args[1].tofloat();
 		float rollInput = args[2].tofloat();
+
+		// printt( "rotate ", pitchInput, yawInput, rollInput );
 
 		if(pitchInput == -1 && yawInput == -1 && rollInput == -1)
 		{
 			ToolgunGrab.GrabbedEntity.SetAngles( Vector(0, 0, 0) );
 		}
-		else
+		else //if ( fabs( xInput ) + fabs( yInput ) >= 0.05 )
 		{
 			float rotateSpeed = 1;
 			vector rotationInput = Vector( pitchInput, yawInput, rollInput ) * rotateSpeed;
@@ -256,8 +236,15 @@ bool function ClientCommand_Toolgun_Grab_PerformRotation( entity player, array<s
 			vector entAngles = ToolgunGrab.GrabbedEntity.GetAngles();
 			entAngles = AnglesCompose( entAngles, rotationInput );
 			ToolgunGrab.GrabbedEntity.SetAngles( entAngles );
+
+			// vector entAngles = ToolgunGrab.GrabbedEntity.GetAngles();
+			// Quaternion entQuat = toQuaternion( entAngles );
+			// entQuat = Quaternion_Multiply( entQuat, Quaternion_AngleAxis( pitchInput, AnglesToRight( player.EyeAngles() ) ) );
+
+			// vector newAngles = toEulerVector( entQuat );
+			// ToolgunGrab.GrabbedEntity.SetAngles( newAngles );
+
 		}
-#endif
 
 	}
 	return true;
