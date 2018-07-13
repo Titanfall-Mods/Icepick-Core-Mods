@@ -139,5 +139,9 @@
 			"ClientCallback" : "Spawnmenu_Init_Weapons",
 			"ServerCallback": "Spawnmenu_Init_Weapons"
 		},
+		{
+			"Path": "toolgun/sv_save_writer.nut",
+			"RunOn": "SERVER"
+		},
 	],
 }

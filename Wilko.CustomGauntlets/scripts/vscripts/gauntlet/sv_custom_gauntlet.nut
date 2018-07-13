@@ -262,6 +262,7 @@ void function CustomGauntlet_Server_Finish()
 		BestTime = TotalTime;
 		CustomGauntletsGlobal.ActiveTrack.BestTime = TotalTime;
 	}
+	CustomGauntlet_AddLeaderboardTime( CustomGauntletsGlobal.ActiveTrack, TotalTime, GetPlayerByIndex( 0 ).GetPlayerName() );
 
 	// Send data to player
 	entity player = GetPlayerByIndex( 0 );

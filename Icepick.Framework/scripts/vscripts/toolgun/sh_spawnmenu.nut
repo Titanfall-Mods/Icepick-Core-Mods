@@ -12,6 +12,7 @@ global function Spawnmenu_SpawnModel
 global function Spawnmenu_SpawnNpc
 global function Spawnmenu_SaveGame
 global function Spawnmenu_SaveGameToFile
+global function Spawnmenu_SaveCheckpoint
 
 global function Spawnmenu_ToggleEditMode
 global function AddOnEditModeChangedCallback
@@ -328,14 +329,21 @@ void function AddOnEditModeChangedCallback( void functionref() callbackFunc )
 void function Spawnmenu_SaveGame()
 {
 #if SERVER
-	// Save the game using the inbuilt checkpoint system so that we can come back to things later
-	CheckPoint_Forced();
+	IcepickSave();
 #endif
 }
 
 void function Spawnmenu_SaveGameToFile( string saveName )
 {
 #if SERVER
+	IcepickSave( saveName );
+#endif
+}
+
+void function Spawnmenu_SaveCheckpoint()
+{
+#if SERVER
+	// Save the game using the inbuilt checkpoint system so that we can come back to things later
 	CheckPoint_Forced();
 #endif
 }

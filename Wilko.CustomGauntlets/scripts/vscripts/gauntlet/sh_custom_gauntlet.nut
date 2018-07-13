@@ -11,6 +11,7 @@ global function CustomGauntlet_HasStatsBoards
 global function CustomGauntlet_FindParentTrack
 global function CustomGauntlet_IsEntPartOfTrack
 global function CustomGauntlet_IsEntPartOfGauntletTriggerLine
+global function CustomGauntlet_AddLeaderboardTime
 global function ToolGauntlet_CreateTriggerEntity
 global function ToolGauntlet_DelayedTransmit
 
@@ -234,6 +235,40 @@ bool function CustomGauntlet_IsEntPartOfGauntletTriggerLine( GauntletTriggerLine
 		return true;
 
 	return false;
+}
+
+void function CustomGauntlet_AddLeaderboardTime( GauntletTrack Track, float FinalTime, string PlayerName )
+{
+	// Find where to put the highscore
+	int InsertIdx = -1;
+
+	if( Track.Highscores.len() < 1 )
+	{
+		InsertIdx = 0;
+	}
+
+	for( int i = 0; i < Track.Highscores.len(); ++i )
+	{
+		if( FinalTime < Track.Highscores[i].Time )
+		{
+			InsertIdx = i;
+			break;
+		}
+	}
+
+	if( InsertIdx > -1 )
+	{
+		// Insert the highscore
+		GauntletHighscore NewHighscore;
+		NewHighscore.Time = FinalTime;
+		NewHighscore.Name = PlayerName;
+		Track.Highscores.insert( InsertIdx, NewHighscore );
+
+#if CLIENT
+		// Update connected leaderboards
+		CustomGauntlet_UpdateLeaderboards( Track );
+#endif
+	}
 }
 
 entity function ToolGauntlet_CreateTriggerEntity( vector Pos, vector Angles, float Offset )

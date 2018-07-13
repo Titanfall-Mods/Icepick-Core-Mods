@@ -1,38 +1,6 @@
 untyped
 
-global function CustomGauntlet_AddLeaderboardTime
-
-void function CustomGauntlet_AddLeaderboardTime( GauntletTrack Track, float FinalTime, string PlayerName )
-{
-	// Find where to put the highscore
-	int InsertIdx = -1;
-
-	if( Track.Highscores.len() < 1 )
-	{
-		InsertIdx = 0;
-	}
-
-	for( int i = 0; i < Track.Highscores.len(); ++i )
-	{
-		if( FinalTime < Track.Highscores[i].Time )
-		{
-			InsertIdx = i;
-			break;
-		}
-	}
-
-	if( InsertIdx > -1 )
-	{
-		// Insert the highscore
-		GauntletHighscore NewHighscore;
-		NewHighscore.Time = FinalTime;
-		NewHighscore.Name = PlayerName;
-		Track.Highscores.insert( InsertIdx, NewHighscore );
-
-		// Update connected leaderboards
-		CustomGauntlet_UpdateLeaderboards( Track );
-	}
-}
+global function CustomGauntlet_UpdateLeaderboards
 
 void function CustomGauntlet_UpdateLeaderboards( GauntletTrack Track )
 {
