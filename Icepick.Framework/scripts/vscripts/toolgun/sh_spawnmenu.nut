@@ -188,10 +188,10 @@ void function Spawnmenu_SpawnModel( string modelName )
 	}
 
 	entity player = GetPlayerByIndex( 0 );
-	vector origin = player.EyePosition();
-	vector angles = player.EyeAngles();
-	vector forward = AnglesToForward( angles );
-	TraceResults traceResults = TraceLine( origin, angles + forward * 10000, player, TRACE_MASK_PLAYERSOLID | TRACE_MASK_TITANSOLID | TRACE_MASK_NPCWORLDSTATIC | TRACE_MASK_SHOT, TRACE_COLLISION_GROUP_NONE );
+	Toolgun_Utils_FireToolTracer( player );
+
+	vector eyePosition = player.EyePosition();
+	TraceResults traceResults = TraceLine( eyePosition, eyePosition + player.GetViewVector() * 10000, player, TRACE_MASK_PLAYERSOLID, TRACE_COLLISION_GROUP_PLAYER );
 
 	vector Pos = traceResults.endPos;
 	vector Ang = Vector( 0, player.EyeAngles().y, 0 );
@@ -219,10 +219,10 @@ void function Spawnmenu_SpawnNpc( string npcId )
 {
 #if SERVER
 	entity player = GetPlayerByIndex( 0 );
-	vector origin = player.EyePosition();
+	vector eyePosition = player.EyePosition();
 	vector angles = player.EyeAngles();
-	vector forward = AnglesToForward( angles );
-	TraceResults result = TraceLine( origin, origin + forward * 2000, player );
+	TraceResults result = TraceLine( eyePosition, eyePosition + player.GetViewVector() * 10000, player, TRACE_MASK_PLAYERSOLID, TRACE_COLLISION_GROUP_PLAYER );
+
 	angles.x = 0;
 	angles.z = 0;
 

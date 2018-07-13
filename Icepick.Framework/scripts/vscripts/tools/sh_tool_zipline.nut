@@ -74,7 +74,7 @@ void function Toolgun_RegisterTool_ZiplineSpawner()
 		entity player = GetLocalClientPlayer();
 		vector eyePosition = player.EyePosition();
 		vector viewVector = player.GetViewVector();
-		TraceResults traceResults = TraceLineHighDetail( eyePosition, eyePosition + viewVector * 1000000, player, TRACE_MASK_PLAYERSOLID | TRACE_MASK_TITANSOLID | TRACE_MASK_NPCWORLDSTATIC, TRACE_COLLISION_GROUP_NONE );
+		TraceResults traceResults = TraceLine( eyePosition, eyePosition + player.GetViewVector() * 10000, player, TRACE_MASK_PLAYERSOLID, TRACE_COLLISION_GROUP_PLAYER );
 
 		// Check which location we're setting
 		if( ToolZipline.StartLocationSet )
