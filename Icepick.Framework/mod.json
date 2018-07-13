@@ -100,12 +100,6 @@
 			"ServerCallback": "Toolgun_RegisterTool_RemoveProp"
 		},
 		{
-			"Path": "tools/sh_tool_spawn_prop.nut",
-			"RunOn": "SERVER || CLIENT",
-			"ClientCallback": "Toolgun_RegisterTool_SpawnProp",
-			"ServerCallback": "Toolgun_RegisterTool_SpawnProp"
-		},
-		{
 			"Path": "tools/sh_tool_stacker.nut",
 			"RunOn": "SERVER || CLIENT",
 			"ClientCallback": "Toolgun_RegisterTool_Stacker",
