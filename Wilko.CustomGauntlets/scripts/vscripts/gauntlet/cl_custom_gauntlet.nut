@@ -3,6 +3,7 @@ untyped
 global function CustomGauntlet_Client_Init
 global function ServerCallback_CustomGauntlet_Start;
 global function ServerCallback_CustomGauntlet_Finish;
+global function ServerCallback_CustomGauntlet_SendScoreboardTime;
 global function ServerCallback_CustomGauntlet_ShowError;
 global function ServerCallback_CustomGauntlet_SendScoreboardEnt;
 global function ServerCallback_CustomGauntlet_SendStatsBoardEnt;
@@ -114,9 +115,9 @@ void function ServerCallback_CustomGauntlet_Finish( float TotalTime, float BestT
 	GauntletRuntimeData.IsActive = false;
 }
 
-void function CustomGauntlet_OnEnemyKilled( entity player, int oldValue, int newValue, bool actuallyChanged )
+void function ServerCallback_CustomGauntlet_SendScoreboardTime( float Time )
 {
-	thread CustomGauntlet_DoGauntletSplash( "killed enemy" );
+	CustomGauntlet_AddLeaderboardTime( CustomGauntletsGlobal.DevelopmentTrack, Time, "Pilot" );
 }
 
 void function OnToolgunEditModeChanged()

@@ -3,8 +3,6 @@ global function Spawnmenu_Init_Saves
 
 #if SERVER
 global function Spawnmenu_PerformUtility
-global function Spawnmenu_LoadSave
-
 global function AddOnSpawnmenuUtilityCallback
 #endif
 
@@ -28,17 +26,11 @@ void function Spawnmenu_Init_Saves()
 
 	// Add a category where all our saves will be put to be loaded with a click
 	RegisterPageCategory( "saves", "saves", "Saves", "Spawnmenu_LoadSave" );
+	RegisterCategoryItem( "saves", "test", "Load Test" );
 	#endif
 }
 
 #if SERVER
-
-// -----------------------------------------------------------------------------
-
-void function Spawnmenu_LoadSave()
-{
-	// @todo
-}
 
 // -----------------------------------------------------------------------------
 

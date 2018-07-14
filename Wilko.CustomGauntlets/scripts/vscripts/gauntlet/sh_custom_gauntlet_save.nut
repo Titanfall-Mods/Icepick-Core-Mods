@@ -67,16 +67,16 @@ void function OnIcepickSave()
 
 	if( CustomGauntletsGlobal.DevelopmentTrack.StartLine.IsValid )
 	{
-		vector start = CustomGauntletsGlobal.DevelopmentTrack.StartLine.From;
-		vector end = CustomGauntletsGlobal.DevelopmentTrack.StartLine.To;
+		vector start = CustomGauntletsGlobal.DevelopmentTrack.StartLine.FromEnt.GetOrigin();
+		vector end = CustomGauntletsGlobal.DevelopmentTrack.StartLine.ToEnt.GetOrigin();
 		string entry = IcepickSaveOutput( "gauntlet.start", start.x, start.y, start.z, end.x, end.y, end.z );
 		AddSaveItem( entry );
 	}
 
 	if( CustomGauntletsGlobal.DevelopmentTrack.FinishLine.IsValid )
 	{
-		vector start = CustomGauntletsGlobal.DevelopmentTrack.FinishLine.From;
-		vector end = CustomGauntletsGlobal.DevelopmentTrack.FinishLine.To;
+		vector start = CustomGauntletsGlobal.DevelopmentTrack.FinishLine.FromEnt.GetOrigin();
+		vector end = CustomGauntletsGlobal.DevelopmentTrack.FinishLine.ToEnt.GetOrigin();
 		string entry = IcepickSaveOutput( "gauntlet.end", start.x, start.y, start.z, end.x, end.y, end.z );
 		AddSaveItem( entry );
 	}
@@ -95,7 +95,7 @@ void function OnIcepickSave()
 		GauntletWorldUI worldUi = CustomGauntletsGlobal.DevelopmentTrack.Scoreboards[i];
 		vector pos = worldUi.Position;
 		vector rot = worldUi.Rotation;
-		AddSaveItem( IcepickSaveOutput( "gauntlet.scoreboard", worldUi.UIType, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z ) );
+		AddSaveItem( IcepickSaveOutput( "gauntlet.scoreboard", pos.x, pos.y, pos.z, rot.x, rot.y, rot.z ) );
 	}
 
 	for( int i = 0; i < CustomGauntletsGlobal.DevelopmentTrack.StatsBoards.len(); ++i )
@@ -103,7 +103,7 @@ void function OnIcepickSave()
 		GauntletWorldUI worldUi = CustomGauntletsGlobal.DevelopmentTrack.StatsBoards[i];
 		vector pos = worldUi.Position;
 		vector rot = worldUi.Rotation;
-		AddSaveItem( IcepickSaveOutput( "gauntlet.statsboard", worldUi.UIType, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z ) );
+		AddSaveItem( IcepickSaveOutput( "gauntlet.statsboard", pos.x, pos.y, pos.z, rot.x, rot.y, rot.z ) );
 	}
 }
 #endif

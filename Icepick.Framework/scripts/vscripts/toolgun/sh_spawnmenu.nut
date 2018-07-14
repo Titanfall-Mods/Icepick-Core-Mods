@@ -9,6 +9,7 @@ global function Spawnmenu_GiveTitanDefensive
 global function Spawnmenu_GiveTitanTactical
 global function Spawnmenu_GiveCore
 global function Spawnmenu_SpawnModel
+global function Spawnmenu_SpawnModelWithParams
 global function Spawnmenu_SpawnNpc
 global function Spawnmenu_SaveGame
 global function Spawnmenu_SaveGameToFile
@@ -172,6 +173,22 @@ void function Spawnmenu_GiveCore( string abilityId )
 void function Spawnmenu_SpawnModel( string modelName )
 {
 #if SERVER
+	entity player = GetPlayerByIndex( 0 );
+	Toolgun_Utils_FireToolTracer( player );
+
+	vector eyePosition = player.EyePosition();
+	TraceResults traceResults = TraceLine( eyePosition, eyePosition + player.GetViewVector() * 10000, player, TRACE_MASK_PLAYERSOLID, TRACE_COLLISION_GROUP_PLAYER );
+
+	vector Pos = traceResults.endPos;
+	vector Ang = Vector( 0, player.EyeAngles().y, 0 );
+	
+	Spawnmenu_SpawnModelWithParams( modelName, Pos, Ang );
+#endif
+}
+
+void function Spawnmenu_SpawnModelWithParams( string modelName, vector position, vector angles )
+{
+#if SERVER
 	asset spawnAsset = $"";
 	// HACK: Awful, slow way to find asset
 	foreach( a in CurrentLevelSpawnList )
@@ -188,15 +205,6 @@ void function Spawnmenu_SpawnModel( string modelName )
 		return;
 	}
 
-	entity player = GetPlayerByIndex( 0 );
-	Toolgun_Utils_FireToolTracer( player );
-
-	vector eyePosition = player.EyePosition();
-	TraceResults traceResults = TraceLine( eyePosition, eyePosition + player.GetViewVector() * 10000, player, TRACE_MASK_PLAYERSOLID, TRACE_COLLISION_GROUP_PLAYER );
-
-	vector Pos = traceResults.endPos;
-	vector Ang = Vector( 0, player.EyeAngles().y, 0 );
-	
 	EnableExternalSpawnMode();
 
 	entity prop_dynamic = CreateEntity( "prop_dynamic" );
@@ -207,8 +215,8 @@ void function Spawnmenu_SpawnModel( string modelName )
 	prop_dynamic.kv.solid = 6; // 0 = no collision, 2 = bounding box, 6 = use vPhysics, 8 = hitboxes only
 	SetTeam( prop_dynamic, TEAM_BOTH );	// need to have a team other then 0 or it won't take impact damage
 
-	prop_dynamic.SetOrigin( Pos );
-	prop_dynamic.SetAngles( Ang );
+	prop_dynamic.SetOrigin( position );
+	prop_dynamic.SetAngles( angles );
 	DispatchSpawn( prop_dynamic );
 
 	ToolgunData.SpawnedEntities.append( prop_dynamic );

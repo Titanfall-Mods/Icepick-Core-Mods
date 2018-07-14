@@ -149,5 +149,9 @@
 			"Path": "toolgun/sv_save_writer.nut",
 			"RunOn": "SERVER"
 		},
+		{
+			"Path": "toolgun/sv_save_loader.nut",
+			"RunOn": "SERVER"
+		},
 	],
 }

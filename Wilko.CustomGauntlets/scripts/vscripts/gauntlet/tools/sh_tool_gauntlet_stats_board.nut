@@ -1,5 +1,6 @@
 
 global function Toolgun_RegisterTool_GauntletPlaceStats
+global function CustomGauntlets_SpawnStatsboard
 
 table ToolGauntletStats = {};
 
@@ -32,17 +33,7 @@ void function Toolgun_RegisterTool_GauntletPlaceStats()
 		{
 			vector Pos = traceResults.endPos;
 			vector Angles = Vector(0, player.EyeAngles().y, 0);
-			
-			entity StatsEnt = ToolGauntlet_CreateTriggerEntity( Pos, Angles, 0.0 );
-
-			GauntletWorldUI NewStatsBoard;
-			NewStatsBoard.UIType = GauntletWorldUIType.StatsBoard;
-			NewStatsBoard.Position = Pos;
-			NewStatsBoard.Rotation = Angles;
-			NewStatsBoard.ReferenceEnt = StatsEnt;
-			CustomGauntletsGlobal.DevelopmentTrack.Scoreboards.append( NewStatsBoard );
-
-			thread ToolGauntlet_DelayedTransmit( "ServerCallback_CustomGauntlet_SendStatsBoardEnt", StatsEnt );
+			CustomGauntlets_SpawnStatsboard( Pos, Angles );
 		}
 
 		return true;
@@ -54,4 +45,20 @@ void function Toolgun_RegisterTool_GauntletPlaceStats()
 	// Register the tool
 	ToolGunTools.append( ToolGauntletStats );
 
+}
+
+void function CustomGauntlets_SpawnStatsboard( vector position, vector angle )
+{
+#if SERVER
+	entity StatsEnt = ToolGauntlet_CreateTriggerEntity( position, angle, 0.0 );
+
+	GauntletWorldUI NewStatsBoard;
+	NewStatsBoard.UIType = GauntletWorldUIType.StatsBoard;
+	NewStatsBoard.Position = position;
+	NewStatsBoard.Rotation = angle;
+	NewStatsBoard.ReferenceEnt = StatsEnt;
+	CustomGauntletsGlobal.DevelopmentTrack.Scoreboards.append( NewStatsBoard );
+
+	thread ToolGauntlet_DelayedTransmit( "ServerCallback_CustomGauntlet_SendStatsBoardEnt", StatsEnt );
+#endif
 }

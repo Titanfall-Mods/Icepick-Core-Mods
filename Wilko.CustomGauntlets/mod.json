@@ -26,6 +26,11 @@
 			"ServerCallback": "CustomGauntlet_Server_SaveInit"
 		},
 		{
+			"Path": "gauntlet/sv_custom_gauntlet_load.nut",
+			"RunOn": "SERVER",
+			"ServerCallback": "CustomGauntlet_LoadInit"
+		},
+		{
 			"Path": "gauntlet/cl_custom_gauntlet.nut",
 			"RunOn": "CLIENT"
 		},
