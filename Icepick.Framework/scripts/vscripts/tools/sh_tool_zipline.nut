@@ -1,6 +1,10 @@
 untyped
 global function Toolgun_RegisterTool_ZiplineSpawner
 
+#if SERVER
+global function ToolZipline_DestroyZipline
+#endif
+
 global struct PlacedZipline
 {
 	entity start,
@@ -157,15 +161,7 @@ void function ToolZipline_UpdateZiplines()
 			PlacedZipline CurrentZipline = PlacedZiplines[i];
 			if( !IsValid( CurrentZipline.AnchorStart ) || !IsValid( CurrentZipline.AnchorEnd ) )
 			{
-				ToolZipline_DestroyZipline( CurrentZipline );
-				if( IsValid( CurrentZipline.AnchorStart ) )
-				{
-					CurrentZipline.AnchorStart.Destroy();
-				}
-				if( IsValid( CurrentZipline.AnchorEnd ) )
-				{
-					CurrentZipline.AnchorEnd.Destroy();
-				}
+				ToolZipline_DestroyZipline( CurrentZipline, true );
 				PlacedZiplines.remove( i );
 			}
 			else
@@ -189,7 +185,7 @@ void function ToolZipline_UpdateZiplines()
 	}
 }
 
-void function ToolZipline_DestroyZipline( PlacedZipline zip )
+void function ToolZipline_DestroyZipline( PlacedZipline zip, bool completeDestroy = false )
 {
 	if( IsValid( zip.start ) )
 	{
@@ -202,6 +198,17 @@ void function ToolZipline_DestroyZipline( PlacedZipline zip )
 	if( IsValid( zip.end ) )
 	{
 		zip.end.Destroy();
+	}
+	if( completeDestroy )
+	{
+		if( IsValid( zip.AnchorStart ) )
+		{
+			zip.AnchorStart.Destroy();
+		}
+		if( IsValid( zip.AnchorEnd ) )
+		{
+			zip.AnchorEnd.Destroy();
+		}
 	}
 }
 #endif
