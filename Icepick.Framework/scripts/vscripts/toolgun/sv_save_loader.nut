@@ -15,9 +15,9 @@ void function AddOnHandleLoadTokenCallback( void functionref(string id, array<st
 
 void function Spawnmenu_LoadSave( string saveName )
 {
-	string saveContents = ""; // @todo: replace this
+	string saveContents = LoadSaveFileContents( saveName );
 
-	// Split the 
+	// Split the file into lines and tokens and handle each line individually
 	array<string> lines = split( saveContents, "\n" );
 	foreach( line in lines )
 	{

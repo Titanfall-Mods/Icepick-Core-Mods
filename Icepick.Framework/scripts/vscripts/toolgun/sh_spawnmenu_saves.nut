@@ -24,9 +24,28 @@ void function Spawnmenu_Init_Saves()
 	RegisterCategoryItem( "utilities", "cleanup.weapons", "Cleanup Weapons" );
 	RegisterCategoryItem( "utilities", "cleanup.npcs", "Cleanup NPCs" );
 
-	// Add a category where all our saves will be put to be loaded with a click
+	// Add a category where all our saves will be listed
 	RegisterPageCategory( "saves", "saves", "Saves", "Spawnmenu_LoadSave" );
-	RegisterCategoryItem( "saves", "test", "Load Test" );
+
+	// List save files in the saves folder
+	array<string> saveNames = UntypedArrayToStringArray( GetSaveFiles() );
+	foreach( saveFile in saveNames )
+	{
+		array<string> splitName = split( saveFile, "\\" );
+		splitName = split( splitName[splitName.len() - 1], "." );
+		string fileName = "";
+		string displayName = "";
+		for( int i = 0; i < splitName.len(); ++i )
+		{
+			fileName += (fileName == "" ? "" : ".") + splitName[i];
+			if( i < splitName.len() - 1 )
+			{
+				displayName += (displayName == "" ? "" : ".") + splitName[i];
+			}
+		}
+
+		RegisterCategoryItem( "saves", fileName, displayName );
+	}
 	#endif
 }
 
