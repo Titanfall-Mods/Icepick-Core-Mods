@@ -1,9 +1,51 @@
 
-global function CustomGauntlet_Server_SaveInit
+#if CLIENT
+global function CustomGauntlet_Client_SaveInit
+#endif
 
+#if SERVER
+global function CustomGauntlet_Server_SaveInit
+#endif
+
+#if CLIENT
+void function CustomGauntlet_Client_SaveInit()
+{
+	RegisterCategoryItem( "utilities", "cleanup.gauntlet", "Cleanup Gauntlets" );
+}
+#endif
+
+#if SERVER
 void function CustomGauntlet_Server_SaveInit()
 {
+	AddOnSpawnmenuUtilityCallback( OnUtilityCallback );
 	AddOnIcepickSaveCallback( OnIcepickSave );
+}
+
+void function OnUtilityCallback( string utility )
+{
+	switch( utility )
+	{
+		case "cleanup.all":
+		case "cleanup.gauntlet":
+			CleanupGauntlets();
+			break;
+	}
+}
+
+void function CleanupGauntlets()
+{
+	if( CustomGauntletsGlobal.DevelopmentTrack.StartLine.IsValid )
+	{
+		CustomGauntletsGlobal.DevelopmentTrack.StartLine.FromEnt.Destroy(); // Only destroy one entity and let the think cleanup the rest automatically
+	}
+	if( CustomGauntletsGlobal.DevelopmentTrack.FinishLine.IsValid )
+	{
+		CustomGauntletsGlobal.DevelopmentTrack.FinishLine.FromEnt.Destroy(); // Only destroy one entity and let the think cleanup the rest automatically
+	}
+	for( int i = 0; i < CustomGauntletsGlobal.DevelopmentTrack.Targets.len(); ++i )
+	{
+		CustomGauntletsGlobal.DevelopmentTrack.Targets[i].SpawnedEnemy.Destroy();
+	}
 }
 
 // Add custom gauntlet entities when creating a save
@@ -64,3 +106,4 @@ void function OnIcepickSave()
 		AddSaveItem( IcepickSaveOutput( "gauntlet.statsboard", worldUi.UIType, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z ) );
 	}
 }
+#endif

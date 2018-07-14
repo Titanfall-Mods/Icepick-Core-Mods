@@ -36,7 +36,7 @@ void function IcepickSave( string saveName = "SaveGame" )
 	}
 
 	// Write the save to file
-	WriteSaveBufferToFile( saveName );
+	WriteSaveBufferToFile( saveName + ".txt" );
 }
 
 string function IcepickSaveOutput( ... )

@@ -140,6 +140,12 @@
 			"ServerCallback": "Spawnmenu_Init_Weapons"
 		},
 		{
+			"Path": "toolgun/sh_spawnmenu_saves.nut",
+			"RunOn": "SERVER || CLIENT",
+			"ClientCallback" : "Spawnmenu_Init_Saves",
+			"ServerCallback": "Spawnmenu_Init_Saves"
+		},
+		{
 			"Path": "toolgun/sv_save_writer.nut",
 			"RunOn": "SERVER"
 		},

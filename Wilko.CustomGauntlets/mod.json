@@ -20,8 +20,9 @@
 			"RunOn": "SERVER"
 		},
 		{
-			"Path": "gauntlet/sv_custom_gauntlet_save.nut",
-			"RunOn": "SERVER",
+			"Path": "gauntlet/sh_custom_gauntlet_save.nut",
+			"RunOn": "SERVER || CLIENT",
+			"ClientCallback": "CustomGauntlet_Client_SaveInit",
 			"ServerCallback": "CustomGauntlet_Server_SaveInit"
 		},
 		{
