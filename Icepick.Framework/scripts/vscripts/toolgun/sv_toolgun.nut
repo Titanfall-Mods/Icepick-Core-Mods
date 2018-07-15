@@ -220,9 +220,7 @@ bool function ClientCommand_Toolgun_Grab_PerformRotation( entity player, array<s
 	{
 		float pitchInput = args[0].tofloat();
 		float yawInput = args[1].tofloat();
-		float rollInput = args[2].tofloat();
-
-		// printt( "rotate ", pitchInput, yawInput, rollInput );
+		float rollInput = 0;
 
 		if(pitchInput == -1 && yawInput == -1 && rollInput == -1)
 		{
@@ -230,20 +228,23 @@ bool function ClientCommand_Toolgun_Grab_PerformRotation( entity player, array<s
 		}
 		else //if ( fabs( xInput ) + fabs( yInput ) >= 0.05 )
 		{
-			float rotateSpeed = 1;
-			vector rotationInput = Vector( pitchInput, yawInput, rollInput ) * rotateSpeed;
+			float rotateSpeed = 0.05;
+			vector rotationInput = Vector( -pitchInput, yawInput, rollInput ) * rotateSpeed;
+			print(rotationInput);
 
 			vector entAngles = ToolgunGrab.GrabbedEntity.GetAngles();
-			entAngles = AnglesCompose( entAngles, rotationInput );
-			ToolgunGrab.GrabbedEntity.SetAngles( entAngles );
+			Quaternion entQuat = toQuaternion( entAngles );
+			Quaternion invEntQuat = Quaternion_Invert( entQuat );
 
-			// vector entAngles = ToolgunGrab.GrabbedEntity.GetAngles();
-			// Quaternion entQuat = toQuaternion( entAngles );
-			// entQuat = Quaternion_Multiply( entQuat, Quaternion_AngleAxis( pitchInput, AnglesToRight( player.EyeAngles() ) ) );
+			vector rotXAxis = Quaternion_VectorMultiply( invEntQuat, Vector( 0, 0, 1 ) );
+			vector rotYAxis = Quaternion_VectorMultiply( invEntQuat, AnglesToRight( player.EyeAngles() ) );
 
-			// vector newAngles = toEulerVector( entQuat );
-			// ToolgunGrab.GrabbedEntity.SetAngles( newAngles );
+			Quaternion rotXQuat = Quaternion_AngleAxis( rotationInput.y, rotXAxis );
+			Quaternion rotYQuat = Quaternion_AngleAxis( rotationInput.x, rotYAxis );
 
+			Quaternion result = Quaternion_Multiply( Quaternion_Multiply( entQuat, rotXQuat ), rotYQuat );
+			vector newAngles = Quaternion_Angles( result );
+			ToolgunGrab.GrabbedEntity.SetAngles( newAngles );
 		}
 
 	}
