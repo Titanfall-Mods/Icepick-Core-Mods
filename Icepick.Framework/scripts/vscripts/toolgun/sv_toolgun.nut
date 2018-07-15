@@ -14,6 +14,7 @@ global ToolgunDataStruct ToolgunData
 struct {
 	entity GrabbedEntity,
 	vector GrabOffset,
+	vector RotatePivot,
 	float GrabDistance,
 	bool IsRotating,
 	vector LockViewAngle,
@@ -203,14 +204,21 @@ bool function ClientCommand_Toolgun_ReleaseEntity( entity player, array<string> 
 
 bool function ClientCommand_Toolgun_Grab_StartRotate( entity player, array<string> args )
 {
-	// ToolgunGrab.IsRotating = true;
+	vector eyePosition = player.EyePosition();
+	vector viewVector = player.GetViewVector();
+	TraceResults traceResults = TraceLine( eyePosition, eyePosition + viewVector * 10000, player, TRACE_MASK_PLAYERSOLID | TRACE_MASK_TITANSOLID | TRACE_MASK_NPCWORLDSTATIC, TRACE_COLLISION_GROUP_NONE )
+	if( traceResults.hitEnt )
+	{
+		ToolgunGrab.RotatePivot = traceResults.endPos;
+	}
+	ToolgunGrab.IsRotating = true;
 	// ToolgunGrab.LockViewAngle = Vector( args[0].tofloat(), args[1].tofloat(), args[2].tofloat() );
 	return true;
 }
 
 bool function ClientCommand_Toolgun_Grab_StopRotate( entity player, array<string> args )
 {
-	// ToolgunGrab.IsRotating = false;
+	ToolgunGrab.IsRotating = false;
 	return true;
 }
 
@@ -231,17 +239,28 @@ bool function ClientCommand_Toolgun_Grab_PerformRotation( entity player, array<s
 			float rotateSpeed = 0.05;
 			vector rotationInput = Vector( pitchInput, yawInput, rollInput ) * rotateSpeed;
 
+			vector rotXAxis = Vector( 0, 0, 1 );
+			vector rotYAxis = AnglesToRight( player.EyeAngles() );
+			Quaternion rotXQuat = Quaternion_AngleAxis( rotationInput.y, rotXAxis );
+			Quaternion rotYQuat = Quaternion_AngleAxis( rotationInput.x, rotYAxis );
+
+			vector delta = ToolgunGrab.GrabbedEntity.GetOrigin() - ToolgunGrab.RotatePivot;
+			Quaternion combinedQuat = Quaternion_Multiply( rotXQuat, rotYQuat );
+			ToolgunGrab.GrabOffset = Quaternion_VectorMultiply( combinedQuat , ToolgunGrab.GrabOffset );
+            vector newPos = ToolgunGrab.RotatePivot + Quaternion_VectorMultiply( combinedQuat, delta );
+            
+            ToolgunGrab.GrabbedEntity.SetOrigin( newPos );
+
 			vector entAngles = ToolgunGrab.GrabbedEntity.GetAngles();
 			Quaternion entQuat = toQuaternion( entAngles );
 			Quaternion invEntQuat = Quaternion_Invert( entQuat );
 
-			vector rotXAxis = Quaternion_VectorMultiply( invEntQuat, Vector( 0, 0, 1 ) );
-			vector rotYAxis = Quaternion_VectorMultiply( invEntQuat, AnglesToRight( player.EyeAngles() ) );
+			vector transRotXAxis = Quaternion_VectorMultiply( invEntQuat, rotXAxis );
+			vector transRotYAxis = Quaternion_VectorMultiply( invEntQuat, rotYAxis );
+			Quaternion transRotXQuat = Quaternion_AngleAxis( rotationInput.y, transRotXAxis );
+			Quaternion transRotYQuat = Quaternion_AngleAxis( rotationInput.x, transRotYAxis );
 
-			Quaternion rotXQuat = Quaternion_AngleAxis( rotationInput.y, rotXAxis );
-			Quaternion rotYQuat = Quaternion_AngleAxis( rotationInput.x, rotYAxis );
-
-			Quaternion result = Quaternion_Multiply( Quaternion_Multiply( entQuat, rotXQuat ), rotYQuat );
+			Quaternion result = Quaternion_Multiply( Quaternion_Multiply( entQuat, transRotXQuat ), transRotYQuat );
 			vector newAngles = Quaternion_Angles( result );
 
 			ToolgunGrab.GrabbedEntity.SetAngles( newAngles );
@@ -265,15 +284,17 @@ void function ToolgunGrab_Think( entity player )
 		vector origin = player.EyePosition()
 		vector angles = player.EyeAngles()
 		vector forward = AnglesToForward( angles )
-		ToolgunGrab.GrabbedEntity.SetOrigin( origin + forward * ToolgunGrab.GrabDistance + ToolgunGrab.GrabOffset )
 
 		if( ToolgunGrab.IsRotating )
 		{
-			player.SnapEyeAngles( ToolgunGrab.LockViewAngle );
-
+			//player.SnapEyeAngles( ToolgunGrab.LockViewAngle );
 			// vector entAngles = ToolgunGrab.GrabbedEntity.GetAngles();
 			// entAngles.y = (entAngles.y + 45 * FrameTime()) % 360.0
 			// ToolgunGrab.GrabbedEntity.SetAngles( entAngles );
+		}
+		else
+		{
+			ToolgunGrab.GrabbedEntity.SetOrigin( origin + forward * ToolgunGrab.GrabDistance + ToolgunGrab.GrabOffset )
 		}
 
 		// ToolgunGrab.GrabBeamEffect.SetOrigin( player.EyePosition() + AnglesToRight( angles ) * 5 + AnglesToUp( angles ) * -5 )
