@@ -20,6 +20,10 @@ const TOOLGUN_GRAB_EFFECT = $"P_wpn_hand_laser_beam"
 
 void function Toolgun_Shared_Init()
 {
+	// Convars
+	RegisterConVar( "physgun_sensitivity", 1.0, "physgun_sensitivity value", "Set the sensitivity of the physgun tool" );
+	RegisterConVar( "physgun_snap", 30.0, "physgun_snap angle", "Set the angle to which the physgun should snap to" );
+
 	// Allow late cache of props
 	SetConVarInt("host_thread_mode", 0);
 	SetConVarInt("script_precache_errors", 0);

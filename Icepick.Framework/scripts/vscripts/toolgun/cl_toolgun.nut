@@ -30,6 +30,8 @@ void function Toolgun_Client_Init()
 	// Toolgun mouse rotation
 	RegisterButtonPressedCallback( KEY_E, KeyPress_ToolgunRotate );
 	RegisterButtonReleasedCallback( KEY_E, KeyRelease_ToolgunRotate );
+	RegisterButtonPressedCallback( KEY_LSHIFT, KeyPress_ToolgunRotateSnap );
+	RegisterButtonReleasedCallback( KEY_LSHIFT, KeyRelease_ToolgunRotateSnap );
 
 	// todo: better prop rotation
 	RegisterButtonPressedCallback( KEY_PAD_8, KeyPress_ToolgunRotate_PitchUp );
@@ -150,30 +152,50 @@ void function MousePress_ToolgunGrab( var button )
 
 void function MouseRelease_ToolgunGrab( var button )
 {
-	// AddPlayerHint( 0.5, 0.25, $"", "Toolgun Release" );
+	Toolgun_StopRotation();
 	ToolgunGrab.GrabbedEntity = null;
 	GetLocalClientPlayer().ClientCommand( "Toolgun_ReleaseEntity" );
 }
 
 void function KeyPress_ToolgunRotate( var button )
 {
-	AddPlayerHint( 0.5, 0.25, $"", "Toolgun rotate on" );
+	if( IsValid( ToolgunGrab.GrabbedEntity ) )
+	{
+		ToolgunGrab.IsRotating = true;
 
-	ToolgunGrab.IsRotating = true;
+		entity player = GetLocalClientPlayer();
+		vector angles = player.EyeAngles();
+		ToolgunGrab.LastEyeAngles = angles;
 
-	entity player = GetLocalClientPlayer();
-	vector angles = player.EyeAngles();
-	ToolgunGrab.LastEyeAngles = angles;
+		GetLocalClientPlayer().FreezeControlsOnClient();
 
-	GetLocalClientPlayer().FreezeControlsOnClient();
-
-	GetLocalClientPlayer().ClientCommand( "Toolgun_Grab_StartRotate " + angles.x + " " + angles.y + " " + angles.z );
+		GetLocalClientPlayer().ClientCommand( "Toolgun_Grab_StartRotate " + angles.x + " " + angles.y + " " + angles.z );
+	}
 }
 
 void function KeyRelease_ToolgunRotate( var button )
 {
-	AddPlayerHint( 0.5, 0.25, $"", "Toolgun rotate off" );
+	if( IsValid( ToolgunGrab.GrabbedEntity ) )
+	{
+		Toolgun_StopRotation();
+	}
+}
 
+void function KeyPress_ToolgunRotateSnap( var button )
+{
+	if( IsValid( ToolgunGrab.GrabbedEntity ) )
+	{
+		GetLocalClientPlayer().ClientCommand( "Toolgun_Grab_RotateSnap 1" );
+	}
+}
+
+void function KeyRelease_ToolgunRotateSnap( var button )
+{
+	GetLocalClientPlayer().ClientCommand( "Toolgun_Grab_RotateSnap 0" );
+}
+
+void function Toolgun_StopRotation()
+{
 	ToolgunGrab.IsRotating = false;
 	GetLocalClientPlayer().ClientCommand( "Toolgun_Grab_StopRotate" );
 	GetLocalClientPlayer().UnfreezeControlsOnClient();
@@ -183,7 +205,6 @@ void function Toolgun_PerformRotate( float x, float y, float z )
 {
 	if( Toolgun_CanUseKeyboardInput() )
 	{
-		// AddPlayerHint( 0.5, 0.25, $"", "Rotate " + x + " " + y + " " + z );
 		GetLocalClientPlayer().ClientCommand( "Toolgun_Grab_PerformRotation " + x + " " + y + " " + z );
 	}
 }

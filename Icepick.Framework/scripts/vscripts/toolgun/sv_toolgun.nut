@@ -17,7 +17,8 @@ struct {
 	vector RotatePivot,
 	float GrabDistance,
 	bool IsRotating,
-	vector LockViewAngle,
+	bool IsSnapping,
+	vector SnapAccumulatedAngles,
 
 	entity GrabBeamEffect,
 	entity GrabBeamTarget
@@ -27,16 +28,17 @@ void function Toolgun_Server_Init()
 {
 	AddSpawnCallback( "player", ToolgunSv_OnPlayerSpawned );
 
-	AddClientCommandCallback( "Toolgun_ToggleEnabled", ClientCommand_Toolgun_ToggleEnabled )
-	AddClientCommandCallback( "Toolgun_SetMode", ClientCommand_Toolgun_SetMode )
-	AddClientCommandCallback( "Toolgun_PrimaryAttack", ClientCommand_Toolgun_PrimaryAttack )
-	AddClientCommandCallback( "Toolgun_GrabEntity", ClientCommand_Toolgun_GrabEntity )
-	AddClientCommandCallback( "Toolgun_ReleaseEntity", ClientCommand_Toolgun_ReleaseEntity )
-	AddClientCommandCallback( "Toolgun_Grab_StartRotate", ClientCommand_Toolgun_Grab_StartRotate )
-	AddClientCommandCallback( "Toolgun_Grab_StopRotate", ClientCommand_Toolgun_Grab_StopRotate )
-	AddClientCommandCallback( "Toolgun_Grab_PerformRotation", ClientCommand_Toolgun_Grab_PerformRotation )
-	AddClientCommandCallback( "Toolgun_ChangeModel", ClientCommand_Toolgun_ChangeModel )
-	AddClientCommandCallback( "Toolgun_UndoSpawn", ClientCommand_Toolgun_UndoSpawn )
+	AddClientCommandCallback( "Toolgun_ToggleEnabled", ClientCommand_Toolgun_ToggleEnabled );
+	AddClientCommandCallback( "Toolgun_SetMode", ClientCommand_Toolgun_SetMode );
+	AddClientCommandCallback( "Toolgun_PrimaryAttack", ClientCommand_Toolgun_PrimaryAttack );
+	AddClientCommandCallback( "Toolgun_GrabEntity", ClientCommand_Toolgun_GrabEntity );
+	AddClientCommandCallback( "Toolgun_ReleaseEntity", ClientCommand_Toolgun_ReleaseEntity );
+	AddClientCommandCallback( "Toolgun_Grab_StartRotate", ClientCommand_Toolgun_Grab_StartRotate );
+	AddClientCommandCallback( "Toolgun_Grab_StopRotate", ClientCommand_Toolgun_Grab_StopRotate );
+	AddClientCommandCallback( "Toolgun_Grab_RotateSnap", ClientCommand_Toolgun_Grab_RotateSnap );
+	AddClientCommandCallback( "Toolgun_Grab_PerformRotation", ClientCommand_Toolgun_Grab_PerformRotation );
+	AddClientCommandCallback( "Toolgun_ChangeModel", ClientCommand_Toolgun_ChangeModel );
+	AddClientCommandCallback( "Toolgun_UndoSpawn", ClientCommand_Toolgun_UndoSpawn );
 }
 
 void function ToolgunSv_OnPlayerSpawned( entity player )
@@ -212,7 +214,6 @@ bool function ClientCommand_Toolgun_Grab_StartRotate( entity player, array<strin
 		ToolgunGrab.RotatePivot = traceResults.endPos;
 	}
 	ToolgunGrab.IsRotating = true;
-	// ToolgunGrab.LockViewAngle = Vector( args[0].tofloat(), args[1].tofloat(), args[2].tofloat() );
 	return true;
 }
 
@@ -222,22 +223,61 @@ bool function ClientCommand_Toolgun_Grab_StopRotate( entity player, array<string
 	return true;
 }
 
+bool function ClientCommand_Toolgun_Grab_RotateSnap( entity player, array<string> args )
+{
+	ToolgunGrab.IsSnapping = args[0] == "1";
+	ToolgunGrab.SnapAccumulatedAngles = Vector( 0, 0, 0 );
+	return true;
+}
+
 bool function ClientCommand_Toolgun_Grab_PerformRotation( entity player, array<string> args )
 {
 	if( ToolgunGrab.GrabbedEntity != null )
 	{
 		float pitchInput = args[0].tofloat();
 		float yawInput = args[1].tofloat();
-		float rollInput = 0;
+		float rollInput = args[2].tofloat();
 
 		if(pitchInput == -1 && yawInput == -1 && rollInput == -1)
 		{
 			ToolgunGrab.GrabbedEntity.SetAngles( Vector(0, 0, 0) );
 		}
-		else //if ( fabs( xInput ) + fabs( yInput ) >= 0.05 )
+		else
 		{
-			float rotateSpeed = 0.05;
+			float rotateSpeed = GetConVarValue( "physgun_sensitivity", 0.05 );
+			float snapAngle = GetConVarValue( "physgun_snap", 30 );
 			vector rotationInput = Vector( pitchInput, yawInput, rollInput ) * rotateSpeed;
+
+			if( ToolgunGrab.IsSnapping )
+			{
+				ToolgunGrab.SnapAccumulatedAngles += rotationInput;
+				float ax = ToolgunGrab.SnapAccumulatedAngles.x;
+				float ay = ToolgunGrab.SnapAccumulatedAngles.y;
+				float az = ToolgunGrab.SnapAccumulatedAngles.z;
+
+				rotationInput = Vector( 0, 0, 0 );
+
+				if( fabs( ToolgunGrab.SnapAccumulatedAngles.x ) > snapAngle )
+				{
+					float sign = ax > 0 ? 1.0 : -1.0;
+					rotationInput.x = snapAngle * sign;
+					ax -= snapAngle * sign;
+				}
+				if( fabs( ToolgunGrab.SnapAccumulatedAngles.y ) > snapAngle )
+				{
+					float sign = ay > 0 ? 1.0 : -1.0;
+					rotationInput.y = snapAngle * sign;
+					ay -= snapAngle * sign;
+				}
+				if( fabs( ToolgunGrab.SnapAccumulatedAngles.z ) > snapAngle )
+				{
+					float sign = az > 0 ? 1.0 : -1.0;
+					rotationInput.z = snapAngle * sign;
+					az -= snapAngle * sign;
+				}
+
+				ToolgunGrab.SnapAccumulatedAngles = Vector( ax, ay, az );
+			}
 
 			vector rotXAxis = Vector( 0, 0, 1 );
 			vector rotYAxis = AnglesToRight( player.EyeAngles() );
@@ -262,12 +302,32 @@ bool function ClientCommand_Toolgun_Grab_PerformRotation( entity player, array<s
 
 			Quaternion result = Quaternion_Multiply( Quaternion_Multiply( entQuat, transRotXQuat ), transRotYQuat );
 			vector newAngles = Quaternion_Angles( result );
+			if( ToolgunGrab.IsSnapping )
+			{
+				newAngles.x = RoundToNearestMultiple( newAngles.x, snapAngle );
+				newAngles.y = RoundToNearestMultiple( newAngles.y, snapAngle );
+				newAngles.z = RoundToNearestMultiple( newAngles.z, snapAngle );
+			}
 
 			ToolgunGrab.GrabbedEntity.SetAngles( newAngles );
 		}
 
 	}
 	return true;
+}
+
+// Alsmot duplicate of RoundToNearestMultiplier, but that doesn't handle negative numbers correctly for the rotation
+float function RoundToNearestMultiple( float value, float multiplier )
+{
+	float remainder = value % multiplier;
+	remainder = remainder >= 0 ? remainder : multiplier - fabs(remainder);
+
+	value -= remainder;
+
+	if ( remainder >= ( multiplier / 2 ) )
+		value += multiplier
+
+	return value
 }
 
 bool function ClientCommand_Toolgun_ChangeModel( entity player, array<string> args )
@@ -287,7 +347,6 @@ void function ToolgunGrab_Think( entity player )
 
 		if( ToolgunGrab.IsRotating )
 		{
-			//player.SnapEyeAngles( ToolgunGrab.LockViewAngle );
 			// vector entAngles = ToolgunGrab.GrabbedEntity.GetAngles();
 			// entAngles.y = (entAngles.y + 45 * FrameTime()) % 360.0
 			// ToolgunGrab.GrabbedEntity.SetAngles( entAngles );
