@@ -22,6 +22,8 @@ struct {
 
 	entity GrabBeamEffect,
 	entity GrabBeamTarget
+
+	array<string> WeaponsTakenFromPlayer
 } ToolgunGrab;
 
 void function Toolgun_Server_Init()
@@ -37,6 +39,7 @@ void function Toolgun_Server_Init()
 	AddClientCommandCallback( "Toolgun_Grab_StopRotate", ClientCommand_Toolgun_Grab_StopRotate );
 	AddClientCommandCallback( "Toolgun_Grab_RotateSnap", ClientCommand_Toolgun_Grab_RotateSnap );
 	AddClientCommandCallback( "Toolgun_Grab_PerformRotation", ClientCommand_Toolgun_Grab_PerformRotation );
+	AddClientCommandCallback( "Toolgun_Grab_MoveForward", ClientCommand_Toolgun_Grab_MoveForward );
 	AddClientCommandCallback( "Toolgun_ChangeModel", ClientCommand_Toolgun_ChangeModel );
 	AddClientCommandCallback( "Toolgun_UndoSpawn", ClientCommand_Toolgun_UndoSpawn );
 }
@@ -189,6 +192,19 @@ bool function ClientCommand_Toolgun_GrabEntity( entity player, array<string> arg
 		ToolgunGrab.GrabBeamEffect = zapBeam;
 		*/
 
+		// Remove player non-toolgun weapons and give them back after stop moving prop
+		ToolgunGrab.WeaponsTakenFromPlayer.clear();
+		array<entity> weapons = player.GetMainWeapons();
+		foreach ( weapon in weapons )
+		{
+			if( weapon != player.GetActiveWeapon() )
+			{
+				string weaponClassName = weapon.GetWeaponClassName();
+				player.TakeWeaponNow( weaponClassName );
+				ToolgunGrab.WeaponsTakenFromPlayer.append( weaponClassName );
+			}
+		}
+
 		thread ToolgunGrab_Think( player );
 		return true;
 	}
@@ -200,6 +216,13 @@ bool function ClientCommand_Toolgun_ReleaseEntity( entity player, array<string> 
 	ToolgunGrab.GrabbedEntity = null;
 	// ToolgunGrab.GrabBeamEffect.Destroy();
 	// ToolgunGrab.GrabBeamTarget.Destroy();
+
+	// Give weapons back to player
+	foreach( weapon in ToolgunGrab.WeaponsTakenFromPlayer )
+	{
+		player.GiveWeapon( weapon );
+	}
+	ToolgunGrab.WeaponsTakenFromPlayer.clear();
 
 	return true;
 }
@@ -328,6 +351,13 @@ float function RoundToNearestMultiple( float value, float multiplier )
 		value += multiplier
 
 	return value
+}
+
+bool function ClientCommand_Toolgun_Grab_MoveForward( entity player, array<string> args )
+{
+	float direction = args[0] == "1" ? 1.0 : -1.0;
+	ToolgunGrab.GrabDistance += direction * GetConVarValue( "physgun_speed", 30.0 );
+	return true;
 }
 
 bool function ClientCommand_Toolgun_ChangeModel( entity player, array<string> args )

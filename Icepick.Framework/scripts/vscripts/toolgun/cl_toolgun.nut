@@ -19,9 +19,6 @@ void function Toolgun_Client_Init()
 {
 	RegisterButtonPressedCallback( KEY_HOME, KeyPress_ToolgunToggleEnabled );
 
-	RegisterButtonPressedCallback( KEY_PAD_MINUS, KeyPress_ToolgunPrevMode );
-	RegisterButtonPressedCallback( KEY_PAD_PLUS, KeyPress_ToolgunNextMode );
-
 	RegisterButtonPressedCallback( MOUSE_RIGHT, MousePress_ToolgunGrab );
 	RegisterButtonReleasedCallback( MOUSE_RIGHT, MouseRelease_ToolgunGrab );
 
@@ -33,7 +30,10 @@ void function Toolgun_Client_Init()
 	RegisterButtonPressedCallback( KEY_LSHIFT, KeyPress_ToolgunRotateSnap );
 	RegisterButtonReleasedCallback( KEY_LSHIFT, KeyRelease_ToolgunRotateSnap );
 
-	// todo: better prop rotation
+	RegisterButtonReleasedCallback( MOUSE_WHEEL_UP, KeyPress_ScrollUp );
+	RegisterButtonReleasedCallback( MOUSE_WHEEL_DOWN, KeyPress_ScrollDown );
+
+	// Fine rotation using numpad
 	RegisterButtonPressedCallback( KEY_PAD_8, KeyPress_ToolgunRotate_PitchUp );
 	RegisterButtonPressedCallback( KEY_PAD_2, KeyPress_ToolgunRotate_PitchDown );
 	RegisterButtonPressedCallback( KEY_PAD_4, KeyPress_ToolgunRotate_YawLeft );
@@ -67,16 +67,6 @@ void function Toolgun_Client_ToggleEditMode()
 	ToolgunModeEnabled = !ToolgunModeEnabled;
 	GetLocalClientPlayer().ClientCommand( "Toolgun_ToggleEnabled " + (ToolgunModeEnabled ? 1 : 0) );
 	EmitSoundOnEntity( GetLocalClientPlayer(), "menu_click" );
-}
-
-void function KeyPress_ToolgunNextMode( var button )
-{
-	Toolgun_Client_ChangeTool( 1 );
-}
-
-void function KeyPress_ToolgunPrevMode( var button )
-{
-	Toolgun_Client_ChangeTool( -1 );
 }
 
 void function Toolgun_Client_SelectTool( string id )
@@ -192,6 +182,16 @@ void function KeyPress_ToolgunRotateSnap( var button )
 void function KeyRelease_ToolgunRotateSnap( var button )
 {
 	GetLocalClientPlayer().ClientCommand( "Toolgun_Grab_RotateSnap 0" );
+}
+
+void function KeyPress_ScrollUp( var button )
+{
+	GetLocalClientPlayer().ClientCommand( "Toolgun_Grab_MoveForward 1" );
+}
+
+void function KeyPress_ScrollDown( var button )
+{
+	GetLocalClientPlayer().ClientCommand( "Toolgun_Grab_MoveForward -1" );
 }
 
 void function Toolgun_StopRotation()
