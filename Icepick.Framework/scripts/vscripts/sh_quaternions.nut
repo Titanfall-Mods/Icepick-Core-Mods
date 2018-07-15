@@ -54,8 +54,24 @@ Quaternion function Quaternion_Invert( Quaternion q )
 Quaternion function Quaternion_Multiply( Quaternion left, Quaternion right )
 {
 	Quaternion out;
-	out.Xyz = right.W * left.Xyz + left.W * right.Xyz + CrossProduct( left.Xyz, right.Xyz );
-	out.W = left.W * right.W - DotProduct( left.Xyz, right.Xyz );
+
+	float lx = left.Xyz.x;
+	float ly = left.Xyz.y;
+	float lz = left.Xyz.z;
+	float lw = left.W;
+
+	float rx = right.Xyz.x;
+	float ry = right.Xyz.y;
+	float rz = right.Xyz.z;
+	float rw = right.W;
+
+	vector vec;
+	vec.x = lx * rw + lw * rx + ly * rz - lz * ry;
+    vec.y = ly * rw + lw * ry + lz * rx - lx * rz;
+    vec.z = lz * rw + lw * rz + lx * ry - ly * rx;
+    out.W = lw * rw - lx * rx - ly * ry - lz * rz;
+    out.Xyz = vec;
+    
 	return out;
 }
 

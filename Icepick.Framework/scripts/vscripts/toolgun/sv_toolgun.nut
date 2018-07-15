@@ -229,8 +229,7 @@ bool function ClientCommand_Toolgun_Grab_PerformRotation( entity player, array<s
 		else //if ( fabs( xInput ) + fabs( yInput ) >= 0.05 )
 		{
 			float rotateSpeed = 0.05;
-			vector rotationInput = Vector( -pitchInput, yawInput, rollInput ) * rotateSpeed;
-			print(rotationInput);
+			vector rotationInput = Vector( pitchInput, yawInput, rollInput ) * rotateSpeed;
 
 			vector entAngles = ToolgunGrab.GrabbedEntity.GetAngles();
 			Quaternion entQuat = toQuaternion( entAngles );
@@ -244,6 +243,7 @@ bool function ClientCommand_Toolgun_Grab_PerformRotation( entity player, array<s
 
 			Quaternion result = Quaternion_Multiply( Quaternion_Multiply( entQuat, rotXQuat ), rotYQuat );
 			vector newAngles = Quaternion_Angles( result );
+
 			ToolgunGrab.GrabbedEntity.SetAngles( newAngles );
 		}
 
