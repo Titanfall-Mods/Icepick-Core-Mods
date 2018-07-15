@@ -23,7 +23,7 @@ void function Spawnmenu_Init_Weapons()
 	RegisterCategoryItem( "wep_pilot_primary", "mp_weapon_lstar", Localize("#WPN_LSTAR") );
 	RegisterCategoryItem( "wep_pilot_primary", "mp_weapon_esaw", Localize("#WPN_ESAW") );
 	RegisterCategoryItem( "wep_pilot_primary", "mp_weapon_sniper", Localize("#WPN_SNIPER") );
-	RegisterCategoryItem( "wep_pilot_primary", "mp_weapon_doubletake", Localize("#WPN_SNIPER") );
+	RegisterCategoryItem( "wep_pilot_primary", "mp_weapon_doubletake", Localize("#WPN_DOUBLETAKE") );
 	RegisterCategoryItem( "wep_pilot_primary", "mp_weapon_dmr", Localize("#WPN_DMR") );
 	RegisterCategoryItem( "wep_pilot_primary", "mp_weapon_shotgun", Localize("#WPN_SHOTGUN") );
 	RegisterCategoryItem( "wep_pilot_primary", "mp_weapon_mastiff", Localize("#WPN_MASTIFF") );
