@@ -58,12 +58,12 @@
 			"ServerCallback": "Toolgun_Shared_Init"
 		},
 		{
-			"Path": "toolgun/cl_toolgun.nut",
-			"RunOn": "CLIENT"
-		},
-		{
 			"Path": "toolgun/sv_toolgun.nut",
 			"RunOn": "SERVER"
+		},
+		{
+			"Path": "toolgun/cl_toolgun.nut",
+			"RunOn": "CLIENT"
 		},
 		{
 			"Path": "toolgun/ui_toolgun.nut",

@@ -33,18 +33,18 @@ void function Spawnmenu_Init()
 	#if CLIENT
 	ClearSpawnmenu(); // Clear spawnmenu items from previous session
 
-	RegisterButtonPressedCallback( KEY_TAB, Spawnmenu_ToggleOpen );
-	RegisterButtonPressedCallback( KEY_X, Spawnmenu_ToggleNoclip );
+	RegisterConCommandTriggeredCallback( "+showscores", Spawnmenu_ToggleOpen );
 	#endif
 
 	#if SERVER
 	// IsNoclipping only exists on the server, so serve noclip requests by sending them to the server first
-	AddClientCommandCallback( "Spawnmenu_RequestNoclipToggle", ClientCommand_Spawnmenu_RequestNoclipToggle );
+	// Command is bound and activated from scripts/kb_act.lst
+	AddClientCommandCallback( "toggle_noclip", ClientCommand_Spawnmenu_RequestNoclipToggle );
 	#endif
 }
 
 #if CLIENT
-void function Spawnmenu_ToggleOpen( var button )
+void function Spawnmenu_ToggleOpen( entity player )
 {
 	file.isSpawnMenuOpen = !file.isSpawnMenuOpen;
 	if( file.isSpawnMenuOpen )
@@ -55,11 +55,6 @@ void function Spawnmenu_ToggleOpen( var button )
 	{
 		GetLocalClientPlayer().ClientCommand( "hide_icepick_menu" );
 	}
-}
-
-void function Spawnmenu_ToggleNoclip( var button )
-{
-	GetLocalClientPlayer().ClientCommand( "Spawnmenu_RequestNoclipToggle" );
 }
 #endif
 
@@ -345,7 +340,7 @@ void function Spawnmenu_SpawnNpc( string npcId )
 void function Spawnmenu_ToggleEditMode()
 {
 #if CLIENT
-	Toolgun_Client_ToggleEditMode();
+	GetLocalClientPlayer().ClientCommand( "toggle_toolgun" );
 
 	foreach ( callbackFunc in file.onToolEditModeChangedCallbacks )
 	{

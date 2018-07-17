@@ -17,18 +17,18 @@ global ToolgunGrabStruct ToolgunGrab;
 
 void function Toolgun_Client_Init()
 {
-	RegisterButtonPressedCallback( KEY_HOME, KeyPress_ToolgunToggleEnabled );
+	RegisterConCommandTriggeredCallback( "toggle_toolgun", KeyPress_ToolgunToggleEnabled );
 
-	RegisterButtonPressedCallback( MOUSE_RIGHT, MousePress_ToolgunGrab );
-	RegisterButtonReleasedCallback( MOUSE_RIGHT, MouseRelease_ToolgunGrab );
+	RegisterConCommandTriggeredCallback( "+zoom", MousePress_ToolgunGrab );
+	RegisterConCommandTriggeredCallback( "-zoom", MouseRelease_ToolgunGrab );
 
-	RegisterButtonPressedCallback( KEY_BACKSPACE, KeyPress_Toolgun_UndoSpawn );
+	RegisterConCommandTriggeredCallback( "undo", KeyPress_Toolgun_UndoSpawn );
 
 	// Toolgun mouse rotation
-	RegisterButtonPressedCallback( KEY_E, KeyPress_ToolgunRotate );
-	RegisterButtonReleasedCallback( KEY_E, KeyRelease_ToolgunRotate );
-	RegisterButtonPressedCallback( KEY_LSHIFT, KeyPress_ToolgunRotateSnap );
-	RegisterButtonReleasedCallback( KEY_LSHIFT, KeyRelease_ToolgunRotateSnap );
+	RegisterConCommandTriggeredCallback( "+use", KeyPress_ToolgunRotate );
+	RegisterConCommandTriggeredCallback( "-use", KeyRelease_ToolgunRotate );
+	RegisterConCommandTriggeredCallback( "+speed", KeyPress_ToolgunRotateSnap );
+	RegisterConCommandTriggeredCallback( "-speed", KeyRelease_ToolgunRotateSnap );
 
 	RegisterButtonReleasedCallback( MOUSE_WHEEL_UP, KeyPress_ScrollUp );
 	RegisterButtonReleasedCallback( MOUSE_WHEEL_DOWN, KeyPress_ScrollDown );
