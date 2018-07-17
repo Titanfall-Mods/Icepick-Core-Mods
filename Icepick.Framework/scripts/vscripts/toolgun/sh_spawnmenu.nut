@@ -34,6 +34,12 @@ void function Spawnmenu_Init()
 	ClearSpawnmenu(); // Clear spawnmenu items from previous session
 
 	RegisterButtonPressedCallback( KEY_TAB, Spawnmenu_ToggleOpen );
+	RegisterButtonPressedCallback( KEY_X, Spawnmenu_ToggleNoclip );
+	#endif
+
+	#if SERVER
+	// IsNoclipping only exists on the server, so serve noclip requests by sending them to the server first
+	AddClientCommandCallback( "Spawnmenu_RequestNoclipToggle", ClientCommand_Spawnmenu_RequestNoclipToggle );
 	#endif
 }
 
@@ -49,6 +55,26 @@ void function Spawnmenu_ToggleOpen( var button )
 	{
 		GetLocalClientPlayer().ClientCommand( "hide_icepick_menu" );
 	}
+}
+
+void function Spawnmenu_ToggleNoclip( var button )
+{
+	GetLocalClientPlayer().ClientCommand( "Spawnmenu_RequestNoclipToggle" );
+}
+#endif
+
+#if SERVER
+bool function ClientCommand_Spawnmenu_RequestNoclipToggle( entity player, array<string> args )
+{
+	if( player.IsNoclipping() )
+	{
+		ClientCommand( player, "noclip_disable" );
+	}
+	else
+	{
+		ClientCommand( player, "noclip_enable" );
+	}
+	return true;
 }
 #endif
 
