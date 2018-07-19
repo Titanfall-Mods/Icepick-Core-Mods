@@ -1,6 +1,10 @@
 
 global function Spawnmenu_Init_Saves
 
+#if CLIENT
+global function Spawnmenu_OnSavedGameToFile
+#endif
+
 #if SERVER
 global function Spawnmenu_PerformUtility
 global function AddOnSpawnmenuUtilityCallback
@@ -8,7 +12,8 @@ global function AddOnSpawnmenuUtilityCallback
 
 struct
 {
-	array<void functionref(string id)> onPerformUtilityCallback
+	array<void functionref(string id)> onPerformUtilityCallback,
+	array<string> existingSaveFiles
 } file
 
 void function Spawnmenu_Init_Saves()
@@ -32,33 +37,58 @@ void function Spawnmenu_Init_Saves()
 	array<string> saveNames = UntypedArrayToStringArray( GetSaveFiles() );
 	foreach( saveFile in saveNames )
 	{
-		array<string> splitName = split( saveFile, "\\" );
-		splitName = split( splitName[splitName.len() - 1], "." );
-
-		string saveMap = splitName[ splitName.len() - 2 ];
-		bool isCurrentMapSave = saveMap == GetMapName();
-		string itemCategory = isCurrentMapSave ? "saves-current" : "saves-all";
-
-		string fileName = "";
-		string displayName = "";
-		for( int i = 0; i < splitName.len(); ++i )
-		{
-			fileName += (fileName == "" ? "" : ".") + splitName[i];
-			if( i < splitName.len() - 2 )
-			{
-				displayName += (displayName == "" ? "" : ".") + splitName[i];
-			}
-		}
-
-		if( !isCurrentMapSave )
-		{
-			displayName += " (" + Localize("#" + saveMap.toupper()) + ")";
-		}
-
-		RegisterCategoryItem( itemCategory, fileName, displayName );
+		AddSaveFileToMenu( saveFile );
 	}
 	#endif
 }
+
+#if CLIENT
+void function AddSaveFileToMenu( string saveFile )
+{
+	// Make sure the file is unique when we refresh the list
+	foreach( existingSave in file.existingSaveFiles )
+	{
+		if( existingSave == saveFile )
+		{
+			return;
+		}
+	}
+
+	// Parse and add the file
+	array<string> splitName = split( saveFile, "\\" );
+	splitName = split( splitName[splitName.len() - 1], "." );
+
+	string saveMap = splitName[ splitName.len() - 2 ];
+	bool isCurrentMapSave = saveMap == GetMapName();
+	string itemCategory = isCurrentMapSave ? "saves-current" : "saves-all";
+
+	string fileName = "";
+	string displayName = "";
+	for( int i = 0; i < splitName.len(); ++i )
+	{
+		fileName += (fileName == "" ? "" : ".") + splitName[i];
+		if( i < splitName.len() - 2 )
+		{
+			displayName += (displayName == "" ? "" : ".") + splitName[i];
+		}
+	}
+
+	if( !isCurrentMapSave )
+	{
+		displayName += " (" + Localize("#" + saveMap.toupper()) + ")";
+	}
+
+	RegisterCategoryItem( itemCategory, fileName, displayName );
+
+	// Record the file as existing so we don't get duplicates
+	file.existingSaveFiles.append( saveFile );
+}
+
+void function Spawnmenu_OnSavedGameToFile( string fileName )
+{
+	AddSaveFileToMenu( fileName );
+}
+#endif
 
 #if SERVER
 

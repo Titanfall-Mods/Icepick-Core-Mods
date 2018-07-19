@@ -39,7 +39,12 @@ void function IcepickSave( string saveName = "SaveGame" )
 	}
 
 	// Write the save to file
-	WriteSaveBufferToFile( saveName + "." + GetMapName() + ".txt" );
+	string saveSuffix = "." + GetMapName() + ".txt";
+	if( saveName.find( saveSuffix ) == null )
+	{
+		saveName += saveSuffix;
+	}
+	WriteSaveBufferToFile( saveName );
 }
 
 string function IcepickSaveOutput( ... )
