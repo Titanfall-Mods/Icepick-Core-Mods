@@ -26,7 +26,6 @@ void function Spawnmenu_LoadSave( string saveName )
 		tokens.remove( 0 );
 		HandleLoadToken( id, tokens );
 	}
-
 }
 
 void function HandleLoadToken( string id, array<string> data )

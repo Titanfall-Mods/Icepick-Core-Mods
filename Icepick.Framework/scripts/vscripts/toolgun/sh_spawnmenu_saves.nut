@@ -24,8 +24,9 @@ void function Spawnmenu_Init_Saves()
 	RegisterCategoryItem( "utilities", "cleanup.weapons", "Cleanup Weapons" );
 	RegisterCategoryItem( "utilities", "cleanup.npcs", "Cleanup NPCs" );
 
-	// Add a category where all our saves will be listed
-	RegisterPageCategory( "saves", "saves", "Saves", "Spawnmenu_LoadSave" );
+	// Add categories where all our saves will be listed
+	RegisterPageCategory( "saves", "saves-current", Localize("#" + GetMapName().toupper()) + " Saves", "Spawnmenu_LoadSave" ); // Current map saves
+	RegisterPageCategory( "saves", "saves-all", "Saves for all other maps", "Spawnmenu_LoadSave" ); // Saves for all other maps just in case
 
 	// List save files in the saves folder
 	array<string> saveNames = UntypedArrayToStringArray( GetSaveFiles() );
@@ -33,18 +34,28 @@ void function Spawnmenu_Init_Saves()
 	{
 		array<string> splitName = split( saveFile, "\\" );
 		splitName = split( splitName[splitName.len() - 1], "." );
+
+		string saveMap = splitName[ splitName.len() - 2 ];
+		bool isCurrentMapSave = saveMap == GetMapName();
+		string itemCategory = isCurrentMapSave ? "saves-current" : "saves-all";
+
 		string fileName = "";
 		string displayName = "";
 		for( int i = 0; i < splitName.len(); ++i )
 		{
 			fileName += (fileName == "" ? "" : ".") + splitName[i];
-			if( i < splitName.len() - 1 )
+			if( i < splitName.len() - 2 )
 			{
 				displayName += (displayName == "" ? "" : ".") + splitName[i];
 			}
 		}
 
-		RegisterCategoryItem( "saves", fileName, displayName );
+		if( !isCurrentMapSave )
+		{
+			displayName += " (" + Localize("#" + saveMap.toupper()) + ")";
+		}
+
+		RegisterCategoryItem( itemCategory, fileName, displayName );
 	}
 	#endif
 }

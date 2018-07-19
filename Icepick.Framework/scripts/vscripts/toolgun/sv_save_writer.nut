@@ -12,6 +12,9 @@ void function IcepickSave( string saveName = "SaveGame" )
 {
 	ClearSaveBuffer();
 
+	// Save the current map
+	AddSaveItem( IcepickSaveOutput( "map", GetMapName() ) );
+
 	// Save all props placed by players
 	for( int i = 0; i < ToolgunData.SpawnedEntities.len(); ++i )
 	{
@@ -36,7 +39,7 @@ void function IcepickSave( string saveName = "SaveGame" )
 	}
 
 	// Write the save to file
-	WriteSaveBufferToFile( saveName + ".txt" );
+	WriteSaveBufferToFile( saveName + "." + GetMapName() + ".txt" );
 }
 
 string function IcepickSaveOutput( ... )
