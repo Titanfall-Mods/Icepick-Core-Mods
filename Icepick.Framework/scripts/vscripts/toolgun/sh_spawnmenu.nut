@@ -198,7 +198,7 @@ void function Spawnmenu_SpawnModel( string modelName )
 	Toolgun_Utils_FireToolTracer( player );
 
 	vector eyePosition = player.EyePosition();
-	TraceResults traceResults = TraceLine( eyePosition, eyePosition + player.GetViewVector() * 10000, player, TRACE_MASK_PLAYERSOLID, TRACE_COLLISION_GROUP_PLAYER );
+	TraceResults traceResults = TraceLineHighDetail( eyePosition, eyePosition + player.GetViewVector() * 10000, player, TRACE_MASK_PLAYERSOLID, TRACE_COLLISION_GROUP_PLAYER );
 
 	vector Pos = traceResults.endPos;
 	vector Ang = Vector( 0, player.EyeAngles().y, 0 );
