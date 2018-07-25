@@ -2,6 +2,7 @@ global function CustomGauntlet_Server_Init
 
 const float GAUNTLET_ENEMY_MISSED_TIME_PENALTY = 2.0;
 const float GAUNTLET_TARGET_DISSOLVE_TIME = 1.0 * 100;
+const float GAUNTLET_WEAPON_RESPAWN_TIME = 2.2;
 
 global enum GauntletTriggerEntity
 {
@@ -72,6 +73,29 @@ void function CustomGauntlet_Server_Think_EditMode()
 			CustomGauntletsGlobal.DevelopmentTrack.Targets.remove( i );
 		}
 	}
+
+	// Remove any respawning weapons that've been deleted
+	for( int i = CustomGauntletsGlobal.DevelopmentTrack.RespawningWeapons.len() - 1; i >= 0; --i )
+	{
+		GauntletWeapon respawningWeapon = CustomGauntletsGlobal.DevelopmentTrack.RespawningWeapons[i];
+		if( !IsValid( respawningWeapon.ReferenceEnt ) )
+		{
+			// Remove the spawned weapon
+			entity ent = respawningWeapon.ReferenceEnt;
+			if( ent.e.attachedEnts.len() && IsValid( ent.e.attachedEnts[0] ) )
+			{
+				entity weaponEnt = ent.e.attachedEnts[0];
+				if( IsValid( weaponEnt ) && !weaponEnt.GetOwner() )
+				{
+					weaponEnt.Destroy();
+				}
+			}
+
+			// Remove the weapon spawner
+			CustomGauntletsGlobal.DevelopmentTrack.RespawningWeapons.remove( i );
+		}
+	}
+
 }
 
 void function CustomGauntlet_Server_Think_PlayMode()

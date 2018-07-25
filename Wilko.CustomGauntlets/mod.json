@@ -84,5 +84,11 @@
 			"ClientCallback": "Toolgun_RegisterTool_GauntletPlaceLeaderboard",
 			"ServerCallback": "Toolgun_RegisterTool_GauntletPlaceLeaderboard"
 		},
+		{
+			"Path": "gauntlet/tools/sh_tool_gauntlet_weapon.nut",
+			"RunOn": "SERVER || CLIENT",
+			"ClientCallback": "Toolgun_RegisterTool_GauntletPlaceWeapon",
+			"ServerCallback": "Toolgun_RegisterTool_GauntletPlaceWeapon"
+		},
 	],
 }

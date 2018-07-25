@@ -44,6 +44,13 @@ global struct GauntletWorldUI
 	entity ReferenceEnt
 };
 
+global struct GauntletWeapon
+{
+	string WeaponClass,
+	float TimeToRespawn = -1.0,
+	entity ReferenceEnt
+};
+
 global struct GauntletHighscore
 {
 	string Name,
@@ -61,6 +68,7 @@ global struct GauntletTrack
 	array<TargetEnemy> Targets,
 	array<GauntletWorldUI> Scoreboards,
 	array<GauntletWorldUI> StatsBoards,
+	array<GauntletWeapon> RespawningWeapons,
 
 	array<string> Tips = [ // Keep tips part of the track data so we can add custom ones
 		"#GAUNTLET_TIP_0",

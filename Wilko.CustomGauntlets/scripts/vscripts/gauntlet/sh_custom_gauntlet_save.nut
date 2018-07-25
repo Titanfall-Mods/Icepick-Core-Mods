@@ -1,4 +1,6 @@
 
+const float CUSTOM_GAUNTLET_SAVE_VERSION = 1.0;
+
 #if CLIENT
 global function CustomGauntlet_Client_SaveInit
 #endif
@@ -46,11 +48,16 @@ void function CleanupGauntlets()
 	{
 		CustomGauntletsGlobal.DevelopmentTrack.Targets[i].SpawnedEnemy.Destroy();
 	}
+	for( int i = 0; i < CustomGauntletsGlobal.DevelopmentTrack.RespawningWeapons.len(); ++i )
+	{
+		CustomGauntletsGlobal.DevelopmentTrack.RespawningWeapons[i].ReferenceEnt.Destroy();
+	}
 }
 
 // Add custom gauntlet entities when creating a save
 void function OnIcepickSave()
 {
+	AddSaveItem( IcepickSaveOutput( "gauntlet.save-version", CUSTOM_GAUNTLET_SAVE_VERSION ) );
 	AddSaveItem( IcepickSaveOutput( "gauntlet.id", CustomGauntletsGlobal.DevelopmentTrack.Id ) );
 	AddSaveItem( IcepickSaveOutput( "gauntlet.name", CustomGauntletsGlobal.DevelopmentTrack.TrackName ) );
 
@@ -105,5 +112,13 @@ void function OnIcepickSave()
 		vector rot = worldUi.Rotation;
 		AddSaveItem( IcepickSaveOutput( "gauntlet.statsboard", pos.x, pos.y, pos.z, rot.x, rot.y, rot.z ) );
 	}
+
+	for( int i = 0; i < CustomGauntletsGlobal.DevelopmentTrack.RespawningWeapons.len(); ++i )
+	{
+		GauntletWeapon respawningWeapon = CustomGauntletsGlobal.DevelopmentTrack.RespawningWeapons[i];
+		vector pos = respawningWeapon.ReferenceEnt.GetOrigin();
+		vector rot = respawningWeapon.ReferenceEnt.GetAngles();
+		AddSaveItem( IcepickSaveOutput( "gauntlet.weapon", respawningWeapon.WeaponClass, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z ) );
+	}	
 }
 #endif

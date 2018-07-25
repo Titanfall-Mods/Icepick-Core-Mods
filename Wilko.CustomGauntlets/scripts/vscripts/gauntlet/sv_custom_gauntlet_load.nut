@@ -39,6 +39,9 @@ void function HandleLoadToken( string id, array<string> data )
 		case "gauntlet.statsboard":
 			HandleLoadStatsboard( data );
 			break;
+		case "gauntlet.weapon":
+			HandleLoadWeapon( data );
+			break;
 	}
 }
 
@@ -110,4 +113,12 @@ void function HandleLoadStatsboard( array<string> data )
 	vector position = Vector( data[0].tofloat(), data[1].tofloat(), data[2].tofloat() );
 	vector angles = Vector( data[3].tofloat(), data[4].tofloat(), data[5].tofloat() );
 	CustomGauntlets_SpawnStatsboard( position, angles );
+}
+
+void function HandleLoadWeapon( array<string> data )
+{
+	string weaponClass = data[0];
+	vector position = Vector( data[1].tofloat(), data[2].tofloat(), data[3].tofloat() );
+	vector angle = Vector( data[4].tofloat(), data[5].tofloat(), data[6].tofloat() );
+	CustomGauntlet_SpawnRespawningWeapon( weaponClass, position, angle );
 }
