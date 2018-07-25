@@ -28,18 +28,8 @@
 			"RunOn": "SERVER || CLIENT"
 		},
 		{
-			"Path": "console/cl_console.nut",
-			"RunOn": "CLIENT"
-		},
-		{
-			"Path": "console/sv_console.nut",
-			"RunOn": "SERVER"
-		},
-		{
-			"Path": "console/sh_console.nut",
-			"RunOn": "SERVER || CLIENT",
-			"ClientCallback": "Console_Shared_Init",
-			"ServerCallback": "Console_Shared_Init"
+			"Path": "sh_convars.nut",
+			"RunOn": "SERVER || CLIENT"
 		},
 		{
 			"Path": "spawnlists/spmp_compiled_spawn_list.nut",
