@@ -3,6 +3,8 @@ global function IcepickSave
 global function IcepickSaveOutput
 global function AddOnIcepickSaveCallback
 
+const float LATEST_ICEPICK_SAVE_VERSION = 1.0;
+
 struct
 {
 	array<void functionref()> onIcepickSaveCallbacks
@@ -13,6 +15,7 @@ void function IcepickSave( string saveName = "SaveGame" )
 	ClearSaveBuffer();
 
 	// Save the current map
+	AddSaveItem( IcepickSaveOutput( "icepick.save-version", LATEST_ICEPICK_SAVE_VERSION ) );
 	AddSaveItem( IcepickSaveOutput( "map", GetMapName() ) );
 
 	// Save all props placed by players
