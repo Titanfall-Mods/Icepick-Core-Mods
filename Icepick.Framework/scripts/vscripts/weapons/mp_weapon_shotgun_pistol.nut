@@ -7,6 +7,7 @@ global function OnWeaponNpcPrimaryAttack_weapon_shotgun_pistol
 #endif // #if SERVER
 
 const SHOTGUN_PISTOL_MAX_BOLTS = 3 // this is the code limit for bolts per frame... do not increase.
+const TOOL_COOLDOWN_TIME = 0.125
 
 struct {
 	float[2][SHOTGUN_PISTOL_MAX_BOLTS] boltOffsets = [
@@ -15,6 +16,8 @@ struct {
 		[0.0, 0.0], //
 
 	]
+
+	float nextAllowedToolTime
 
 } file
 
@@ -45,10 +48,16 @@ function FireWeaponPlayerAndNPC( WeaponPrimaryAttackParams attackParams, bool pl
 function FireWeaponPlayerAndNPC_Toolgun( WeaponPrimaryAttackParams attackParams, bool playerFired, entity weapon )
 {
 #if CLIENT
-	entity localPlayer = GetLocalClientPlayer()
-	localPlayer.ClientCommand( "Toolgun_PrimaryAttack" )
-	Toolgun_Client_PrimaryAttack( localPlayer )
-	EmitSoundOnEntity( localPlayer, "menu_accept" )
+	// Add a small cooldown as sometimes we end up getting two tool commands for one shot
+	if( file.nextAllowedToolTime < Time() )
+	{
+		entity localPlayer = GetLocalClientPlayer()
+		localPlayer.ClientCommand( "Toolgun_PrimaryAttack" )
+		Toolgun_Client_PrimaryAttack( localPlayer )
+		EmitSoundOnEntity( localPlayer, "menu_accept" )
+
+		file.nextAllowedToolTime = Time() + TOOL_COOLDOWN_TIME
+	}
 #endif
 
 	// Give infinite ammo
