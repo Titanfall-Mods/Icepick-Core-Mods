@@ -42,6 +42,7 @@ void function Spawnmenu_Init_Weapons()
 	RegisterCategoryItem( "wep_pilot_secondary", "mp_weapon_mgl", Localize("#WPN_MGL") );
 	RegisterCategoryItem( "wep_pilot_secondary", "mp_weapon_arc_launcher", Localize("#WPN_ARC_LAUNCHER") );
 	RegisterCategoryItem( "wep_pilot_secondary", "mp_weapon_rocket_launcher", Localize("#WPN_ROCKET_LAUNCHER") );
+	RegisterCategoryItem( "wep_pilot_secondary", "mp_weapon_smart_pistol", Localize("#WPN_SMART_PISTOL") );
 
 	RegisterPageCategory( "weapons", "wep_pilot_abilities", "Pilot Abilities", "Spawnmenu_GiveAbility" );
 	RegisterCategoryItem( "wep_pilot_abilities", "mp_ability_cloak", Localize("#WPN_CLOAK") );
