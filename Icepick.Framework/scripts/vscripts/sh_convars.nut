@@ -1,4 +1,5 @@
 
+global function Convars_Shared_Init
 global function RegisterConVar
 global function SetConVarValue
 global function GetConVarValue
@@ -8,6 +9,28 @@ global struct ConsoleDataStruct
 	table< string, float > FloatConVars
 }
 global ConsoleDataStruct ConsoleData
+
+void function Convars_Shared_Init()
+{
+#if SERVER
+	AddClientCommandCallback( "ConvarUpdate", ClientCommand_ConvarUpdate );
+#endif
+}
+
+#if SERVER
+bool function ClientCommand_ConvarUpdate( entity player, array<string> args )
+{
+	string ConvarName = args[0];
+	float Value = args[1].tofloat();
+
+	if( ConvarName in ConsoleData.FloatConVars )
+	{
+		ConsoleData.FloatConVars[ ConvarName ] = Value;
+		return true;
+	}
+	return false;
+}
+#endif
 
 void function RegisterConVar( string VarName, float InitialValue, string AutocompleteHelp, string HelpText )
 {
@@ -22,7 +45,7 @@ void function SetConVarValue( string VarName, float NewValue )
 
 	// Send convar value to server
 	string InputString = VarName + " " + NewValue;
-	GetLocalClientPlayer().ClientCommand( "Console_RunCommand " + InputString );
+	GetLocalClientPlayer().ClientCommand( "ConvarUpdate " + InputString );
 #endif
 #if SERVER
 	printc("[Error] SetConVarValue should not be used on the server as it doesn't do anything!");

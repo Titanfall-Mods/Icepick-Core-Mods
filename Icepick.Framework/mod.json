@@ -29,7 +29,9 @@
 		},
 		{
 			"Path": "sh_convars.nut",
-			"RunOn": "SERVER || CLIENT"
+			"RunOn": "SERVER || CLIENT",
+			"ClientCallback": "Convars_Shared_Init",
+			"ServerCallback": "Convars_Shared_Init"
 		},
 		{
 			"Path": "spawnlists/spmp_compiled_spawn_list.nut",
