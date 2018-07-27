@@ -54,8 +54,6 @@ void function CustomGauntlets_SpawnLeaderboard( vector pos, vector angles )
 
 	GauntletWorldUI NewScoreboard;
 	NewScoreboard.UIType = GauntletWorldUIType.Scoreboard;
-	NewScoreboard.Position = pos;
-	NewScoreboard.Rotation = angles;
 	NewScoreboard.ReferenceEnt = ScoreboardEnt;
 	CustomGauntletsGlobal.DevelopmentTrack.Scoreboards.append( NewScoreboard );
 

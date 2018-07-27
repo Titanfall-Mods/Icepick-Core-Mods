@@ -30,8 +30,6 @@ void function ServerCallback_CustomGauntlet_SendScoreboardEnt( var EntHandle )
 	{
 		GauntletWorldUI NewScoreboard;
 		NewScoreboard.UIType = GauntletWorldUIType.Scoreboard;
-		NewScoreboard.Position = RefEnt.GetOrigin();
-		NewScoreboard.Rotation = RefEnt.GetAngles();
 		NewScoreboard.ReferenceEnt = RefEnt;
 		CustomGauntletsGlobal.DevelopmentTrack.Scoreboards.append( NewScoreboard );
 	}
@@ -48,8 +46,6 @@ void function ServerCallback_CustomGauntlet_SendStatsBoardEnt( var EntHandle )
 	{
 		GauntletWorldUI NewStatsBoard;
 		NewStatsBoard.UIType = GauntletWorldUIType.StatsBoard;
-		NewStatsBoard.Position = RefEnt.GetOrigin();
-		NewStatsBoard.Rotation = RefEnt.GetAngles();
 		NewStatsBoard.ReferenceEnt = RefEnt;
 		CustomGauntletsGlobal.DevelopmentTrack.StatsBoards.append( NewStatsBoard );
 	}

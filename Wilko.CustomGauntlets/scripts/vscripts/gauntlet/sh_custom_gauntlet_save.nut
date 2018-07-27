@@ -100,16 +100,16 @@ void function OnIcepickSave()
 	for( int i = 0; i < CustomGauntletsGlobal.DevelopmentTrack.Scoreboards.len(); ++i )
 	{
 		GauntletWorldUI worldUi = CustomGauntletsGlobal.DevelopmentTrack.Scoreboards[i];
-		vector pos = worldUi.Position;
-		vector rot = worldUi.Rotation;
+		vector pos = worldUi.ReferenceEnt.GetOrigin();
+		vector rot = worldUi.ReferenceEnt.GetAngles();
 		AddSaveItem( IcepickSaveOutput( "gauntlet.scoreboard", pos.x, pos.y, pos.z, rot.x, rot.y, rot.z ) );
 	}
 
 	for( int i = 0; i < CustomGauntletsGlobal.DevelopmentTrack.StatsBoards.len(); ++i )
 	{
 		GauntletWorldUI worldUi = CustomGauntletsGlobal.DevelopmentTrack.StatsBoards[i];
-		vector pos = worldUi.Position;
-		vector rot = worldUi.Rotation;
+		vector pos = worldUi.ReferenceEnt.GetOrigin();
+		vector rot = worldUi.ReferenceEnt.GetAngles();
 		AddSaveItem( IcepickSaveOutput( "gauntlet.statsboard", pos.x, pos.y, pos.z, rot.x, rot.y, rot.z ) );
 	}
 

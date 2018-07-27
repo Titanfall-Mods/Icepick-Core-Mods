@@ -54,8 +54,6 @@ void function CustomGauntlets_SpawnStatsboard( vector position, vector angle )
 
 	GauntletWorldUI NewStatsBoard;
 	NewStatsBoard.UIType = GauntletWorldUIType.StatsBoard;
-	NewStatsBoard.Position = position;
-	NewStatsBoard.Rotation = angle;
 	NewStatsBoard.ReferenceEnt = StatsEnt;
 	CustomGauntletsGlobal.DevelopmentTrack.StatsBoards.append( NewStatsBoard );
 

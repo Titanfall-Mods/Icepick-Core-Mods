@@ -43,7 +43,7 @@ void function CustomGauntlet_Think_UpdateTrackTopologies( GauntletTrack Track, b
 		// Create topology if it doesn't exist
 		if( CurrentUI.Topology == null )
 		{
-			CurrentUI.Topology = CustomGauntlet_CreateCentredTopology( CurrentUI.Position, CurrentUI.Rotation, SCOREBOARD_SIZE_W, SCOREBOARD_SIZE_H, 0.0, SCOREBOARD_OFFSET_H );
+			CurrentUI.Topology = CustomGauntlet_CreateCentredTopology( CurrentUI.ReferenceEnt.GetOrigin(), CurrentUI.ReferenceEnt.GetAngles(), SCOREBOARD_SIZE_W, SCOREBOARD_SIZE_H, 0.0, SCOREBOARD_OFFSET_H );
 		}
 
 		// Update topology position
@@ -78,7 +78,7 @@ void function CustomGauntlet_Think_UpdateTrackTopologies( GauntletTrack Track, b
 		// Create topology if it doesn't exist
 		if( CurrentUI.Topology == null )
 		{
-			CurrentUI.Topology = CustomGauntlet_CreateCentredTopology( CurrentUI.Position, CurrentUI.Rotation, STATS_SIZE_W, STATS_SIZE_H, 0.0, STATS_OFFSET_H );
+			CurrentUI.Topology = CustomGauntlet_CreateCentredTopology( CurrentUI.ReferenceEnt.GetOrigin(), CurrentUI.ReferenceEnt.GetAngles(), STATS_SIZE_W, STATS_SIZE_H, 0.0, STATS_OFFSET_H );
 		}
 
 		// Update topology position

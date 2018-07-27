@@ -36,8 +36,6 @@ global struct TargetEnemy
 
 global struct GauntletWorldUI
 {
-	vector Position,
-	vector Rotation,
 	int UIType,
 	var Topology,
 	var Rui,
