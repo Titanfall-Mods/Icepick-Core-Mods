@@ -341,13 +341,21 @@ void function Spawnmenu_ToggleEditMode()
 {
 #if CLIENT
 	GetLocalClientPlayer().ClientCommand( "toggle_toolgun" );
+	thread WaitAndToggleEditMode();	
+#endif
+}
+
+#if CLIENT
+void function WaitAndToggleEditMode()
+{
+	WaitFrame();
 
 	foreach ( callbackFunc in file.onToolEditModeChangedCallbacks )
 	{
 		callbackFunc();
 	}
-#endif
 }
+#endif
 
 void function AddOnEditModeChangedCallback( void functionref() callbackFunc )
 {
