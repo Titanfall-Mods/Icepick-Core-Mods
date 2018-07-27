@@ -174,6 +174,16 @@ function IsReplacementTitanAvailableForGameState()
 	return true
 }
 
+bool function DoesMapSupportTitanfalls()
+{
+	string mapname = GetMapName();
+
+	if( mapname.find( "mp_lf_" ) == 0 )
+		return false;
+
+	return true;
+}
+
 void function SetReplacementTitanGamemodeRules( bool functionref( entity ) rules )
 {
 	file.ReplacementTitanGamemodeRules = rules
@@ -584,6 +594,12 @@ bool function ReplacementTitan( entity player )
 	{
 		printt( "ReplacementTitan", player, player.entindex(), "failed", "GetPlayerTitanInMap was true" )
 		return false
+	}
+
+	if( !DoesMapSupportTitanfalls() )
+	{
+		printt( "ReplacementTitan", player, player.entindex(), "failed", "Map does not support titanfalls", GetMapName() )
+		return false;
 	}
 
 	if ( player in file.warpFallDebounce )
