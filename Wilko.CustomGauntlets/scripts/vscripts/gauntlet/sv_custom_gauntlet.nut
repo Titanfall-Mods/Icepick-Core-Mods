@@ -74,6 +74,25 @@ void function CustomGauntlet_Server_Think_EditMode()
 		}
 	}
 
+	// Remove any scoreboards that've been removed
+	for( int i = CustomGauntletsGlobal.DevelopmentTrack.Scoreboards.len() - 1; i >= 0; --i )
+	{
+		if( !IsValid( CustomGauntletsGlobal.DevelopmentTrack.Scoreboards[i].ReferenceEnt ) )
+		{
+			CustomGauntletsGlobal.DevelopmentTrack.Scoreboards.remove( i );
+		}
+	}
+
+	// Remove any results boards that've been removed
+	for( int i = CustomGauntletsGlobal.DevelopmentTrack.StatsBoards.len() - 1; i >= 0; --i )
+	{
+		if( !IsValid( CustomGauntletsGlobal.DevelopmentTrack.StatsBoards[i].ReferenceEnt ) )
+		{
+			CustomGauntletsGlobal.DevelopmentTrack.StatsBoards.remove( i );
+		}
+	}
+
+
 	// Remove any respawning weapons that've been deleted
 	for( int i = CustomGauntletsGlobal.DevelopmentTrack.RespawningWeapons.len() - 1; i >= 0; --i )
 	{

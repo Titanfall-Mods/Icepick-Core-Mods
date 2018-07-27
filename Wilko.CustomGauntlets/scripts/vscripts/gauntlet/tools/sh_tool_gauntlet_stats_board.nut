@@ -57,7 +57,7 @@ void function CustomGauntlets_SpawnStatsboard( vector position, vector angle )
 	NewStatsBoard.Position = position;
 	NewStatsBoard.Rotation = angle;
 	NewStatsBoard.ReferenceEnt = StatsEnt;
-	CustomGauntletsGlobal.DevelopmentTrack.Scoreboards.append( NewStatsBoard );
+	CustomGauntletsGlobal.DevelopmentTrack.StatsBoards.append( NewStatsBoard );
 
 	thread ToolGauntlet_DelayedTransmit( "ServerCallback_CustomGauntlet_SendStatsBoardEnt", StatsEnt );
 #endif
