@@ -252,14 +252,22 @@ void function CustomGauntlet_AddLeaderboardTime( GauntletTrack Track, float Fina
 	{
 		InsertIdx = 0;
 	}
-
-	for( int i = 0; i < Track.Highscores.len(); ++i )
+	else
 	{
-		if( FinalTime < Track.Highscores[i].Time )
+		for( int i = 0; i < Track.Highscores.len(); ++i )
 		{
-			InsertIdx = i;
-			break;
+			if( FinalTime < Track.Highscores[i].Time )
+			{
+				InsertIdx = i;
+				break;
+			}
 		}
+	}
+
+	// Didn't find a slower time, so check if we can just add it to the end
+	if( InsertIdx == -1 && Track.Highscores.len() <= 10 )
+	{
+		InsertIdx = Track.Highscores.len();
 	}
 
 	if( InsertIdx > -1 )

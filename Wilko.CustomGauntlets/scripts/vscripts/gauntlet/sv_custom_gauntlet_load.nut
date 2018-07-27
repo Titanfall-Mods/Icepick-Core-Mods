@@ -65,6 +65,12 @@ void function HandleLoadHighscore( array<string> data )
 	string name = data[0];
 	float time = data[1].tofloat();
 	CustomGauntlet_AddLeaderboardTime( CustomGauntletsGlobal.DevelopmentTrack, time, name );
+
+	if( CustomGauntletsGlobal.DevelopmentTrack.BestTime < 0.0 || time < CustomGauntletsGlobal.DevelopmentTrack.BestTime )
+	{
+		CustomGauntletsGlobal.DevelopmentTrack.BestTime = time;
+	}
+
 	thread DelayTransmitScoreboardTime( time );
 }
 
