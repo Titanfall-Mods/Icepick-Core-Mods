@@ -35,7 +35,7 @@ var function OnWeaponNpcPrimaryAttack_weapon_shotgun_pistol( entity weapon, Weap
 
 function FireWeaponPlayerAndNPC( WeaponPrimaryAttackParams attackParams, bool playerFired, entity weapon )
 {
-	if( IsEditModeEnabled() )
+	if( ToolgunModeEnabled )
 	{
 		FireWeaponPlayerAndNPC_Toolgun( attackParams, playerFired, weapon );
 	}
