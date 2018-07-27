@@ -21,55 +21,60 @@ void function Toolgun_RegisterTool_GauntletPlaceWeapon()
 
 	ToolGauntletWeapon.GetHelp <- function()
 	{
-		return "Fire to place a respawning weapon in the world.\nShoot an existing respawner to update it.\nPlacing: " + ToolGauntletWeapon.spawningId;
+		string help = "Fire to place a respawning weapon in the world.\nShoot an existing respawner to update it.";
+		#if CLIENT || UI
+		help += "\nPlacing: " + Localize( expect string(ToolGauntletWeapon.spawningId) );
+		#endif
+		return help;
 	}
 
 	ToolGauntletWeapon.RegisterOptions <- function()
 	{
-		#if SERVER
+		#if CLIENT
 		AddTextOption( "gauntlet_weapon", "Primary Weapons" );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_rspn101", ("#WPN_RSPN101") );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_rspn101_og", ("#WPN_RSPN101_OG") );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_hemlok", ("#WPN_HEMLOK") );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_g2", ("#WPN_G2") );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_vinson", ("#WPN_VINSON") );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_car", ("#WPN_CAR") );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_alternator_smg", ("#WPN_ALTERNATOR_SMG") );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_hemlok_smg", ("#WPN_HEMLOK_SMG") );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_r97", ("#WPN_R97") );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_lmg", ("#WPN_LMG") );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_lstar", ("#WPN_LSTAR") );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_esaw", ("#WPN_ESAW") );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_sniper", ("#WPN_SNIPER") );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_doubletake", ("#WPN_DOUBLETAKE") );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_dmr", ("#WPN_DMR") );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_shotgun", ("#WPN_SHOTGUN") );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_mastiff", ("#WPN_MASTIFF") );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_smr", ("#WPN_SMR") );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_epg", ("#WPN_EPG") );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_softball", ("#WPN_SOFTBALL") );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_pulse_lmg", ("#WPN_PULSE_LMG") );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_wingman_n", ("#WPN_WINGMAN_N") );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_shotgun_pistol", ("#WPN_SHOTGUN_PISTOL") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_rspn101", Localize("#WPN_RSPN101") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_rspn101_og", Localize("#WPN_RSPN101_OG") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_hemlok", Localize("#WPN_HEMLOK") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_g2", Localize("#WPN_G2") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_vinson", Localize("#WPN_VINSON") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_car", Localize("#WPN_CAR") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_alternator_smg", Localize("#WPN_ALTERNATOR_SMG") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_hemlok_smg", Localize("#WPN_HEMLOK_SMG") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_r97", Localize("#WPN_R97") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_lmg", Localize("#WPN_LMG") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_lstar", Localize("#WPN_LSTAR") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_esaw", Localize("#WPN_ESAW") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_sniper", Localize("#WPN_SNIPER") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_doubletake", Localize("#WPN_DOUBLETAKE") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_dmr", Localize("#WPN_DMR") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_shotgun", Localize("#WPN_SHOTGUN") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_mastiff", Localize("#WPN_MASTIFF") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_smr", Localize("#WPN_SMR") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_epg", Localize("#WPN_EPG") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_softball", Localize("#WPN_SOFTBALL") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_pulse_lmg", Localize("#WPN_PULSE_LMG") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_wingman_n", Localize("#WPN_WINGMAN_N") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_shotgun_pistol", Localize("#WPN_SHOTGUN_PISTOL") );
 		AddDividerOption( "gauntlet_weapon" );
 
 		AddTextOption( "gauntlet_weapon", "Secondary Weapons" );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_semipistol", ("#WPN_P2011") );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_autopistol", ("#WPN_RE45_AUTOPISTOL") );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_wingman", ("#WPN_WINGMAN") );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_defender", ("#WPN_CHARGE_RIFLE") );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_mgl", ("#WPN_MGL") );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_arc_launcher", ("#WPN_ARC_LAUNCHER") );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_rocket_launcher", ("#WPN_ROCKET_LAUNCHER") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_semipistol", Localize("#WPN_P2011") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_autopistol", Localize("#WPN_RE45_AUTOPISTOL") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_wingman", Localize("#WPN_WINGMAN") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_defender", Localize("#WPN_CHARGE_RIFLE") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_mgl", Localize("#WPN_MGL") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_arc_launcher", Localize("#WPN_ARC_LAUNCHER") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_rocket_launcher", Localize("#WPN_ROCKET_LAUNCHER") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_smart_pistol", Localize("#WPN_SMART_PISTOL") );
 		AddDividerOption( "gauntlet_weapon" );
 
 		AddTextOption( "gauntlet_weapon", "Ordance" );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_frag_grenade", ("#WPN_FRAG_GRENADE") );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_thermite_grenade", ("#WPN_THERMITE_GRENADE") );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_grenade_electric_smoke", ("#WPN_GRENADE_ELECTRIC_SMOKE") );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_grenade_emp", ("#WPN_GRENADE_EMP") );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_grenade_gravity", ("#WPN_GRENADE_GRAVITY") );
-		AddButtonOption( "gauntlet_weapon", "mp_weapon_satchel", ("#WPN_SATCHEL") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_frag_grenade", Localize("#WPN_FRAG_GRENADE") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_thermite_grenade", Localize("#WPN_THERMITE_GRENADE") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_grenade_electric_smoke", Localize("#WPN_GRENADE_ELECTRIC_SMOKE") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_grenade_emp", Localize("#WPN_GRENADE_EMP") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_grenade_gravity", Localize("#WPN_GRENADE_GRAVITY") );
+		AddButtonOption( "gauntlet_weapon", "mp_weapon_satchel", Localize("#WPN_SATCHEL") );
 		#endif
 	}
 

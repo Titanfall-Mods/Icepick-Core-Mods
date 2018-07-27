@@ -26,7 +26,7 @@ void function Toolgun_RegisterTool_Stacker()
 	
 	ToolStackProp.RegisterOptions <- function()
 	{
-		#if SERVER
+		#if CLIENT
 		AddButtonOption( "stack_prop", "stacker_up", "Up" );
 		AddButtonOption( "stack_prop", "stacker_down", "Down" );
 		AddButtonOption( "stack_prop", "stacker_left", "Left" );

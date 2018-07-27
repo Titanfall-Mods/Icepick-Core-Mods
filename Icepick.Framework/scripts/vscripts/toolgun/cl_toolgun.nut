@@ -5,6 +5,7 @@ global function Toolgun_Client_ChangeTool
 global function Toolgun_Client_PrimaryAttack
 global function Toolgun_CanUseKeyboardInput
 global function Toolgun_Client_ToggleEditMode
+global function ServerCallback_Toolgun_RegisterTools;
 
 global struct ToolgunGrabStruct {
 	entity GrabbedEntity,
@@ -271,5 +272,29 @@ void function KeyPress_Toolgun_UndoSpawn( var button )
 	{
 		AddPlayerHint( 0.5, 0.15, $"", "Undo Spawn" );
 		GetLocalClientPlayer().ClientCommand( "Toolgun_UndoSpawn" );
+	}
+}
+
+void function ServerCallback_Toolgun_RegisterTools()
+{
+	ClearTools(); // Clear tools from previous session
+
+	for( int i = 0; i < ToolGunTools.len(); ++i )
+	{
+		var tool = ToolGunTools[i];
+
+		// Register each tool
+		var name = tool.GetName();
+		if( "GetRawName" in tool )
+		{
+			name = tool.GetRawName();
+		}
+		RegisterTool( tool.id, name, tool.GetHelp() );
+
+		// Register tool options
+		if( "RegisterOptions" in tool )
+		{
+			tool.RegisterOptions();
+		}
 	}
 }

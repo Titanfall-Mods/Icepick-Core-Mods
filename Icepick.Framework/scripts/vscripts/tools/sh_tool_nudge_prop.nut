@@ -16,7 +16,7 @@ void function Toolgun_RegisterTool_NudgeProp()
 	
 	ToolNudgeProp.RegisterOptions <- function()
 	{
-		#if SERVER
+		#if CLIENT
 		AddIntSliderOption( "nudge_prop", "nudge_distance", "Distance", 5, 1, 100 );
 		#endif
 	}

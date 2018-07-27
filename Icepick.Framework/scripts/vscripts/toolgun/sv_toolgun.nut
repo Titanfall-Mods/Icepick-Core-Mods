@@ -50,27 +50,14 @@ void function ToolgunSv_OnPlayerSpawned( entity player )
 	{
 		return;
 	}
+	thread ToolgunSv_OnPlayerSpawned_Thread( player );
+}
 
-	ClearTools(); // Clear tools from previous session
+void function ToolgunSv_OnPlayerSpawned_Thread( entity player )
+{
+	wait 1.0; // HACK: wait a second to register tools since the player can't get remote function calls until they /actually/ spawn
 
-	for( int i = 0; i < ToolGunTools.len(); ++i )
-	{
-		var tool = ToolGunTools[i];
-
-		// Register each tool
-		var name = tool.GetName();
-		if( "GetRawName" in tool )
-		{
-			name = tool.GetRawName();
-		}
-		RegisterTool( tool.id, name, tool.GetHelp() );
-
-		// Register tool options
-		if( "RegisterOptions" in tool )
-		{
-			tool.RegisterOptions();
-		}
-	}
+	Remote_CallFunction_NonReplay( player, "ServerCallback_Toolgun_RegisterTools" );
 
 	// Only register tools once
 	ToolgunData.HasRegisteredToolgunTools = true;

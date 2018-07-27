@@ -71,7 +71,7 @@ void function Toolgun_RegisterTool_CameraPlacer()
 
 	ToolCamera.RegisterOptions <- function()
 	{
-		#if SERVER
+		#if CLIENT
 		AddButtonOption( "camera", "camera_type_static", "Static Camera" );
 		AddButtonOption( "camera", "camera_type_tracking", "Tracking Camera" );
 		AddDividerOption( "camera" );

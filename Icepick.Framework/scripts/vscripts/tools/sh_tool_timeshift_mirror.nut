@@ -14,7 +14,7 @@ void function Toolgun_RegisterTool_TimeshiftMirror()
 
 	ToolMirrorProp.RegisterOptions <- function()
 	{
-		#if SERVER
+		#if CLIENT
 		AddTextOption( "mirror_prop", "This tool only functions in Effect and Cause." );
 		#endif
 	}
