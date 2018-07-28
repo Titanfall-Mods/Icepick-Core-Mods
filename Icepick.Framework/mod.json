@@ -1,4 +1,5 @@
 {
+	"ApiId" : "icepick",
 	"Name" : "Icepick Framework",
 	"Description" : "The framework that allows the Icepick to function inside Titanfall 2.",
 	"Authors" : [
