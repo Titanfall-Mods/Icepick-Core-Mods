@@ -356,25 +356,16 @@ bool function ClientCommand_Toolgun_ChangeModel( entity player, array<string> ar
 
 void function ToolgunGrab_Think( entity player )
 {
-	while( ToolgunGrab.GrabbedEntity != null )
+	while( IsValid( ToolgunGrab.GrabbedEntity ) )
 	{
 		vector origin = player.EyePosition()
 		vector angles = player.EyeAngles()
 		vector forward = AnglesToForward( angles )
 
-		if( ToolgunGrab.IsRotating )
-		{
-			// vector entAngles = ToolgunGrab.GrabbedEntity.GetAngles();
-			// entAngles.y = (entAngles.y + 45 * FrameTime()) % 360.0
-			// ToolgunGrab.GrabbedEntity.SetAngles( entAngles );
-		}
-		else
+		if( !ToolgunGrab.IsRotating )
 		{
 			ToolgunGrab.GrabbedEntity.SetOrigin( origin + forward * ToolgunGrab.GrabDistance + ToolgunGrab.GrabOffset )
 		}
-
-		// ToolgunGrab.GrabBeamEffect.SetOrigin( player.EyePosition() + AnglesToRight( angles ) * 5 + AnglesToUp( angles ) * -5 )
-		// ToolgunGrab.GrabBeamTarget.SetOrigin( origin + forward * ToolgunGrab.GrabDistance + ToolgunGrab.GrabOffset )
 
 		WaitFrame();
 	}
