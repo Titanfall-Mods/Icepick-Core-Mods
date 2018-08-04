@@ -218,6 +218,8 @@ void function Spawnmenu_SpawnModel( string modelName )
 	
 	Spawnmenu_SpawnModelWithParams( modelName, Pos, Ang );
 #endif
+
+	ToolGunSettings.LastSpawnedModel = modelName;
 }
 
 void function Spawnmenu_SpawnModelWithParams( string modelName, vector position, vector angles )

@@ -9,7 +9,8 @@ global struct ToolGunSettingsStruct
 	int CurrentMode,
 	int CurrentModeIdx,
 	asset SelectedModel,
-	entity LastSpawnedEntity
+	entity LastSpawnedEntity,
+	string LastSpawnedModel
 };
 
 global ToolGunSettingsStruct ToolGunSettings;
