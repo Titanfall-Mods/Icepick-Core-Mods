@@ -7,12 +7,19 @@ global function ServerCallback_CustomGauntlet_SendScoreboardTime;
 global function ServerCallback_CustomGauntlet_ShowError;
 global function ServerCallback_CustomGauntlet_SendScoreboardEnt;
 global function ServerCallback_CustomGauntlet_SendStatsBoardEnt;
+global function ServerCallback_CustomGauntlet_RefreshWorldTopos;
+global function CustomGauntlet_DoTopologiesNeedRefreshing;
 
 global struct GauntletRuntimeDataStruct
 {
 	bool IsActive,
 	GauntletTrack & ActiveTrack,
 };
+
+struct
+{
+	float timeSinceTopologiesRefresh
+} file;
 
 global GauntletRuntimeDataStruct GauntletRuntimeData;
 
@@ -122,3 +129,16 @@ void function OnToolgunEditModeChanged()
 	string ActiveStr = CustomGauntletsGlobal.EditModeActive ? "1" : "0";
 	GetLocalClientPlayer().ClientCommand( "CustomGauntlet_SetEditMode " + ActiveStr );
 }
+
+// -----------------------------------------------------------------------------
+
+void function ServerCallback_CustomGauntlet_RefreshWorldTopos()
+{
+	file.timeSinceTopologiesRefresh = Time();
+}
+
+bool function CustomGauntlet_DoTopologiesNeedRefreshing()
+{
+	return Time() - file.timeSinceTopologiesRefresh < 1.0;
+}
+

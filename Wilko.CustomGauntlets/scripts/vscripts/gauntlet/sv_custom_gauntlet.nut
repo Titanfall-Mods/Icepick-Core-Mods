@@ -24,6 +24,8 @@ void function CustomGauntlet_Server_Init()
 {
 	AddClientCommandCallback( "CustomGauntlet_SetEditMode", ClientCommand_CustomGauntlet_SetEditMode );
 
+	AddCallback_OnLoadSaveGame( CustomGauntlet_OnLoadSaveGame );
+
 	thread CustomGauntlet_Server_Think();
 }
 
@@ -424,4 +426,35 @@ void function CustomGauntlet_Server_NPC_Damaged( entity npc, var damageInfo )
 			player.SetPlayerNetInt( "CGEnemiesKilled", Killed + 1 );
 		}
 	}
+}
+
+void function CustomGauntlet_OnLoadSaveGame( entity player )
+{
+	thread CustomGauntlet_OnLoadSaveGame_Thread( player );
+}
+
+void function CustomGauntlet_OnLoadSaveGame_Thread( entity player )
+{
+	wait 1.0;
+	thread CustomGauntlet_PlayerConnected( player );
+}
+
+void function CustomGauntlet_PlayerConnected( entity player )
+{
+	// Resend scoreboards and results boards as they get lost on a world restart
+	for( int i = CustomGauntletsGlobal.DevelopmentTrack.Scoreboards.len() - 1; i >= 0; --i )
+	{
+		thread ToolGauntlet_DelayedTransmit( "ServerCallback_CustomGauntlet_SendScoreboardEnt", CustomGauntletsGlobal.DevelopmentTrack.Scoreboards[i].ReferenceEnt );
+	}
+	for( int i = CustomGauntletsGlobal.DevelopmentTrack.StatsBoards.len() - 1; i >= 0; --i )
+	{
+		thread ToolGauntlet_DelayedTransmit( "ServerCallback_CustomGauntlet_SendStatsBoardEnt", CustomGauntletsGlobal.DevelopmentTrack.StatsBoards[i].ReferenceEnt );
+	}
+
+	wait 0.5;
+	for( int i = CustomGauntletsGlobal.DevelopmentTrack.Highscores.len() - 1; i >= 0; --i )
+	{
+		Remote_CallFunction_Replay( player, "ServerCallback_CustomGauntlet_SendScoreboardTime", CustomGauntletsGlobal.DevelopmentTrack.Highscores[i].Time );
+	}
+
 }
