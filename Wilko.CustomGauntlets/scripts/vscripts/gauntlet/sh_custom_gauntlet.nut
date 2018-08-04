@@ -285,11 +285,11 @@ void function CustomGauntlet_AddLeaderboardTime( GauntletTrack Track, float Fina
 	}
 }
 
-entity function ToolGauntlet_CreateTriggerEntity( vector Pos, vector Angles, float Offset )
+entity function ToolGauntlet_CreateTriggerEntity( vector Pos, vector Angles, float Offset, asset ModelAsset = $"models/weapons/titan_trip_wire/titan_trip_wire.mdl" )
 {
 #if SERVER
 	entity prop_dynamic = CreateEntity( "prop_dynamic" );
-	prop_dynamic.SetValueForModelKey( $"models/weapons/titan_trip_wire/titan_trip_wire.mdl" );
+	prop_dynamic.SetValueForModelKey( ModelAsset );
 	prop_dynamic.kv.fadedist = -1;
 	prop_dynamic.kv.renderamt = 255;
 	prop_dynamic.kv.rendercolor = "255 255 255";

@@ -8,6 +8,9 @@ table ToolGauntletWeapon = {};
 
 void function Toolgun_RegisterTool_GauntletPlaceWeapon()
 {
+	const SPAWN_WITH_PLAYER_DIRECTION_DOT = 0.95;
+	const SPAWN_OFFSET = 32;
+
 	AddOnToolOptionUpdateCallback( ToolGauntletWeapon_UpdateToolOption );
 
 	// Create the tool
@@ -114,9 +117,16 @@ void function Toolgun_RegisterTool_GauntletPlaceWeapon()
 			}
 
 			// Create a new spawner
-			vector Pos = traceResults.endPos;
-			vector Angles = Vector(0, player.EyeAngles().y + 90, 0);
-			CustomGauntlet_SpawnRespawningWeapon( expect string( ToolGauntletWeapon.spawningId ), Pos, Angles );
+			vector Pos = GetPlayerCrosshairOrigin( player ) - Vector( 0, 0, SPAWN_OFFSET );
+			vector angles = Vector(0, player.EyeAngles().y + 90, 0);
+			if( traceResults.surfaceNormal.Dot( < 0, 0, 1 > ) < SPAWN_WITH_PLAYER_DIRECTION_DOT )
+			{
+				angles = VectorToAngles( traceResults.surfaceNormal );
+				angles = AnglesCompose( angles, < 90, 0, 0 > );
+				angles = AnglesCompose( angles, < 0, 90, 0 > );
+			}
+			//vector Angles = Vector(0, player.EyeAngles().y + 90, 0);
+			CustomGauntlet_SpawnRespawningWeapon( expect string( ToolGauntletWeapon.spawningId ), Pos, angles );
 		}
 
 		return true;
@@ -180,7 +190,7 @@ void function CustomGauntlet_SpawnRespawningWeapon( string weaponClass, vector p
 {
 	GauntletWeapon newRespawningWeapon;
 	newRespawningWeapon.WeaponClass = weaponClass;
-	newRespawningWeapon.ReferenceEnt = ToolGauntlet_CreateTriggerEntity( position, angles, 0.0 );
+	newRespawningWeapon.ReferenceEnt = ToolGauntlet_CreateTriggerEntity( position, angles, 0.0, $"models/weapons/sentry_shield/sentry_shield_proj.mdl" );
 
 	CustomGauntletsGlobal.DevelopmentTrack.RespawningWeapons.append( newRespawningWeapon );
 
@@ -190,7 +200,7 @@ void function CustomGauntlet_SpawnRespawningWeapon( string weaponClass, vector p
 
 vector function GetSpawnLocation( entity parentEntity )
 {
-	return parentEntity.GetOrigin() + AnglesToUp( parentEntity.GetAngles() ) * 75;
+	return parentEntity.GetOrigin() + AnglesToUp( parentEntity.GetAngles() ) * 25;
 }
 
 vector function GetSpawnAngles( entity parentEntity )
