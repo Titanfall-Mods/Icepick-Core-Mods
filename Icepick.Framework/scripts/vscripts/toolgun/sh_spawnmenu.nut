@@ -11,6 +11,8 @@ global function Spawnmenu_GiveCore
 global function Spawnmenu_SpawnModel
 global function Spawnmenu_SpawnModelWithParams
 global function Spawnmenu_SpawnNpc
+global function Spawnmenu_SpawnTitan
+global function Spawnmenu_SpawnBossTitan
 global function Spawnmenu_SaveGame
 global function Spawnmenu_SaveGameToFile
 global function Spawnmenu_SaveCheckpoint
@@ -335,20 +337,68 @@ void function Spawnmenu_SpawnNpc( string npcId )
 			spawnNpc = CreateNPCTitan( "titan_buddy", TEAM_MILITIA, spawnPos, spawnAng, [] );
 			SetSpawnOption_AISettings( spawnNpc, "npc_titan_buddy" );
 			break;
-		case "npc_titan_styder":
-			spawnNpc = CreateNPCTitan( "titan_stryder", team, spawnPos, spawnAng, [] );
-			SetSpawnOption_AISettings( spawnNpc, "npc_titan_stryder_rocketeer" );
-			break;
-		case "npc_titan_ogre":
-			spawnNpc = CreateNPCTitan( "titan_ogre", team, spawnPos, spawnAng, [] );
-			SetSpawnOption_AISettings( spawnNpc, "npc_titan_ogre" );
-			break;
-		case "npc_titan_atlas":
-			spawnNpc = CreateNPCTitan( "titan_atlas", team, spawnPos, spawnAng, [] );
-			SetSpawnOption_AISettings( spawnNpc, "npc_titan_atlas" );
-			break;
 	}
 	DispatchSpawn( spawnNpc );
+#endif
+}
+
+void function Spawnmenu_SpawnTitan( string titanId )
+{
+#if SERVER
+	entity player = GetPlayerByIndex( 0 );
+	vector origin = GetPlayerCrosshairOrigin( player );
+	vector angles = player.EyeAngles();
+	angles.x = 0;
+	angles.z = 0;
+
+	vector spawnPos = origin;
+	vector spawnAng = angles;
+	int team = TEAM_IMC;
+
+	entity spawnNpc = CreateNPCTitan( "npc_titan", team, spawnPos, spawnAng, [] );
+	SetSpawnOption_NPCTitan( spawnNpc, TITAN_HENCH );
+	SetSpawnOption_AISettings( spawnNpc, titanId );
+	DispatchSpawn( spawnNpc );
+#endif
+}
+
+void function Spawnmenu_SpawnBossTitan( string bossId )
+{
+#if SERVER
+	const CROSSHAIR_VERT_OFFSET = 32;
+
+	TitanLoadoutDef ornull loadout = GetTitanLoadoutForBossCharacter( bossId );
+	printt("loadout is null: ", loadout == null );
+	if ( loadout == null )
+	{
+		return;
+	}
+	expect TitanLoadoutDef( loadout );
+	string baseClass = "npc_titan";
+	string aiSettings = GetNPCSettingsFileForTitanPlayerSetFile( loadout.setFile );
+
+	entity player = GetPlayerByIndex( 0 );
+	vector origin = GetPlayerCrosshairOrigin( player );
+	vector angles = Vector( 0, 0, 0 );
+	entity npc = CreateNPC( baseClass, TEAM_IMC, origin, angles );
+	if ( IsTurret( npc ) )
+	{
+		npc.kv.origin -= Vector( 0, 0, CROSSHAIR_VERT_OFFSET );
+	}
+	SetSpawnOption_AISettings( npc, aiSettings );
+
+	if ( npc.GetClassName() == "npc_titan" )
+	{
+		string builtInLoadout = expect string( Dev_GetAISettingByKeyField_Global( aiSettings, "npc_titan_player_settings" ) )
+		SetTitanSettings( npc.ai.titanSettings, builtInLoadout );
+		npc.ai.titanSpawnLoadout.setFile = builtInLoadout;
+		OverwriteLoadoutWithDefaultsForSetFile( npc.ai.titanSpawnLoadout ); // get the entire loadout, including defensive and tactical
+	}
+
+	SetSpawnOption_NPCTitan( npc, TITAN_MERC );
+	SetSpawnOption_TitanLoadout( npc, loadout );
+	npc.ai.bossTitanPlayIntro = false;
+	DispatchSpawn( npc );
 #endif
 }
 
