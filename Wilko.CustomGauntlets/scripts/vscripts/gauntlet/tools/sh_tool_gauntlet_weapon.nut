@@ -8,9 +8,6 @@ table ToolGauntletWeapon = {};
 
 void function Toolgun_RegisterTool_GauntletPlaceWeapon()
 {
-	const SPAWN_WITH_PLAYER_DIRECTION_DOT = 0.95;
-	const SPAWN_OFFSET = 32;
-
 	AddOnToolOptionUpdateCallback( ToolGauntletWeapon_UpdateToolOption );
 
 	// Create the tool
@@ -84,6 +81,9 @@ void function Toolgun_RegisterTool_GauntletPlaceWeapon()
 	ToolGauntletWeapon.OnFire <- function()
 	{
 	#if SERVER
+		const SPAWN_WITH_PLAYER_DIRECTION_DOT = 0.95;
+		const SPAWN_OFFSET = 32;
+
 		entity player = GetPlayerByIndex( 0 );
 		Toolgun_Utils_FireToolTracer( player );
 
