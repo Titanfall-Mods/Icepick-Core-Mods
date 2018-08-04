@@ -176,7 +176,7 @@ void function Toolgun_CreateTeleporter( entity player, vector entryOrigin, vecto
 	newTeleporter.controlPoint = cpEnd;
 	PlacedTeleporters.append( newTeleporter );
 
-	thread Teleporter_Think( player, newTeleporter, PlacedTeleporters.len() - 1 );
+	thread Teleporter_Think( player, newTeleporter );
 }
 
 entity function CreateTeleporterEntity( vector origin, vector angles, asset model = $"models/beacon/beacon_doorframe_04.mdl" )
@@ -197,21 +197,28 @@ entity function CreateTeleporterEntity( vector origin, vector angles, asset mode
 	return prop_dynamic;
 }
 
-void function Teleporter_Think( entity player, PlacedTeleporter teleporter, int teleporterIdx )
+void function Teleporter_Think( entity player, PlacedTeleporter teleporter )
 {
 	EndSignal( teleporter.entryEnt, "OnDestroy" );
 	EndSignal( teleporter.exitEnt, "OnDestroy" );
 
 	// Cleanup teleporters if one of them is destroyed
 	OnThreadEnd(
-		function() : ( teleporter, teleporterIdx )
+		function() : ( teleporter )
 		{
 			if ( IsValid( teleporter.entryEnt ) )
 				teleporter.entryEnt.Destroy();
 			if ( IsValid( teleporter.exitEnt ) )
 				teleporter.exitEnt.Destroy();
 
-			PlacedTeleporters.remove( teleporterIdx );
+			for( int i = 0; i < PlacedTeleporters.len(); ++i )
+			{
+				if( PlacedTeleporters[i] == teleporter )
+				{
+					PlacedTeleporters.remove( i );
+					break;
+				}
+			}
 		}
 	)
 

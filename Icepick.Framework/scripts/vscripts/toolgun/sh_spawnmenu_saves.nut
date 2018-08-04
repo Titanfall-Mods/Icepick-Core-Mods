@@ -26,6 +26,7 @@ void function Spawnmenu_Init_Saves()
 	RegisterCategoryItem( "utilities", "cleanup.all", "Cleanup Everything" );
 	RegisterCategoryItem( "utilities", "cleanup.props", "Cleanup Props" );
 	RegisterCategoryItem( "utilities", "cleanup.ziplines", "Cleanup Ziplines" );
+	RegisterCategoryItem( "utilities", "cleanup.teleporters", "Cleanup Teleporters" );
 	RegisterCategoryItem( "utilities", "cleanup.weapons", "Cleanup Weapons" );
 	RegisterCategoryItem( "utilities", "cleanup.npcs", "Cleanup NPCs" );
 
@@ -113,6 +114,9 @@ void function Spawnmenu_PerformUtility( string utility )
 		case "cleanup.ziplines":
 			Cleanup_Ziplines();
 			break;
+		case "cleanup.teleporters":
+			Cleanup_Teleporters();
+			break;
 		case "cleanup.weapons":
 			Cleanup_Weapons();
 			break;
@@ -131,6 +135,7 @@ void function Cleanup_All()
 {
 	Cleanup_Props();
 	Cleanup_Ziplines();
+	Cleanup_Teleporters();
 	Cleanup_Weapons();
 	Cleanup_NPCs();
 }
@@ -151,6 +156,22 @@ void function Cleanup_Ziplines()
 		ToolZipline_DestroyZipline( PlacedZiplines[i], true );
 	}
 	PlacedZiplines.clear();
+}
+
+void function Cleanup_Teleporters()
+{
+	foreach( teleporter in PlacedTeleporters )
+	{
+		if( IsValid(teleporter.entryEnt) )
+		{
+			teleporter.entryEnt.Destroy();
+		}
+		if( IsValid(teleporter.entryEnt) )
+		{
+			teleporter.exitEnt.Destroy();
+		}
+	}
+	PlacedTeleporters.clear();
 }
 
 void function Cleanup_Weapons()
