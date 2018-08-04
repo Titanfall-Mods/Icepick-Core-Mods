@@ -1297,6 +1297,11 @@ void function OpenMenuWrapper( var menu, bool focusDefault )
 
 	//UpdateMenuTabs()
 	UpdateFooterOptions()
+
+	if( Hud_GetHudName( menu ) == "menu_InGameSPMenu" )
+	{
+		ClientCommand( "hide_icepick_menu" );
+	}
 }
 
 void function CloseMenuWrapper( var menu )

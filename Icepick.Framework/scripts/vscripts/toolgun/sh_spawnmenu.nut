@@ -46,8 +46,7 @@ void function Spawnmenu_Init()
 #if CLIENT
 void function Spawnmenu_ToggleOpen( entity player )
 {
-	file.isSpawnMenuOpen = !file.isSpawnMenuOpen;
-	if( file.isSpawnMenuOpen )
+	if( IsSpawnMenuOpen() == 0 )
 	{
 		GetLocalClientPlayer().ClientCommand( "show_icepick_menu" );
 	}
