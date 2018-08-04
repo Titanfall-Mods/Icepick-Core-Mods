@@ -7,6 +7,7 @@ global function CustomGauntlet_Client_SaveInit
 
 #if SERVER
 global function CustomGauntlet_Server_SaveInit
+global function CleanupGauntlets
 #endif
 
 #if CLIENT
@@ -51,6 +52,14 @@ void function CleanupGauntlets()
 	for( int i = 0; i < CustomGauntletsGlobal.DevelopmentTrack.RespawningWeapons.len(); ++i )
 	{
 		CustomGauntletsGlobal.DevelopmentTrack.RespawningWeapons[i].ReferenceEnt.Destroy();
+	}
+	for( int i = 0; i < CustomGauntletsGlobal.DevelopmentTrack.Scoreboards.len(); ++i )
+	{
+		CustomGauntletsGlobal.DevelopmentTrack.Scoreboards[i].ReferenceEnt.Destroy();
+	}
+	for( int i = 0; i < CustomGauntletsGlobal.DevelopmentTrack.StatsBoards.len(); ++i )
+	{
+		CustomGauntletsGlobal.DevelopmentTrack.StatsBoards[i].ReferenceEnt.Destroy();
 	}
 }
 

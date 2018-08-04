@@ -47,17 +47,15 @@ void function HandleLoadToken( string id, array<string> data )
 
 void function HandleLoadId( array<string> data )
 {
-
+	CleanupGauntlets(); // Clean up any existing gauntlet when loading a new one so we don't get two overlapping gauntlets
 }
 
 void function HandleLoadName( array<string> data )
 {
-	
 }
 
 void function HandleLoadTip( array<string> data )
 {
-	
 }
 
 void function HandleLoadHighscore( array<string> data )
