@@ -15,6 +15,14 @@ void function AddOnHandleLoadTokenCallback( void functionref(string id, array<st
 
 void function Spawnmenu_LoadSave( string saveName )
 {
+	thread Spawnmenu_LoadSave_Thread( saveName );
+}
+
+void function Spawnmenu_LoadSave_Thread( string saveName )
+{
+	ShowLoadingModal();
+	wait 0.2;
+
 	string saveContents = LoadSaveFileContents( saveName );
 
 	// Split the file into lines and tokens and handle each line individually
@@ -26,6 +34,9 @@ void function Spawnmenu_LoadSave( string saveName )
 		tokens.remove( 0 );
 		HandleLoadToken( id, tokens );
 	}
+
+	wait 0.2;
+	HideLoadingModal();
 }
 
 void function HandleLoadToken( string id, array<string> data )
