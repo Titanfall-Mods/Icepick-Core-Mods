@@ -64,6 +64,7 @@ void function Spawnmenu_Init_Weapons()
 	RegisterCategoryItem( "wep_pilot_ordnance", "mp_weapon_grenade_emp", Localize("#WPN_GRENADE_EMP") );
 	RegisterCategoryItem( "wep_pilot_ordnance", "mp_weapon_grenade_gravity", Localize("#WPN_GRENADE_GRAVITY") );
 	RegisterCategoryItem( "wep_pilot_ordnance", "mp_weapon_satchel", Localize("#WPN_SATCHEL") );
+	RegisterCategoryItem( "wep_pilot_ordnance", "mp_weapon_frag_drone", Localize("#WPN_FRAG_DRONE") );
 
 	RegisterPageCategory( "weapons", "wep_pilot_melee", "Pilot Melees", "Spawnmenu_GiveMelee" );
 	RegisterCategoryItem( "wep_pilot_melee", "melee_pilot_emptyhanded", "Fists" );
