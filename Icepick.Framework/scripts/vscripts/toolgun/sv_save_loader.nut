@@ -38,6 +38,9 @@ void function HandleLoadToken( string id, array<string> data )
 		case "zipline":
 			HandleLoadZipline( data );
 			break;
+		case "teleporter":
+			HandleLoadTeleporter( data );
+			break;
 	}
 
 	foreach ( callbackFunc in file.onHandleLoadTokenCallback )
@@ -60,4 +63,14 @@ void function HandleLoadZipline( array<string> data )
 	string from = data[0] + " " + data[1] + " " + data[2];
 	string to = data[3] + " " + data[4] + " " + data[5];
 	ClientCommand( GetPlayerByIndex( 0 ), "ToolZipline_AddZipline " + from + " " + to );
+}
+
+void function HandleLoadTeleporter( array<string> data )
+{
+	vector entryOrigin = Vector( data[0].tofloat(), data[1].tofloat(), data[2].tofloat() );
+	vector entryAngles = Vector( data[3].tofloat(), data[4].tofloat(), data[5].tofloat() );
+	vector exitOrigin = Vector( data[6].tofloat(), data[7].tofloat(), data[8].tofloat() );
+	vector exitAngles = Vector( data[9].tofloat(), data[10].tofloat(), data[11].tofloat() );
+
+	Toolgun_CreateTeleporter( GetPlayerByIndex( 0 ), entryOrigin, entryAngles, exitOrigin, exitAngles );
 }

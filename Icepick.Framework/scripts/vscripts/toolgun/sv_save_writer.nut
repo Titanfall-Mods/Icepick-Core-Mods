@@ -35,6 +35,18 @@ void function IcepickSave( string saveName = "SaveGame" )
 		AddSaveItem( entry );
 	}
 
+	// Save teleporters
+	foreach( teleporter in PlacedTeleporters )
+	{
+		vector entryOrigin = teleporter.entryEnt.GetOrigin();
+		vector entryAngles = teleporter.entryEnt.GetAngles();
+		vector exitOrigin = teleporter.exitEnt.GetOrigin();
+		vector exitAngles = teleporter.exitEnt.GetAngles();
+
+		string entry = IcepickSaveOutput( "teleporter", entryOrigin.x, entryOrigin.y, entryOrigin.z, entryAngles.x, entryAngles.y, entryAngles.z, exitOrigin.x, exitOrigin.y, exitOrigin.z, exitAngles.x, exitAngles.y, exitAngles.z );
+		AddSaveItem( entry );
+	}
+
 	// Write any custom data from mods
 	foreach ( callbackFunc in file.onIcepickSaveCallbacks )
 	{

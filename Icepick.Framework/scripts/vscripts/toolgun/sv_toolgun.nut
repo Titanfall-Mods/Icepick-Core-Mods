@@ -71,7 +71,7 @@ bool function Toolgun_IsHoldingToolgun()
 		entity plyWeapon = player.GetActiveWeapon();
 		if( plyWeapon != null )
 		{
-			return plyWeapon.GetWeaponClassName() == "mp_weapon_shotgun_pistol";
+			return plyWeapon.GetWeaponClassName() == "mp_weapon_shotgun_pistol" && ToolgunModeEnabled;
 		}
 	}
 	return false;
