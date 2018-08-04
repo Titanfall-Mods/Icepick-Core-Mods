@@ -1,5 +1,5 @@
 {
-	"ApiId" : "hkPvjkQY2tjdisnbc",
+	"ApiId" : "piCdw8m2ZBKv9TDrq",
 	"Name" : "Custom Gauntlets",
 	"Description" : "Allows you to make and race custom gauntlets!",
 	"Authors" : [
@@ -90,6 +90,6 @@
 			"RunOn": "SERVER || CLIENT",
 			"ClientCallback": "Toolgun_RegisterTool_GauntletPlaceWeapon",
 			"ServerCallback": "Toolgun_RegisterTool_GauntletPlaceWeapon"
-		},
-	],
+		}
+	]
 }
