@@ -14,6 +14,7 @@ global function Spawnmenu_SpawnNpc
 global function Spawnmenu_SaveGame
 global function Spawnmenu_SaveGameToFile
 global function Spawnmenu_SaveCheckpoint
+global function Spawnmenu_ChangePlayerInvincibility
 
 global function Spawnmenu_ToggleEditMode
 global function AddOnEditModeChangedCallback
@@ -37,6 +38,8 @@ void function Spawnmenu_Init()
 	#endif
 
 	#if SERVER
+	AddSpawnCallback( "player", Spawnmenu_OnPlayerSpawnedCallback );
+
 	// IsNoclipping only exists on the server, so serve noclip requests by sending them to the server first
 	// Command is bound and activated from scripts/kb_act.lst
 	AddClientCommandCallback( "toggle_noclip", ClientCommand_Spawnmenu_RequestNoclipToggle );
@@ -58,6 +61,17 @@ void function Spawnmenu_ToggleOpen( entity player )
 #endif
 
 #if SERVER
+void function Spawnmenu_OnPlayerSpawnedCallback( entity player )
+{
+	thread Spawnmenu_OnPlayerSpawnedCallback_Thread( player );
+}
+
+void function Spawnmenu_OnPlayerSpawnedCallback_Thread( entity player )
+{
+	wait 1.0;
+	Spawnmenu_ChangePlayerInvincibility( IsInvincibilityEnabled() == 1 );
+}
+
 bool function ClientCommand_Spawnmenu_RequestNoclipToggle( entity player, array<string> args )
 {
 	if( player.IsNoclipping() )
@@ -396,4 +410,23 @@ void function Spawnmenu_UpdateToolOption( string id, var value )
 	{
 		callbackFunc( id, value );
 	}
+}
+
+void function Spawnmenu_ChangePlayerInvincibility( bool wantsInvincibility )
+{
+#if SERVER
+	entity player = GetPlayerByIndex( 0 );
+
+	if( wantsInvincibility )
+	{
+		EnableDemigod( player )
+	}
+	else
+	{
+		if( IsDemigod( player ) )
+		{
+			DisableDemigod( player );
+		}
+	}
+#endif
 }
