@@ -1,4 +1,6 @@
+
 global function CustomGauntlet_Server_Init
+global function CustomGauntletCreateRope
 
 const float GAUNTLET_ENEMY_MISSED_TIME_PENALTY = 2.0;
 const float GAUNTLET_TARGET_DISSOLVE_TIME = 1.0 * 100;
@@ -48,25 +50,6 @@ void function CustomGauntlet_Server_Think()
 
 void function CustomGauntlet_Server_Think_EditMode()
 {
-	// Update all trigger helper positions
-	CustomGauntlet_UpdateTriggerLineSavedPosition( CustomGauntletsGlobal.DevelopmentTrack.StartLine, GauntletTriggerEntity.StartLine, "0 140 255" );
-	CustomGauntlet_UpdateTriggerLineSavedPosition( CustomGauntletsGlobal.DevelopmentTrack.FinishLine, GauntletTriggerEntity.FinishLine, "255 180 0" );
-	for( int i = CustomGauntletsGlobal.DevelopmentTrack.Checkpoints.len() - 1; i >= 0; --i )
-	{
-		CustomGauntlet_UpdateTriggerLineSavedPosition( CustomGauntletsGlobal.DevelopmentTrack.Checkpoints[i], GauntletTriggerEntity.Checkpoint, "190 230 160" );
-	}
-
-	// Check if any trigger helper entities were removed
-	CustomGauntlet_WatchForTriggerLineCleanup( CustomGauntletsGlobal.DevelopmentTrack.StartLine );
-	CustomGauntlet_WatchForTriggerLineCleanup( CustomGauntletsGlobal.DevelopmentTrack.FinishLine );
-	for( int i = CustomGauntletsGlobal.DevelopmentTrack.Checkpoints.len() - 1; i >= 0; --i )
-	{
-		if( CustomGauntlet_WatchForTriggerLineCleanup( CustomGauntletsGlobal.DevelopmentTrack.Checkpoints[i] ) )
-		{
-			CustomGauntletsGlobal.DevelopmentTrack.Checkpoints.remove( i );
-		}
-	}
-
 	// Remove any targets that've been removed
 	for( int i = CustomGauntletsGlobal.DevelopmentTrack.Targets.len() - 1; i >= 0; --i )
 	{
@@ -94,7 +77,6 @@ void function CustomGauntlet_Server_Think_EditMode()
 		}
 	}
 
-
 	// Remove any respawning weapons that've been deleted
 	for( int i = CustomGauntletsGlobal.DevelopmentTrack.RespawningWeapons.len() - 1; i >= 0; --i )
 	{
@@ -121,65 +103,57 @@ void function CustomGauntlet_Server_Think_EditMode()
 
 void function CustomGauntlet_Server_Think_PlayMode()
 {
+	entity player = GetPlayerByIndex( 0 );
 
+	if( !CustomGauntletsGlobal.HasStarted )
+	{
+		ListenForPlayerStartGauntlet( player );
+	}
+	else if( !CustomGauntletsGlobal.HasFinished )
+	{
+		ListenForPlayerFinishGauntlet( player );
+	}
 }
 
-bool function CustomGauntlet_WatchForTriggerLineCleanup( GauntletTriggerLine TriggerLine )
+void function ListenForPlayerStartGauntlet( entity player )
 {
-	if( !IsValid( TriggerLine.FromEnt ) || !IsValid( TriggerLine.ToEnt ) )
+	foreach( startLine in CustomGauntletsGlobal.DevelopmentTrack.Starts )
 	{
-		if( IsValid( TriggerLine.FromEnt ) )
+		if ( IsPlayerInGauntletTrigger( player, startLine ) )
 		{
-			TriggerLine.FromEnt.Destroy();
-			TriggerLine.FromEnt = null;
+			CustomGauntlet_Server_Start( CustomGauntletsGlobal.DevelopmentTrack );
+			break;
 		}
-		if( IsValid( TriggerLine.ToEnt ) )
-		{
-			TriggerLine.ToEnt.Destroy();
-			TriggerLine.ToEnt = null;
-		}
-		DestroyBeam( TriggerLine.BeamHelper );
-		TriggerLine.IsValid = false;
-		return true;
 	}
-	return false;
 }
 
-void function CustomGauntlet_UpdateTriggerLineSavedPosition( GauntletTriggerLine TriggerLine, int TriggerType, string BeamColorString )
+void function ListenForPlayerFinishGauntlet( entity player )
 {
-	if( IsValid( TriggerLine.FromEnt ) && IsValid( TriggerLine.ToEnt ) )
+	foreach( finishLine in CustomGauntletsGlobal.DevelopmentTrack.Finishes )
 	{
-		TriggerLine.From = TriggerLine.FromEnt.GetOrigin() + TriggerLineOffset;
-		TriggerLine.To = TriggerLine.ToEnt.GetOrigin() + TriggerLineOffset;
-		TriggerLine.IsValid = true;
-
-		// Update visualizer beam
-		if( !IsBeamEntityValid( TriggerLine.BeamHelper ) )
+		if ( IsPlayerInGauntletTrigger( player, finishLine ) )
 		{
-			CreateBeamHelper( TriggerLine.BeamHelper, BeamColorString, TriggerLine.FromEnt, TriggerLine.ToEnt );
-			switch( TriggerType )
-			{
-				case GauntletTriggerEntity.StartLine:
-					TriggerLine.BeamHelper.Laser.ConnectOutput( "OnTouchedByEntity", CustomGauntlet_StartLine_OnTouchedByEntity );
-					TriggerLine.BeamHelper.Laser2.ConnectOutput( "OnTouchedByEntity", CustomGauntlet_StartLine_OnTouchedByEntity );
-					break;
-				case GauntletTriggerEntity.FinishLine:
-					TriggerLine.BeamHelper.Laser.ConnectOutput( "OnTouchedByEntity", CustomGauntlet_FinishLine_OnTouchedByEntity );
-					TriggerLine.BeamHelper.Laser2.ConnectOutput( "OnTouchedByEntity", CustomGauntlet_FinishLine_OnTouchedByEntity );
-					break;
-				case GauntletTriggerEntity.Checkpoint:
-					TriggerLine.BeamHelper.Laser.ConnectOutput( "OnTouchedByEntity", CustomGauntlet_Checkpoint_OnTouchedByEntity );
-					TriggerLine.BeamHelper.Laser2.ConnectOutput( "OnTouchedByEntity", CustomGauntlet_Checkpoint_OnTouchedByEntity );
-					break;
-			}
+			CustomGauntlet_Server_Finish();
+			break;
 		}
-		else
-		{
-			UpdateBeamEmitterPosition( TriggerLine.BeamHelper, TriggerLine.From );
-			UpdateBeamTargetPosition( TriggerLine.BeamHelper, TriggerLine.To );
-		}
-
 	}
+}
+
+bool function IsPlayerInGauntletTrigger( entity player, GauntletTriggerLine trigger )
+{
+	entity pylon1 = trigger.left;
+	entity pylon2 = trigger.right;
+
+	vector p1Org = pylon1.GetOrigin();
+	vector p2Org = pylon2.GetOrigin();
+	float pylonDist = Length( p2Org - p1Org );
+
+	vector triggerOBBOrigin = ( p1Org + p2Org ) / 2.0;
+	vector triggerOOBAngles = VectorToAngles( p2Org - p1Org );
+	vector triggerOOBMins = < pylonDist * -0.5, -8.0, 0.0 >;
+	vector triggerOOBMaxs = < pylonDist * 0.5, 8.0, trigger.triggerHeight >;
+
+	return OBBIntersectsOBB( triggerOBBOrigin, triggerOOBAngles, triggerOOBMins, triggerOOBMaxs, player.GetOrigin(), <0.0,0.0,0.0>, player.GetBoundingMins(), player.GetBoundingMaxs(), 0.0 );
 }
 
 bool function ClientCommand_CustomGauntlet_SetEditMode( entity player, array<string> args )
@@ -195,44 +169,6 @@ bool function ClientCommand_CustomGauntlet_SetEditMode( entity player, array<str
 	}
 	CustomGauntlet_Server_Reset();
 	return true;
-}
-
-// -----------------------------------------------------------------------------
-
-void function CustomGauntlet_StartLine_OnTouchedByEntity( entity self, entity activator, entity caller, var value )
-{
-	if( !CustomGauntletsGlobal.EditModeActive && activator.IsPlayer() )
-	{
-		GauntletTrack ParentTrack = CustomGauntlet_FindParentTrack( self );
-		if( !CustomGauntletsGlobal.HasStarted && ParentTrack.Id != "" )
-		{
-			CustomGauntlet_Server_Start( ParentTrack );
-		}
-	}
-}
-
-void function CustomGauntlet_FinishLine_OnTouchedByEntity( entity self, entity activator, entity caller, var value )
-{
-	if( !CustomGauntletsGlobal.EditModeActive && activator.IsPlayer() )
-	{
-		GauntletTrack ParentTrack = CustomGauntlet_FindParentTrack( self );
-		if( CustomGauntletsGlobal.HasStarted && !CustomGauntletsGlobal.HasFinished && ParentTrack.Id != "" && CustomGauntletsGlobal.ActiveTrack.Id == ParentTrack.Id )
-		{
-			CustomGauntlet_Server_Finish();
-		}
-	}
-}
-
-void function CustomGauntlet_Checkpoint_OnTouchedByEntity( entity self, entity activator, entity caller, var value )
-{
-	if( !CustomGauntletsGlobal.EditModeActive && activator.IsPlayer() )
-	{
-		GauntletTrack ParentTrack = CustomGauntlet_FindParentTrack( self );
-		if( ParentTrack.Id != "" && CustomGauntletsGlobal.ActiveTrack.Id == ParentTrack.Id )
-		{
-			// Do checkpoint
-		}
-	}
 }
 
 // -----------------------------------------------------------------------------
@@ -460,4 +396,40 @@ void function CustomGauntlet_PlayerConnected( entity player )
 		Remote_CallFunction_Replay( player, "ServerCallback_CustomGauntlet_SendScoreboardTime", CustomGauntletsGlobal.DevelopmentTrack.Highscores[i].Time );
 	}
 
+}
+
+array<entity> function CustomGauntletCreateRope( vector origin, vector target, string cable = "cable/cable_selfillum.vmt" )
+{
+	int movespeed = 64
+	int subdivisions = 0 // 25
+	int slack = -100
+	string endpointName = UniqueString( "rope_endpoint" )
+
+	entity rope_start = CreateEntity( "move_rope" )
+	rope_start.kv.NextKey = endpointName
+	rope_start.kv.MoveSpeed = movespeed
+	rope_start.kv.Slack = slack
+	rope_start.kv.Subdiv = subdivisions
+	rope_start.kv.Width = "2"
+	rope_start.kv.TextureScale = "1"
+	rope_start.kv.RopeMaterial = cable
+	rope_start.kv.PositionInterpolator = 2
+	rope_start.DisableHibernation()
+	rope_start.SetOrigin( origin )
+
+	entity rope_end = CreateEntity( "keyframe_rope" )
+	SetTargetName( rope_end, endpointName )
+	rope_end.kv.MoveSpeed = movespeed
+	rope_end.kv.Slack = slack
+	rope_end.kv.Subdiv = subdivisions
+	rope_end.kv.Width = "2"
+	rope_end.kv.TextureScale = "1"
+	rope_end.kv.RopeMaterial = cable
+	rope_end.DisableHibernation()
+	rope_end.SetOrigin( target )
+
+	DispatchSpawn( rope_start )
+	DispatchSpawn( rope_end )
+
+	return [ rope_start, rope_end ];
 }

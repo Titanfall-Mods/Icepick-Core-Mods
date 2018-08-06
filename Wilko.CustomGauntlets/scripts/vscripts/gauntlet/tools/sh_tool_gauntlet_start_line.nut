@@ -1,5 +1,8 @@
 
 global function Toolgun_RegisterTool_GauntletPlaceStart
+#if SERVER
+global function CustomGauntlet_CreateStartLine
+#endif
 
 table ToolGauntletStart = {};
 
@@ -30,18 +33,16 @@ void function Toolgun_RegisterTool_GauntletPlaceStart()
 		TraceResults traceResults = TraceLineHighDetail( eyePosition, eyePosition + viewVector * 10000, player, TRACE_MASK_PLAYERSOLID, TRACE_COLLISION_GROUP_PLAYER );
 		if( traceResults.hitEnt )
 		{
-			vector Pos = traceResults.endPos;
-			vector Angles = Vector(0, player.EyeAngles().y, 0);
-			
-			if( CustomGauntlet_HasStartLineEntities( CustomGauntletsGlobal.DevelopmentTrack ) )
-			{
-				Remote_CallFunction_NonReplay( GetPlayerByIndex( 0 ), "ServerCallback_CustomGauntlet_ShowError", 1 );
-			}
-			else
-			{
-				CustomGauntletsGlobal.DevelopmentTrack.StartLine.FromEnt = ToolGauntlet_CreateTriggerEntity( Pos, Angles, 100.0 );
-				CustomGauntletsGlobal.DevelopmentTrack.StartLine.ToEnt = ToolGauntlet_CreateTriggerEntity( Pos, Angles, -100.0 );
-			}
+			const START_LINE_SPACING = 200.0;
+			const TRIGGER_HEIGHT = 100.0;
+
+			vector origin = traceResults.endPos;
+			vector angles = Vector( 0, player.EyeAngles().y, 0 );
+
+			vector left = origin + AnglesToRight( angles ) * START_LINE_SPACING * 0.5 * -1.0;
+			vector right = origin + AnglesToRight( angles ) * START_LINE_SPACING * 0.5;
+
+			CustomGauntlet_CreateStartLine( left, right, TRIGGER_HEIGHT );
 		}
 
 		return true;
@@ -54,3 +55,70 @@ void function Toolgun_RegisterTool_GauntletPlaceStart()
 	ToolGunTools.append( ToolGauntletStart );
 
 }
+
+#if SERVER
+void function CustomGauntlet_CreateStartLine( vector leftOrigin, vector rightOrigin, float height )
+{
+	entity left = CreateSmallAnchorEntity( leftOrigin, < 0, 0, 0 > );
+	entity right = CreateSmallAnchorEntity( rightOrigin, < 0, 0, 0 > );
+	vector heightOffset = < 0, 0, height >;
+
+	array<entity> lowerRopes = CustomGauntletCreateRope( left.GetOrigin(), right.GetOrigin() );
+	lowerRopes[0].SetParent( left );
+	lowerRopes[1].SetParent( right );
+
+	array<entity> upperRopes = CustomGauntletCreateRope( left.GetOrigin() + heightOffset, right.GetOrigin() + heightOffset );
+	upperRopes[0].SetParent( left );
+	upperRopes[1].SetParent( right );
+
+	array<entity> leftRopes = CustomGauntletCreateRope( left.GetOrigin(), left.GetOrigin() + heightOffset );
+	leftRopes[0].SetParent( left );
+	leftRopes[1].SetParent( left );
+
+	array<entity> rightRopes = CustomGauntletCreateRope( right.GetOrigin(), right.GetOrigin() + heightOffset );
+	rightRopes[0].SetParent( right );
+	rightRopes[1].SetParent( right );
+
+	GauntletTriggerLine startLine;
+	startLine.left = left;
+	startLine.right = right;
+	startLine.triggerHeight = height;
+	CustomGauntletsGlobal.DevelopmentTrack.Starts.append( startLine );
+
+	thread CustomGauntlet_StartLine_Think( startLine );
+}
+
+void function CustomGauntlet_StartLine_Think( GauntletTriggerLine startLine )
+{
+	EndSignal( startLine.left, "OnDestroy" );
+	EndSignal( startLine.right, "OnDestroy" );
+
+	OnThreadEnd(
+		function() : ( startLine )
+		{
+			if( IsValid( startLine.left ) )
+			{
+				startLine.left.Destroy();
+			}
+			if( IsValid( startLine.right ) )
+			{
+				startLine.right.Destroy();
+			}
+
+			for( int i = CustomGauntletsGlobal.DevelopmentTrack.Starts.len() - 1; i >= 0; --i )
+			{
+				if( startLine == CustomGauntletsGlobal.DevelopmentTrack.Starts[i] )
+				{
+					CustomGauntletsGlobal.DevelopmentTrack.Starts.remove( i );
+					break;
+				}
+			}
+		}
+	)
+
+	while( true )
+	{
+		wait 1.0;
+	}
+}
+#endif

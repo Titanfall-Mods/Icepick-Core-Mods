@@ -4,6 +4,7 @@ global function VectorStepTowards
 global function PackVectorToString
 global function UnpackStringToVector
 global function CreateAnchorEntity
+global function CreateSmallAnchorEntity
 
 void function printc( ... )
 {
@@ -64,4 +65,9 @@ entity function CreateAnchorEntity( vector origin, vector angles, asset modelAss
 #if CLIENT
 	return null;
 #endif
+}
+
+entity function CreateSmallAnchorEntity( vector origin, vector angles, asset modelAsset = $"models/weapons/sentry_shield/sentry_shield_proj.mdl" )
+{
+	return CreateAnchorEntity( origin, angles, modelAsset );
 }

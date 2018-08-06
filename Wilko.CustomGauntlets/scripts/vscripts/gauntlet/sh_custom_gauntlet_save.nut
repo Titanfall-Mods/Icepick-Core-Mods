@@ -1,5 +1,5 @@
 
-const float CUSTOM_GAUNTLET_SAVE_VERSION = 1.0;
+global const float CUSTOM_GAUNTLET_SAVE_VERSION = 2.0;
 
 #if CLIENT
 global function CustomGauntlet_Client_SaveInit
@@ -37,13 +37,13 @@ void function OnUtilityCallback( string utility )
 
 void function CleanupGauntlets()
 {
-	if( CustomGauntletsGlobal.DevelopmentTrack.StartLine.IsValid )
+	for( int i = 0; i < CustomGauntletsGlobal.DevelopmentTrack.Starts.len(); ++i )
 	{
-		CustomGauntletsGlobal.DevelopmentTrack.StartLine.FromEnt.Destroy(); // Only destroy one entity and let the think cleanup the rest automatically
+		CustomGauntletsGlobal.DevelopmentTrack.Starts[i].left.Destroy();
 	}
-	if( CustomGauntletsGlobal.DevelopmentTrack.FinishLine.IsValid )
+	for( int i = 0; i < CustomGauntletsGlobal.DevelopmentTrack.Finishes.len(); ++i )
 	{
-		CustomGauntletsGlobal.DevelopmentTrack.FinishLine.FromEnt.Destroy(); // Only destroy one entity and let the think cleanup the rest automatically
+		CustomGauntletsGlobal.DevelopmentTrack.Finishes[i].left.Destroy();
 	}
 	for( int i = 0; i < CustomGauntletsGlobal.DevelopmentTrack.Targets.len(); ++i )
 	{
@@ -81,19 +81,21 @@ void function OnIcepickSave()
 		AddSaveItem( IcepickSaveOutput( "gauntlet.highscore", highscore.Name, highscore.Time ) );
 	}
 
-	if( CustomGauntletsGlobal.DevelopmentTrack.StartLine.IsValid )
+	for( int i = 0; i < CustomGauntletsGlobal.DevelopmentTrack.Starts.len(); ++i )
 	{
-		vector start = CustomGauntletsGlobal.DevelopmentTrack.StartLine.FromEnt.GetOrigin();
-		vector end = CustomGauntletsGlobal.DevelopmentTrack.StartLine.ToEnt.GetOrigin();
-		string entry = IcepickSaveOutput( "gauntlet.start", start.x, start.y, start.z, end.x, end.y, end.z );
+		GauntletTriggerLine start = CustomGauntletsGlobal.DevelopmentTrack.Starts[i];
+		string leftOrigin = PackVectorToString( start.left.GetOrigin() );
+		string rightOrigin = PackVectorToString( start.right.GetOrigin() );
+		string entry = IcepickSaveOutput( "gauntlet.start", leftOrigin, rightOrigin, start.triggerHeight );
 		AddSaveItem( entry );
 	}
 
-	if( CustomGauntletsGlobal.DevelopmentTrack.FinishLine.IsValid )
+	for( int i = 0; i < CustomGauntletsGlobal.DevelopmentTrack.Finishes.len(); ++i )
 	{
-		vector start = CustomGauntletsGlobal.DevelopmentTrack.FinishLine.FromEnt.GetOrigin();
-		vector end = CustomGauntletsGlobal.DevelopmentTrack.FinishLine.ToEnt.GetOrigin();
-		string entry = IcepickSaveOutput( "gauntlet.end", start.x, start.y, start.z, end.x, end.y, end.z );
+		GauntletTriggerLine finish = CustomGauntletsGlobal.DevelopmentTrack.Finishes[i];
+		string leftOrigin = PackVectorToString( finish.left.GetOrigin() );
+		string rightOrigin = PackVectorToString( finish.right.GetOrigin() );
+		string entry = IcepickSaveOutput( "gauntlet.end", leftOrigin, rightOrigin, finish.triggerHeight );
 		AddSaveItem( entry );
 	}
 

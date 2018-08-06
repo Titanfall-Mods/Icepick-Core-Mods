@@ -1,16 +1,5 @@
 
 global function CustomGauntlet_Shared_Init
-global function CustomGauntlet_HasTriggerLine
-global function CustomGauntlet_HasTriggerLineEntities
-global function CustomGauntlet_HasStartLine
-global function CustomGauntlet_HasStartLineEntities
-global function CustomGauntlet_HasFinishLine
-global function CustomGauntlet_HasFinishLineEntities
-global function CustomGauntlet_HasScoreboard
-global function CustomGauntlet_HasStatsBoards
-global function CustomGauntlet_FindParentTrack
-global function CustomGauntlet_IsEntPartOfTrack
-global function CustomGauntlet_IsEntPartOfGauntletTriggerLine
 global function CustomGauntlet_AddLeaderboardTime
 global function ToolGauntlet_CreateTriggerEntity
 global function ToolGauntlet_DelayedTransmit
@@ -19,13 +8,9 @@ global const CUSTOM_GAUNTLET_LEADERBOARD_MAX_ENTRIES = 10;
 
 global struct GauntletTriggerLine
 {
-	bool IsValid,
-	vector From,
-	vector To,
-
-	entity FromEnt,
-	entity ToEnt,
-	BeamEntity BeamHelper
+	entity left,
+	entity right,
+	float triggerHeight
 };
 
 global struct TargetEnemy
@@ -62,9 +47,10 @@ global struct GauntletTrack
 	string Id = "",
 	string TrackName = "Unnamed",
 
-	GauntletTriggerLine StartLine,
-	GauntletTriggerLine FinishLine,
+	array<GauntletTriggerLine> Starts,
+	array<GauntletTriggerLine> Finishes,
 	array<GauntletTriggerLine> Checkpoints,
+
 	array<TargetEnemy> Targets,
 	array<GauntletWorldUI> Scoreboards,
 	array<GauntletWorldUI> StatsBoards,
@@ -137,114 +123,6 @@ void function CustomGauntlet_Shared_Think()
 
 // -----------------------------------------------------------------------------
 
-bool function CustomGauntlet_HasTriggerLine( GauntletTriggerLine TriggerLine )
-{
-	return TriggerLine.From != ZERO_VECTOR || TriggerLine.To != ZERO_VECTOR;
-}
-
-bool function CustomGauntlet_HasTriggerLineEntities( GauntletTriggerLine TriggerLine )
-{
-	return IsValid( TriggerLine.FromEnt ) || IsValid( TriggerLine.ToEnt );
-}
-
-// -----------------------------------------------------------------------------
-
-bool function CustomGauntlet_HasStartLine( GauntletTrack Track )
-{
-	return CustomGauntlet_HasTriggerLine( Track.StartLine );
-}
-
-bool function CustomGauntlet_HasStartLineEntities( GauntletTrack Track )
-{
-	return CustomGauntlet_HasTriggerLineEntities( Track.StartLine );
-}
-
-// -----------------------------------------------------------------------------
-
-bool function CustomGauntlet_HasFinishLine( GauntletTrack Track )
-{
-	return CustomGauntlet_HasTriggerLine( Track.FinishLine );
-}
-
-bool function CustomGauntlet_HasFinishLineEntities( GauntletTrack Track )
-{
-	return CustomGauntlet_HasTriggerLineEntities( Track.FinishLine );
-}
-
-// -----------------------------------------------------------------------------
-
-bool function CustomGauntlet_HasScoreboard( GauntletTrack Track )
-{
-	return Track.Scoreboards.len() > 0;
-}
-
-// -----------------------------------------------------------------------------
-
-bool function CustomGauntlet_HasStatsBoards( GauntletTrack Track )
-{
-	return Track.StatsBoards.len() > 0;
-}
-
-// -----------------------------------------------------------------------------
-
-GauntletTrack function CustomGauntlet_FindParentTrack( entity SearchEnt )
-{
-	if( CustomGauntlet_IsEntPartOfTrack( CustomGauntletsGlobal.DevelopmentTrack, SearchEnt ) )
-	{
-		return CustomGauntletsGlobal.DevelopmentTrack;
-	}
-
-	for( int i = 0; i < CustomGauntletsGlobal.RegisteredTracks.len(); ++i )
-	{
-		if( CustomGauntlet_IsEntPartOfTrack( CustomGauntletsGlobal.RegisteredTracks[i], SearchEnt ) )
-		{
-			return CustomGauntletsGlobal.RegisteredTracks[i];
-		}
-	}
-	
-	GauntletTrack InvalidTrack;
-	InvalidTrack.TrackName = "Invalid";
-	return InvalidTrack;
-}
-
-bool function CustomGauntlet_IsEntPartOfTrack( GauntletTrack Track, entity SearchEnt )
-{
-	if( CustomGauntlet_IsEntPartOfGauntletTriggerLine( Track.FinishLine, SearchEnt ) )
-		return true;
-	if( CustomGauntlet_IsEntPartOfGauntletTriggerLine( Track.StartLine, SearchEnt ) )
-		return true;
-
-	for( int i = 0; i < Track.Checkpoints.len(); ++i )
-	{
-		if( CustomGauntlet_IsEntPartOfGauntletTriggerLine( Track.Checkpoints[i], SearchEnt ) )
-			return true;
-	}
-
-	for( int i = 0; i < Track.Targets.len(); ++i )
-	{
-		if( Track.Targets[i].SpawnedEnemy == SearchEnt )
-		{
-			return true;
-		}
-	}
-
-	return false;
-}
-
-bool function CustomGauntlet_IsEntPartOfGauntletTriggerLine( GauntletTriggerLine TriggerLine, entity SearchEnt )
-{
-	if( TriggerLine.FromEnt == SearchEnt )
-		return true;
-	if( TriggerLine.ToEnt == SearchEnt )
-		return true;
-	if( TriggerLine.BeamHelper.Laser == SearchEnt )
-		return true;
-	if( TriggerLine.BeamHelper.Laser2 == SearchEnt )
-		return true;
-
-	return false;
-}
-
 void function CustomGauntlet_AddLeaderboardTime( GauntletTrack Track, float FinalTime, string PlayerName )
 {
 	// Find where to put the highscore
@@ -290,6 +168,8 @@ void function CustomGauntlet_AddLeaderboardTime( GauntletTrack Track, float Fina
 entity function ToolGauntlet_CreateTriggerEntity( vector Pos, vector Angles, float Offset, asset ModelAsset = $"models/weapons/titan_trip_wire/titan_trip_wire.mdl" )
 {
 #if SERVER
+	EnableExternalSpawnMode();
+
 	entity prop_dynamic = CreateEntity( "prop_dynamic" );
 	prop_dynamic.SetValueForModelKey( ModelAsset );
 	prop_dynamic.kv.fadedist = -1;
@@ -301,6 +181,9 @@ entity function ToolGauntlet_CreateTriggerEntity( vector Pos, vector Angles, flo
 	prop_dynamic.SetOrigin( Pos - AnglesToRight( Angles ) * Offset );
 	prop_dynamic.SetAngles( Angles );
 	DispatchSpawn( prop_dynamic );
+	
+	DisableExternalSpawnMode();
+
 	return prop_dynamic;
 #endif
 #if CLIENT

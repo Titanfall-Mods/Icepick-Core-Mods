@@ -3,6 +3,11 @@
 
 global function CustomGauntlet_LoadInit
 
+struct
+{
+	table< string, array<string> functionref( array<string> ) > conversionMethods
+} file;
+
 void function CustomGauntlet_LoadInit()
 {
 	AddOnHandleLoadTokenCallback( HandleLoadToken );
@@ -10,8 +15,17 @@ void function CustomGauntlet_LoadInit()
 
 void function HandleLoadToken( string id, array<string> data )
 {
+	if( id in file.conversionMethods )
+	{
+		array<string> functionref( array<string> ) callbackFunc = file.conversionMethods[id];
+		data = callbackFunc( data );
+	}
+
 	switch( id )
 	{
+		case "gauntlet.save-version":
+			HandleLoadSaveVersion( data );
+			break;
 		case "gauntlet.id":
 			HandleLoadId( data );
 			break;
@@ -41,6 +55,17 @@ void function HandleLoadToken( string id, array<string> data )
 			break;
 		case "gauntlet.weapon":
 			HandleLoadWeapon( data );
+			break;
+	}
+}
+
+void function HandleLoadSaveVersion( array<string> data )
+{
+	string versionId = data[0];
+	switch( versionId )
+	{
+		case "1":
+			file.conversionMethods = CustomGauntlet_GetConvertOneToTwo();
 			break;
 	}
 }
@@ -80,20 +105,20 @@ void function DelayTransmitScoreboardTime( float time )
 
 void function HandleLoadStart( array<string> data )
 {
-	vector left = Vector( data[0].tofloat(), data[1].tofloat(), data[2].tofloat() );
-	vector right = Vector( data[3].tofloat(), data[4].tofloat(), data[5].tofloat() );
+	vector leftOrigin = UnpackStringToVector( data[0] );
+	vector rightOrigin = UnpackStringToVector( data[1] );
+	float height = data[2].tofloat();
 
-	CustomGauntletsGlobal.DevelopmentTrack.StartLine.FromEnt = ToolGauntlet_CreateTriggerEntity( left, Vector( 0, 0, 0 ), 0.0 );
-	CustomGauntletsGlobal.DevelopmentTrack.StartLine.ToEnt = ToolGauntlet_CreateTriggerEntity( right, Vector( 0, 0, 0 ), 0.0 );
+	CustomGauntlet_CreateStartLine( leftOrigin, rightOrigin, height ); 
 }
 
 void function HandleLoadEnd( array<string> data )
 {
-	vector left = Vector( data[0].tofloat(), data[1].tofloat(), data[2].tofloat() );
-	vector right = Vector( data[3].tofloat(), data[4].tofloat(), data[5].tofloat() );
+	vector leftOrigin = UnpackStringToVector( data[0] );
+	vector rightOrigin = UnpackStringToVector( data[1] );
+	float height = data[2].tofloat();
 
-	CustomGauntletsGlobal.DevelopmentTrack.FinishLine.FromEnt = ToolGauntlet_CreateTriggerEntity( left, Vector( 0, 0, 0 ), 0.0 );
-	CustomGauntletsGlobal.DevelopmentTrack.FinishLine.ToEnt = ToolGauntlet_CreateTriggerEntity( right, Vector( 0, 0, 0 ), 0.0 );
+	CustomGauntlet_CreateFinishLine( leftOrigin, rightOrigin, height ); 
 }
 
 void function HandleLoadTarget( array<string> data )

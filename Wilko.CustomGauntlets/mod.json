@@ -90,6 +90,10 @@
 			"RunOn": "SERVER || CLIENT",
 			"ClientCallback": "Toolgun_RegisterTool_GauntletPlaceWeapon",
 			"ServerCallback": "Toolgun_RegisterTool_GauntletPlaceWeapon"
+		},
+		{
+			"Path": "gauntlet/loaders/sv_convert_load_v1.nut",
+			"RunOn": "SERVER"
 		}
 	]
 }
