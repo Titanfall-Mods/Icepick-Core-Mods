@@ -3,6 +3,7 @@ global function Toolgun_RegisterTool_GauntletPlaceFinish
 #if SERVER
 global function CustomGauntlet_CreateFinishLine
 #endif
+global function CustomGauntlet_FinishLine_Think
 
 table ToolGauntletFinish = {};
 
@@ -87,7 +88,15 @@ void function CustomGauntlet_CreateFinishLine( vector leftOrigin, vector rightOr
 	CustomGauntletsGlobal.DevelopmentTrack.Finishes.append( finishLine );
 
 	thread CustomGauntlet_FinishLine_Think( finishLine );
+	thread SendFinishLineToClient( finishLine );
 }
+
+void function SendFinishLineToClient( GauntletTriggerLine finishLine )
+{
+	wait 0.2;
+	Remote_CallFunction_NonReplay( GetPlayerByIndex( 0 ), "ServerCallback_CustomGauntlet_SendStartFinishLine", 1, finishLine.left.GetEncodedEHandle(), finishLine.right.GetEncodedEHandle(), finishLine.triggerHeight );
+}
+#endif
 
 void function CustomGauntlet_FinishLine_Think( GauntletTriggerLine finishLine )
 {
@@ -97,6 +106,7 @@ void function CustomGauntlet_FinishLine_Think( GauntletTriggerLine finishLine )
 	OnThreadEnd(
 		function() : ( finishLine )
 		{
+			#if SERVER
 			if( IsValid( finishLine.left ) )
 			{
 				finishLine.left.Destroy();
@@ -105,6 +115,7 @@ void function CustomGauntlet_FinishLine_Think( GauntletTriggerLine finishLine )
 			{
 				finishLine.right.Destroy();
 			}
+			#endif
 
 			for( int i = CustomGauntletsGlobal.DevelopmentTrack.Finishes.len() - 1; i >= 0; --i )
 			{
@@ -122,4 +133,3 @@ void function CustomGauntlet_FinishLine_Think( GauntletTriggerLine finishLine )
 		wait 1.0;
 	}
 }
-#endif

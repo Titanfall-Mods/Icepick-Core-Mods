@@ -3,6 +3,7 @@ global function Toolgun_RegisterTool_GauntletPlaceStart
 #if SERVER
 global function CustomGauntlet_CreateStartLine
 #endif
+global function CustomGauntlet_StartLine_Think
 
 table ToolGauntletStart = {};
 
@@ -86,7 +87,15 @@ void function CustomGauntlet_CreateStartLine( vector leftOrigin, vector rightOri
 	CustomGauntletsGlobal.DevelopmentTrack.Starts.append( startLine );
 
 	thread CustomGauntlet_StartLine_Think( startLine );
+	thread SendStartLineToClient( startLine );
 }
+
+void function SendStartLineToClient( GauntletTriggerLine startLine )
+{
+	wait 0.2;
+	Remote_CallFunction_NonReplay( GetPlayerByIndex( 0 ), "ServerCallback_CustomGauntlet_SendStartFinishLine", 0, startLine.left.GetEncodedEHandle(), startLine.right.GetEncodedEHandle(), startLine.triggerHeight );
+}
+#endif
 
 void function CustomGauntlet_StartLine_Think( GauntletTriggerLine startLine )
 {
@@ -96,6 +105,7 @@ void function CustomGauntlet_StartLine_Think( GauntletTriggerLine startLine )
 	OnThreadEnd(
 		function() : ( startLine )
 		{
+			#if SERVER
 			if( IsValid( startLine.left ) )
 			{
 				startLine.left.Destroy();
@@ -104,6 +114,7 @@ void function CustomGauntlet_StartLine_Think( GauntletTriggerLine startLine )
 			{
 				startLine.right.Destroy();
 			}
+			#endif
 
 			for( int i = CustomGauntletsGlobal.DevelopmentTrack.Starts.len() - 1; i >= 0; --i )
 			{
@@ -121,4 +132,3 @@ void function CustomGauntlet_StartLine_Think( GauntletTriggerLine startLine )
 		wait 1.0;
 	}
 }
-#endif

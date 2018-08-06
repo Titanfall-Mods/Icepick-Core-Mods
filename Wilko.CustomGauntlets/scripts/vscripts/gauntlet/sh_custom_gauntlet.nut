@@ -10,7 +10,10 @@ global struct GauntletTriggerLine
 {
 	entity left,
 	entity right,
-	float triggerHeight
+	float triggerHeight,
+
+	var topo,
+	var rui
 };
 
 global struct TargetEnemy

@@ -798,6 +798,7 @@ function RemoteFunctions_Init()
 	RegisterNetworkedVariable( "CGEnemiesKilled", SNDC_PLAYER_GLOBAL, SNVT_INT, 0 )
 
 	Remote_RegisterFunction( "ServerCallback_CustomGauntlet_ShowError" );
+	Remote_RegisterFunction( "ServerCallback_CustomGauntlet_SendStartFinishLine" );
 	Remote_RegisterFunction( "ServerCallback_CustomGauntlet_SendScoreboardEnt" );
 	Remote_RegisterFunction( "ServerCallback_CustomGauntlet_SendStatsBoardEnt" );
 	Remote_RegisterFunction( "ServerCallback_CustomGauntlet_RefreshWorldTopos" );

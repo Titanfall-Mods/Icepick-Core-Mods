@@ -1,6 +1,7 @@
 untyped
 
 global function CustomGauntlet_Think_Topology
+global function ServerCallback_CustomGauntlet_SendStartFinishLine
 
 const float SCOREBOARD_SIZE_W = 120.0;
 const float SCOREBOARD_SIZE_H = 120.0;
@@ -94,6 +95,69 @@ void function CustomGauntlet_Think_UpdateTrackTopologies( GauntletTrack Track, b
 		{
 			CurrentUI.Rui = RuiCreate( $"ui/gauntlet_results_display.rpak", CurrentUI.Topology, RUI_DRAW_WORLD, 0 );
 		}
+	}
+}
+
+// -----------------------------------------------------------------------------
+
+void function ServerCallback_CustomGauntlet_SendStartFinishLine( int type, int leftEntIdx, int rightEntIdx, float triggerHeight )
+{
+	printt(" ServerCallback_CustomGauntlet_SendStartFinishLine", type, leftEntIdx, rightEntIdx, triggerHeight );
+
+	entity left = GetEntityFromEncodedEHandle( leftEntIdx );
+	entity right = GetEntityFromEncodedEHandle( rightEntIdx );
+
+	GauntletTriggerLine triggerLine;
+	triggerLine.left = left;
+	triggerLine.right = right;
+	triggerLine.triggerHeight = triggerHeight;
+
+	string displayText = "NO TEXT";
+	switch( type )
+	{
+		case 0:
+			CustomGauntletsGlobal.DevelopmentTrack.Starts.append( triggerLine );
+			displayText = "#GAUNTLET_START_TEXT";
+			break;
+		case 1:
+			CustomGauntletsGlobal.DevelopmentTrack.Finishes.append( triggerLine );
+			displayText = "#GAUNTLET_FINISH_TEXT";
+			break;
+	}
+
+	vector zeroVector = Vector( 0, 0, 0 );
+	triggerLine.topo = CustomGauntlet_CreateCentredTopology( zeroVector, zeroVector );
+	triggerLine.rui = RuiCreate( $"ui/gauntlet_starting_line.rpak", triggerLine.topo, RUI_DRAW_WORLD, 0 );
+	RuiSetString( triggerLine.rui, "displayText", displayText );
+
+	thread CustomGauntlet_StartLine_Think( triggerLine );
+	thread UpdateStartFinishLineTopology( triggerLine );
+}
+
+void function UpdateStartFinishLineTopology( GauntletTriggerLine triggerLine )
+{
+	EndSignal( triggerLine.left, "OnDeath" );
+	EndSignal( triggerLine.right, "OnDeath" );
+
+	while( true )
+	{
+		wait 0.1;
+
+		vector leftOrigin = triggerLine.left.GetOrigin();
+		vector rightOrigin = triggerLine.right.GetOrigin();
+		float width = Distance( leftOrigin, rightOrigin ) * 0.5;
+		width = width < 60.0 ? 60.0 : width;
+		float height = width * 0.5;
+		if( height > triggerLine.triggerHeight * 0.66 )
+		{
+			height = triggerLine.triggerHeight * 0.66;
+			width = height * 2.0;
+		}
+
+		vector topoOrigin = ( leftOrigin + rightOrigin ) / 2.0 + < 0, 0, triggerLine.triggerHeight * 0.5 >;
+		vector topoAngles = VectorToAngles( rightOrigin - leftOrigin ) + < 0, 90, 0 >;
+		topoAngles = < 0, topoAngles.y, 0 >;
+		CustomGauntlet_UpdateCentredTopology( triggerLine.topo, topoOrigin, topoAngles, width, height );
 	}
 }
 
