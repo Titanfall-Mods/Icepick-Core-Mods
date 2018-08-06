@@ -2,7 +2,6 @@
 untyped
 
 global function Toolgun_UI_Init
-global function Toolgun_IsHoldingToolgun
 
 array<var> ruis = [];
 array<var> grabModeRuis = [];
@@ -122,20 +121,6 @@ void function Toolgun_UI_DelayedInit()
 	thread ToolgunUI_Think();
 }
 
-bool function Toolgun_IsHoldingToolgun()
-{
-	entity player = GetLocalClientPlayer()
-	if( player )
-	{
-		entity plyWeapon = player.GetActiveWeapon()
-		if( plyWeapon != null )
-		{
-			return plyWeapon.GetWeaponClassName() == "mp_weapon_shotgun_pistol";
-		}
-	}
-	return false;
-}
-
 void function AddKeypadRui( string text, vector position, vector color )
 {
 	var rui = RuiCreate( $"ui/cockpit_console_text_top_left.rpak", clGlobal.topoCockpitHudPermanent, RUI_DRAW_COCKPIT, 0 )
@@ -221,7 +206,7 @@ void function ToolgunUI_Think()
 {
 	while( true )
 	{
-		if( Toolgun_IsHoldingToolgun() )
+		if( Toolgun_IsHoldingToolgun_IgnoreEnabled() )
 		{
 			if( ToolgunModeEnabled )
 			{
@@ -232,7 +217,7 @@ void function ToolgunUI_Think()
 			else
 			{
 				ToolgunUI_Think_HideUi();
-				RuiSetString( ToolgunUIRuis.ToolgunTitle, "msgText", "Toolgun Disabled\nPress [Home] to toggle" );
+				RuiSetString( ToolgunUIRuis.ToolgunTitle, "msgText", "Toolgun Disabled\nRe-enable it in the Spawn Menu" );
 				RuiSetFloat( ToolgunUIRuis.ToolgunTitle, "msgFontSize", 24.0 );
 				RuiSetFloat( ToolgunUIRuis.ToolgunTitle, "msgAlpha", 0.9 );
 			}

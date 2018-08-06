@@ -6,6 +6,8 @@ global function Toolgun_Client_PrimaryAttack
 global function Toolgun_CanUseKeyboardInput
 global function Toolgun_Client_ToggleEditMode
 global function ServerCallback_Toolgun_RegisterTools;
+global function Toolgun_IsHoldingToolgun
+global function Toolgun_IsHoldingToolgun_IgnoreEnabled
 
 global struct ToolgunGrabStruct {
 	entity GrabbedEntity,
@@ -297,4 +299,23 @@ void function ServerCallback_Toolgun_RegisterTools()
 			tool.RegisterOptions();
 		}
 	}
+}
+
+bool function Toolgun_IsHoldingToolgun()
+{
+	return Toolgun_IsHoldingToolgun_IgnoreEnabled() && ToolgunModeEnabled;
+}
+
+bool function Toolgun_IsHoldingToolgun_IgnoreEnabled()
+{
+	entity player = GetLocalClientPlayer()
+	if( player )
+	{
+		entity plyWeapon = player.GetActiveWeapon()
+		if( plyWeapon != null )
+		{
+			return plyWeapon.GetWeaponClassName() == "mp_weapon_shotgun_pistol";
+		}
+	}
+	return false;
 }
