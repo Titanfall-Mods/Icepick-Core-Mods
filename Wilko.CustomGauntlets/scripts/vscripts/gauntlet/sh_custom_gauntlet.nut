@@ -15,6 +15,8 @@ global function CustomGauntlet_AddLeaderboardTime
 global function ToolGauntlet_CreateTriggerEntity
 global function ToolGauntlet_DelayedTransmit
 
+global const CUSTOM_GAUNTLET_LEADERBOARD_MAX_ENTRIES = 10;
+
 global struct GauntletTriggerLine
 {
 	bool IsValid,
