@@ -30,6 +30,15 @@ void function Toolgun_RegisterTool_SpawnPoint()
 		return "Fire to place a Spawn Point at your location";
 	}
 
+	ToolSpawnPoint.RegisterOptions <- function()
+	{
+		#if CLIENT
+		AddTextOption( "spawn_point_spawner", "Firing will place a spawn point where you stand.\nSpawn points can be removed using the remover tool." );
+		AddTextOption( "spawn_point_spawner", "\nWhen your save file is loaded players will be teleported to one of your placed spawns." );
+		AddTextOption( "spawn_point_spawner", "Respawning will also prioritize your spawn points over the ones already placed in the level." );
+		#endif
+	}
+
 	ToolSpawnPoint.OnFire <- function()
 	{
 	#if SERVER
