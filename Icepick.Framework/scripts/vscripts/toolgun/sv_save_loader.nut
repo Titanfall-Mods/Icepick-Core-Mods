@@ -4,7 +4,8 @@ global function Spawnmenu_LoadSave
 
 struct
 {
-	array<void functionref(string id, array<string> data)> onHandleLoadTokenCallback
+	array<void functionref(string id, array<string> data)> onHandleLoadTokenCallback,
+	array<CustomSpawnPoint> loadedCustomSpawns
 } file
 
 void function AddOnHandleLoadTokenCallback( void functionref(string id, array<string> data) callbackFunc )
@@ -23,6 +24,10 @@ void function Spawnmenu_LoadSave_Thread( string saveName )
 	ShowLoadingModal();
 	wait 0.2;
 
+	// Clear temporary data
+	file.loadedCustomSpawns.clear();
+
+	// Load the file
 	string saveContents = LoadSaveFileContents( saveName );
 
 	// Split the file into lines and tokens and handle each line individually
@@ -33,6 +38,15 @@ void function Spawnmenu_LoadSave_Thread( string saveName )
 		string id = tokens[0];
 		tokens.remove( 0 );
 		HandleLoadToken( id, tokens );
+	}
+
+	// Move to a random custom spawn point if any were loaded
+	if( file.loadedCustomSpawns.len() > 0 )
+	{
+		CustomSpawnPoint customSpawn = file.loadedCustomSpawns[RandomIntRange( 0, file.loadedCustomSpawns.len() )];
+		entity player = GetPlayerByIndex( 0 );
+		player.SetOrigin( customSpawn.anchorEnt.GetOrigin() + < 0, 0, 8 > );
+		player.SetAngles( customSpawn.anchorEnt.GetAngles() );
 	}
 
 	wait 0.2;
@@ -51,6 +65,9 @@ void function HandleLoadToken( string id, array<string> data )
 			break;
 		case "teleporter":
 			HandleLoadTeleporter( data );
+			break;
+		case "spawnpoint":
+			HandleLoadSpawnPoint( data );
 			break;
 	}
 
@@ -84,4 +101,12 @@ void function HandleLoadTeleporter( array<string> data )
 	vector exitAngles = Vector( data[9].tofloat(), data[10].tofloat(), data[11].tofloat() );
 
 	Toolgun_CreateTeleporter( GetPlayerByIndex( 0 ), entryOrigin, entryAngles, exitOrigin, exitAngles );
+}
+
+void function HandleLoadSpawnPoint( array<string> data )
+{
+	vector origin = UnpackStringToVector( data[0] );
+	vector angles = UnpackStringToVector( data[1] );
+	CustomSpawnPoint newSpawn = ToolSpawnPoint_AddSpawn( origin, angles );
+	file.loadedCustomSpawns.append( newSpawn );
 }

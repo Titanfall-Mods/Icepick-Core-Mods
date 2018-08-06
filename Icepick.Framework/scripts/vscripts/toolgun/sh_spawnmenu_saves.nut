@@ -27,6 +27,7 @@ void function Spawnmenu_Init_Saves()
 	RegisterCategoryItem( "utilities", "cleanup.props", "Cleanup Props" );
 	RegisterCategoryItem( "utilities", "cleanup.ziplines", "Cleanup Ziplines" );
 	RegisterCategoryItem( "utilities", "cleanup.teleporters", "Cleanup Teleporters" );
+	RegisterCategoryItem( "utilities", "cleanup.spawnpoints", "Cleanup Spawn Points" );
 	RegisterCategoryItem( "utilities", "cleanup.weapons", "Cleanup Weapons" );
 	RegisterCategoryItem( "utilities", "cleanup.npcs", "Cleanup NPCs" );
 
@@ -117,6 +118,9 @@ void function Spawnmenu_PerformUtility( string utility )
 		case "cleanup.teleporters":
 			Cleanup_Teleporters();
 			break;
+		case "cleanup.spawnpoints":
+			Cleanup_SpawnPoints();
+			break;
 		case "cleanup.weapons":
 			Cleanup_Weapons();
 			break;
@@ -136,6 +140,7 @@ void function Cleanup_All()
 	Cleanup_Props();
 	Cleanup_Ziplines();
 	Cleanup_Teleporters();
+	Cleanup_SpawnPoints();
 	Cleanup_Weapons();
 	Cleanup_NPCs();
 }
@@ -160,8 +165,9 @@ void function Cleanup_Ziplines()
 
 void function Cleanup_Teleporters()
 {
-	foreach( teleporter in PlacedTeleporters )
+	for( int i = PlacedTeleporters.len() - 1; i >= 0; --i )
 	{
+		PlacedTeleporter teleporter = PlacedTeleporters[i];
 		if( IsValid(teleporter.entryEnt) )
 		{
 			teleporter.entryEnt.Destroy();
@@ -171,7 +177,19 @@ void function Cleanup_Teleporters()
 			teleporter.exitEnt.Destroy();
 		}
 	}
+	
 	PlacedTeleporters.clear();
+}
+
+void function Cleanup_SpawnPoints()
+{
+	for( int i = PlacedSpawnPoints.len() - 1; i >= 0; --i )
+	{
+		CustomSpawnPoint spawn = PlacedSpawnPoints[i];
+		spawn.anchorEnt.Destroy();
+	}
+
+	PlacedSpawnPoints.clear();
 }
 
 void function Cleanup_Weapons()

@@ -21,6 +21,7 @@ global function DisableFriendlyHighlight
 global function EnableFriendlyHighlight
 global function SP_PlayerLastSlideTime
 global function GetRandomHumanStartPoint
+global function GetRandomCustomStartPoint
 
 //global function CodeCallback_Ping
 
@@ -196,6 +197,17 @@ entity function GetRandomHumanStartPoint()
 	return StartPoints[RandomIntRange( 0, StartPoints.len() - 1 )];
 }
 
+entity function GetRandomCustomStartPoint()
+{
+	entity start = null;
+	if( PlacedSpawnPoints.len() > 0 )
+	{
+		CustomSpawnPoint customSpawn = PlacedSpawnPoints[RandomIntRange( 0, PlacedSpawnPoints.len() )];
+		start = customSpawn.anchorEnt;
+	}
+	return start;
+}
+
 void function SpPlayerConnecting( entity player )
 {
 	if ( GetPlayerArray().len() > 1 )
@@ -214,9 +226,14 @@ void function SpPlayerConnecting( entity player )
 	bool IsColiseum = MapName == "mp_coliseum" || MapName == "mp_coliseum_column";
 	entity start = null;
 
-	if( IsMultiplayerLevel )
+	// Check if we have any custom placed spawn points
+	if( PlacedSpawnPoints.len() > 0 )
 	{
-		// Pick random start points in multiplayer
+		start = GetRandomCustomStartPoint();
+	}
+	else if( IsMultiplayerLevel )
+	{
+		// Otherwise, pick random start points in multiplayer
 		start = GetRandomHumanStartPoint();
 	}
 	else
@@ -769,9 +786,15 @@ void function ServerRestartMission( entity player )
 		return
 	}
 
-	if( GetMapName().find( "mp_" ) == 0 )
+	// Respawn players at a random spawn point in multiplayer maps
+	if( IsMultiplayerLevel() )
 	{
-		DoRespawnPlayer( player, GetRandomHumanStartPoint() );
+		entity spawnPoint = GetRandomCustomStartPoint();
+		if( spawnPoint == null )
+		{
+			spawnPoint = GetRandomHumanStartPoint();
+		}	
+		DoRespawnPlayer( player, spawnPoint );
 		return;
 	}
 

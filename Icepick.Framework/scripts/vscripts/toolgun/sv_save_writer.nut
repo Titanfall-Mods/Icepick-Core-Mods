@@ -47,6 +47,15 @@ void function IcepickSave( string saveName = "SaveGame" )
 		AddSaveItem( entry );
 	}
 
+	// Save spawn points
+	foreach( spawn in PlacedSpawnPoints )
+	{
+		vector origin = spawn.anchorEnt.GetOrigin();
+		vector angles = spawn.anchorEnt.GetAngles();
+		string entry = IcepickSaveOutput( "spawnpoint", PackVectorToString(origin), PackVectorToString(angles) );
+		AddSaveItem( entry );
+	}
+
 	// Write any custom data from mods
 	foreach ( callbackFunc in file.onIcepickSaveCallbacks )
 	{

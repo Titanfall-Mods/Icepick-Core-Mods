@@ -117,6 +117,12 @@
 			"ServerCallback": "Toolgun_RegisterTool_TeleporterSpawner"
 		},
 		{
+			"Path": "tools/sh_tool_spawn_point.nut",
+			"RunOn": "SERVER || CLIENT",
+			"ClientCallback": "Toolgun_RegisterTool_SpawnPoint",
+			"ServerCallback": "Toolgun_RegisterTool_SpawnPoint"
+		},
+		{
 			"Path": "sh_precache_weapons.nut",
 			"RunOn": "SERVER || CLIENT",
 			"ClientCallback": "Sh_PrecacheWeapons",
