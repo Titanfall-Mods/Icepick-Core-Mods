@@ -272,6 +272,7 @@ void function CustomGauntlet_ClearDroppedWeapons()
 void function CustomGauntlet_Server_Start( GauntletTrack Track )
 {
 	CustomGauntlet_Server_Reset();
+	SetGlobalForcedDialogueOnly( true );
 
 	CustomGauntletsGlobal.ActiveTrack = Track;
 	CustomGauntlet_Server_SpawnTargets();
@@ -283,6 +284,7 @@ void function CustomGauntlet_Server_Start( GauntletTrack Track )
 	Remote_CallFunction_Replay( player, "ServerCallback_CustomGauntlet_Start" );
 	EmitSoundOnEntityOnlyToPlayer( player, player, "training_scr_gaunlet_start" );
 	player.SetPlayerNetInt( "CGEnemiesKilled", 0 );
+	RestockPlayerAmmo( player );
 
 	print( "Started track: " + CustomGauntletsGlobal.ActiveTrack.TrackName + "!" );
 }
@@ -290,6 +292,7 @@ void function CustomGauntlet_Server_Start( GauntletTrack Track )
 void function CustomGauntlet_Server_Finish()
 {
 	CustomGauntletsGlobal.HasFinished = true;
+	SetGlobalForcedDialogueOnly( false );
 
 	// Calculate run stats
 	float TimeBeforePenalties = Time() - GauntletRuntimeData.StartTime;
