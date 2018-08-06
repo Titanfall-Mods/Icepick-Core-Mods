@@ -55,6 +55,14 @@ void function Toolgun_RegisterTool_TeleporterSpawner()
 		}
 	}
 
+	ToolTeleporterSpawner.RegisterOptions <- function()
+	{
+		#if CLIENT
+		AddTextOption( "teleporter_spawner", "Fire once to place a teleporter entry point, and again to place the exit point." );
+		AddTextOption( "teleporter_spawner", "Linked teleporters will be connected with a beam while you are holding the Toolgun." );
+		#endif
+	}
+
 	ToolTeleporterSpawner.OnSelected <- function()
 	{
 		ToolTeleporterSpawner.Reset();
@@ -150,6 +158,17 @@ void function Toolgun_CreateTeleporter( entity player, vector entryOrigin, vecto
 	entity entryFx = CreateTeleporterEntity( fxOrigin, entryAngles, $"models/fx/core_energy.mdl" );
 	entryFx.SetParent( entryEnt );
 
+	// Create the back of the gates
+	vector entryDoorOrigin = entryOrigin + AnglesToRight( entryEnt.GetAngles() ) * 9 + AnglesToForward( entryEnt.GetAngles() ) * 15 + AnglesToUp( entryEnt.GetAngles() ) * 30;
+	CreateTeleporterEntity( entryDoorOrigin, entryAngles + < -90, 90, 0 >, $"models/door/door_tech.mdl", 0 ).SetParent( entryEnt );
+	entryDoorOrigin += AnglesToUp( entryEnt.GetAngles() ) * 50;
+	CreateTeleporterEntity( entryDoorOrigin, entryAngles + < -90, 90, 0 >, $"models/door/door_tech.mdl", 0 ).SetParent( entryEnt );
+
+	vector exitDoorOrigin = exitOrigin + AnglesToRight( exitEnt.GetAngles() ) * 9 + AnglesToForward( exitEnt.GetAngles() ) * 15 + AnglesToUp( exitEnt.GetAngles() ) * 30;
+	CreateTeleporterEntity( exitDoorOrigin, exitAngles + < -90, 90, 0 >, $"models/door/door_tech.mdl", 0 ).SetParent( exitEnt );
+	exitDoorOrigin += AnglesToUp( exitEnt.GetAngles() ) * 50;
+	CreateTeleporterEntity( exitDoorOrigin, exitAngles + < -90, 90, 0 >, $"models/door/door_tech.mdl", 0 ).SetParent( exitEnt );
+	
 	// Create the linking fx
 	entity cpEnd = CreateEntity( "info_placement_helper" )
 	SetTargetName( cpEnd, UniqueString( "laser_pylon_cpEnd" ) )
@@ -179,7 +198,7 @@ void function Toolgun_CreateTeleporter( entity player, vector entryOrigin, vecto
 	thread Teleporter_Think( player, newTeleporter );
 }
 
-entity function CreateTeleporterEntity( vector origin, vector angles, asset model = $"models/beacon/beacon_doorframe_04.mdl" )
+entity function CreateTeleporterEntity( vector origin, vector angles, asset model = $"models/beacon/beacon_doorframe_04.mdl", int solidity = 6 )
 {
 	EnableExternalSpawnMode();
 	entity prop_dynamic = CreateEntity( "prop_dynamic" );
@@ -187,7 +206,7 @@ entity function CreateTeleporterEntity( vector origin, vector angles, asset mode
 	prop_dynamic.kv.fadedist = -1;
 	prop_dynamic.kv.renderamt = 255;
 	prop_dynamic.kv.rendercolor = "255 255 255";
-	prop_dynamic.kv.solid = 6; // 0 = no collision, 2 = bounding box, 6 = use vPhysics, 8 = hitboxes only
+	prop_dynamic.kv.solid = solidity; // 0 = no collision, 2 = bounding box, 6 = use vPhysics, 8 = hitboxes only
 	SetTeam( prop_dynamic, TEAM_BOTH );	// need to have a team other then 0 or it won't take impact damage
 
 	prop_dynamic.SetAngles( angles );
