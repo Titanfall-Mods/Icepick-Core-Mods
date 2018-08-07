@@ -9,6 +9,8 @@ table ToolGauntletStart = {};
 
 void function Toolgun_RegisterTool_GauntletPlaceStart()
 {
+	RegisterConVar( "gauntlet_start_height", 100, "gauntlet_start_height height", "Set the height for the gauntlet start line" );
+	AddOnToolOptionUpdateCallback( ToolGauntletStart_UpdateToolOption );
 
 	// Create the tool
 	ToolGauntletStart.id <- "gauntlet_start";
@@ -23,6 +25,15 @@ void function Toolgun_RegisterTool_GauntletPlaceStart()
 		return "Fire to place the start line for a gauntlet track.";
 	}
 
+	ToolGauntletStart.RegisterOptions <- function()
+	{
+		#if CLIENT
+		AddTextOption( "gauntlet_start", "You can place the start line for a gauntlet with this tool. Passing through the gate while Edit Mode is disabled will start your gauntlet run." );
+		AddTextOption( "gauntlet_start", "Changing the Height will change how tall the gate is. You can move the anchors of the gate to change the width and orientation." );
+		AddSliderOption( "gauntlet_start", "gauntlet_start_height", "Height", 100, 20, 1000 );
+		#endif
+	}
+
 	ToolGauntletStart.OnFire <- function()
 	{
 	#if SERVER
@@ -35,7 +46,7 @@ void function Toolgun_RegisterTool_GauntletPlaceStart()
 		if( traceResults.hitEnt )
 		{
 			const START_LINE_SPACING = 200.0;
-			const TRIGGER_HEIGHT = 100.0;
+			float TRIGGER_HEIGHT = GetConVarValue( "gauntlet_start_height", 100.0 );
 
 			vector origin = traceResults.endPos;
 			vector angles = Vector( 0, player.EyeAngles().y, 0 );
@@ -55,6 +66,24 @@ void function Toolgun_RegisterTool_GauntletPlaceStart()
 	// Register the tool
 	ToolGunTools.append( ToolGauntletStart );
 
+}
+
+
+void function ToolGauntletStart_UpdateToolOption( string id, var value )
+{
+#if CLIENT
+	float newHeight = -1.0;
+	switch( id )
+	{
+		case "gauntlet_start_height":
+			newHeight = expect float( value );
+			break;
+	}
+	if( newHeight > 0 )
+	{
+		SetConVarValue( "gauntlet_start_height", newHeight );
+	}
+#endif
 }
 
 #if SERVER
