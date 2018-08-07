@@ -390,12 +390,19 @@ void function CustomGauntlet_PlayerConnected( entity player )
 		thread ToolGauntlet_DelayedTransmit( "ServerCallback_CustomGauntlet_SendStatsBoardEnt", CustomGauntletsGlobal.DevelopmentTrack.StatsBoards[i].ReferenceEnt );
 	}
 
-	wait 0.5;
+	wait 0.1;
 	for( int i = CustomGauntletsGlobal.DevelopmentTrack.Highscores.len() - 1; i >= 0; --i )
 	{
 		Remote_CallFunction_Replay( player, "ServerCallback_CustomGauntlet_SendScoreboardTime", CustomGauntletsGlobal.DevelopmentTrack.Highscores[i].Time );
 	}
-
+	foreach( line in CustomGauntletsGlobal.DevelopmentTrack.Starts )
+	{
+		Remote_CallFunction_NonReplay( player, "ServerCallback_CustomGauntlet_SendStartFinishLine", 0, line.left.GetEncodedEHandle(), line.right.GetEncodedEHandle(), line.triggerHeight );
+	}
+	foreach( line in CustomGauntletsGlobal.DevelopmentTrack.Finishes )
+	{
+		Remote_CallFunction_NonReplay( player, "ServerCallback_CustomGauntlet_SendStartFinishLine", 1, line.left.GetEncodedEHandle(), line.right.GetEncodedEHandle(), line.triggerHeight );
+	}
 }
 
 array<entity> function CustomGauntletCreateRope( vector origin, vector target, string cable = "cable/cable_selfillum.vmt" )
