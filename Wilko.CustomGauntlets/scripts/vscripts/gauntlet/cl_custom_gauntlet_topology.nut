@@ -102,8 +102,6 @@ void function CustomGauntlet_Think_UpdateTrackTopologies( GauntletTrack Track, b
 
 void function ServerCallback_CustomGauntlet_SendStartFinishLine( int type, int leftEntIdx, int rightEntIdx, float triggerHeight )
 {
-	printt(" ServerCallback_CustomGauntlet_SendStartFinishLine", type, leftEntIdx, rightEntIdx, triggerHeight );
-
 	entity left = GetEntityFromEncodedEHandle( leftEntIdx );
 	entity right = GetEntityFromEncodedEHandle( rightEntIdx );
 
@@ -136,8 +134,8 @@ void function ServerCallback_CustomGauntlet_SendStartFinishLine( int type, int l
 
 void function UpdateStartFinishLineTopology( GauntletTriggerLine triggerLine )
 {
-	EndSignal( triggerLine.left, "OnDeath" );
-	EndSignal( triggerLine.right, "OnDeath" );
+	EndSignal( triggerLine.left, "OnDestroy" );
+	EndSignal( triggerLine.right, "OnDestroy" );
 
 	while( true )
 	{

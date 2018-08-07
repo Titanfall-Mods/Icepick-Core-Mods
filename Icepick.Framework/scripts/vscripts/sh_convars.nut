@@ -28,6 +28,7 @@ bool function ClientCommand_ConvarUpdate( entity player, array<string> args )
 		ConsoleData.FloatConVars[ ConvarName ] = Value;
 		return true;
 	}
+	printt("[Error] Convar is not registered! ", ConvarName, Value );
 	return false;
 }
 #endif
