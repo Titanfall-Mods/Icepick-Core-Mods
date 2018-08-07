@@ -12,6 +12,8 @@ global struct GauntletTriggerLine
 	entity right,
 	float triggerHeight,
 
+	array<entity> lowerRopes,
+	array<entity> upperRopes,
 	var topo,
 	var rui
 };

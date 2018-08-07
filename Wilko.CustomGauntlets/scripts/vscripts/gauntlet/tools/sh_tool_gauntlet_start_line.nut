@@ -45,18 +45,36 @@ void function Toolgun_RegisterTool_GauntletPlaceStart()
 		TraceResults traceResults = TraceLineHighDetail( eyePosition, eyePosition + viewVector * 10000, player, TRACE_MASK_PLAYERSOLID, TRACE_COLLISION_GROUP_PLAYER );
 		if( traceResults.hitEnt )
 		{
-			const START_LINE_SPACING = 200.0;
-			float TRIGGER_HEIGHT = GetConVarValue( "gauntlet_start_height", 100.0 );
+			float gateHeight = GetConVarValue( "gauntlet_start_height", 100.0 );
+			bool addNewGate = true;
 
-			vector origin = traceResults.endPos;
-			vector angles = Vector( 0, player.EyeAngles().y, 0 );
+			// Check if the fired at entity is an already existing gate
+			for( int i = CustomGauntletsGlobal.DevelopmentTrack.Starts.len() - 1; i >= 0; --i )
+			{
+				GauntletTriggerLine existingStartLine = CustomGauntletsGlobal.DevelopmentTrack.Starts[i];
+				if( traceResults.hitEnt == existingStartLine.left || traceResults.hitEnt == existingStartLine.right )
+				{
+					// Update the height of the gate
+					CustomGauntlet_UpdateStartLineHeight( existingStartLine, gateHeight );
+					addNewGate = false;
+					break;
+				}
+			}
 
-			vector left = origin + AnglesToRight( angles ) * START_LINE_SPACING * 0.5 * -1.0;
-			vector right = origin + AnglesToRight( angles ) * START_LINE_SPACING * 0.5;
+			// Or just add a new gate
+			if( addNewGate )
+			{
+				const START_LINE_SPACING = 200.0;
 
-			CustomGauntlet_CreateStartLine( left, right, TRIGGER_HEIGHT );
+				vector origin = traceResults.endPos;
+				vector angles = Vector( 0, player.EyeAngles().y, 0 );
+
+				vector left = origin + AnglesToRight( angles ) * START_LINE_SPACING * 0.5 * -1.0;
+				vector right = origin + AnglesToRight( angles ) * START_LINE_SPACING * 0.5;
+
+				CustomGauntlet_CreateStartLine( left, right, gateHeight );
+			}
 		}
-
 		return true;
 	#else
 		return false;
@@ -113,9 +131,33 @@ void function CustomGauntlet_CreateStartLine( vector leftOrigin, vector rightOri
 	startLine.left = left;
 	startLine.right = right;
 	startLine.triggerHeight = height;
+	startLine.lowerRopes = [ lowerRopes[0], lowerRopes[1], leftRopes[0], rightRopes[0] ];
+	startLine.upperRopes = [ upperRopes[0], upperRopes[1], leftRopes[1], rightRopes[1] ];
 	CustomGauntletsGlobal.DevelopmentTrack.Starts.append( startLine );
 
 	thread CustomGauntlet_StartLine_Think( startLine );
+	thread SendStartLineToClient( startLine );
+}
+
+void function CustomGauntlet_UpdateStartLineHeight( GauntletTriggerLine startLine, float newHeight )
+{
+	foreach( rope in startLine.upperRopes )
+	{
+		rope.ClearParent();
+	}
+
+	vector heightOffset = < 0, 0, newHeight >;
+	startLine.triggerHeight = newHeight;
+	startLine.upperRopes[0].SetOrigin( startLine.left.GetOrigin() + heightOffset );
+	startLine.upperRopes[1].SetOrigin( startLine.right.GetOrigin() + heightOffset );
+	startLine.upperRopes[2].SetOrigin( startLine.left.GetOrigin() + heightOffset );
+	startLine.upperRopes[3].SetOrigin( startLine.right.GetOrigin() + heightOffset );
+
+	startLine.upperRopes[0].SetParent( startLine.left );
+	startLine.upperRopes[1].SetParent( startLine.right );
+	startLine.upperRopes[2].SetParent( startLine.left );
+	startLine.upperRopes[3].SetParent( startLine.right );
+
 	thread SendStartLineToClient( startLine );
 }
 

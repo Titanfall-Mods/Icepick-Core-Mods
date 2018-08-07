@@ -105,6 +105,26 @@ void function ServerCallback_CustomGauntlet_SendStartFinishLine( int type, int l
 	entity left = GetEntityFromEncodedEHandle( leftEntIdx );
 	entity right = GetEntityFromEncodedEHandle( rightEntIdx );
 
+	// Check if we're just updating an existing gate
+	for( int i = CustomGauntletsGlobal.DevelopmentTrack.Starts.len() - 1; i >= 0; --i )
+	{
+		GauntletTriggerLine startLine = CustomGauntletsGlobal.DevelopmentTrack.Starts[i];
+		if( startLine.left == left && startLine.right == right )
+		{
+			startLine.triggerHeight = triggerHeight;
+			return; // Early exit since the thread will automatically update it
+		}
+	}
+	for( int i = CustomGauntletsGlobal.DevelopmentTrack.Finishes.len() - 1; i >= 0; --i )
+	{
+		GauntletTriggerLine finishLine = CustomGauntletsGlobal.DevelopmentTrack.Finishes[i];
+		if( finishLine.left == left && finishLine.right == right )
+		{
+			finishLine.triggerHeight = triggerHeight;
+			return; // Early exit since the thread will automatically update it
+		}
+	}
+
 	GauntletTriggerLine triggerLine;
 	triggerLine.left = left;
 	triggerLine.right = right;
@@ -136,6 +156,31 @@ void function UpdateStartFinishLineTopology( GauntletTriggerLine triggerLine )
 {
 	EndSignal( triggerLine.left, "OnDestroy" );
 	EndSignal( triggerLine.right, "OnDestroy" );
+
+	OnThreadEnd(
+		function() : ( triggerLine )
+		{
+			RuiDestroyIfAlive( triggerLine.rui );
+			RuiTopology_Destroy( triggerLine.topo );
+
+			for( int i = CustomGauntletsGlobal.DevelopmentTrack.Starts.len() - 1; i >= 0; --i )
+			{
+				if( triggerLine == CustomGauntletsGlobal.DevelopmentTrack.Starts[i] )
+				{
+					CustomGauntletsGlobal.DevelopmentTrack.Starts.remove( i );
+					break;
+				}
+			}
+			for( int i = CustomGauntletsGlobal.DevelopmentTrack.Finishes.len() - 1; i >= 0; --i )
+			{
+				if( triggerLine == CustomGauntletsGlobal.DevelopmentTrack.Finishes[i] )
+				{
+					CustomGauntletsGlobal.DevelopmentTrack.Finishes.remove( i );
+					break;
+				}
+			}
+		}
+	)
 
 	while( true )
 	{
