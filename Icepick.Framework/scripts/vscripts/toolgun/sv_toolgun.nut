@@ -28,6 +28,7 @@ struct {
 
 void function Toolgun_Server_Init()
 {
+	EnableEditMode();
 	AddSpawnCallback( "player", ToolgunSv_OnPlayerSpawned );
 
 	AddClientCommandCallback( "Toolgun_ToggleEnabled", ClientCommand_Toolgun_ToggleEnabled );
