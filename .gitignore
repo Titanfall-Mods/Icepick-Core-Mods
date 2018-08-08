@@ -5,3 +5,9 @@ Test.Classes/
 Example.ThrowError/processed/
 Wilko.ToolGun/scripts/old/
 Backup/
+assets_dump/
+compiled_assets/
+crash_dumps/
+saves/
+pakcache.dat
+TTF2SDK.log
