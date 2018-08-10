@@ -22,6 +22,7 @@ global function EnableFriendlyHighlight
 global function SP_PlayerLastSlideTime
 global function GetRandomHumanStartPoint
 global function GetRandomCustomStartPoint
+global function GetRandomStartPointFromAll
 
 //global function CodeCallback_Ping
 
@@ -205,6 +206,28 @@ entity function GetRandomCustomStartPoint()
 		CustomSpawnPoint customSpawn = PlacedSpawnPoints[RandomIntRange( 0, PlacedSpawnPoints.len() )];
 		start = customSpawn.anchorEnt;
 	}
+	return start;
+}
+
+entity function GetRandomStartPointFromAll()
+{
+	entity start = null;
+
+	// Check if we have any custom placed spawn points
+	if( PlacedSpawnPoints.len() > 0 )
+	{
+		start = GetRandomCustomStartPoint();
+	}
+	else if( IsMultiplayerLevel() )
+	{
+		// Otherwise, pick random start points in multiplayer
+		start = GetRandomHumanStartPoint();
+	}
+	else
+	{
+		start = GetEnt( "info_player_start" )
+	}
+	
 	return start;
 }
 

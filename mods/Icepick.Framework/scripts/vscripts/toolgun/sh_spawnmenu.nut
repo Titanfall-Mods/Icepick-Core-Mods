@@ -24,11 +24,16 @@ global function AddOnEditModeChangedCallback
 global function AddOnToolOptionUpdateCallback
 global function Spawnmenu_UpdateToolOption
 
+#if SERVER
+global function AddOnPlayerInstantRespawnedCallback
+#endif
+
 struct
 {
 	bool isSpawnMenuOpen
 	array<void functionref(string id, var value)> onToolOptionChangedCallbacks
 	array<void functionref()> onToolEditModeChangedCallbacks
+	array<void functionref(entity player)> onPlayerInstantlyRespawnedCallbacks
 } file
 
 void function Spawnmenu_Init()
@@ -37,10 +42,13 @@ void function Spawnmenu_Init()
 	ClearSpawnmenu(); // Clear spawnmenu items from previous session
 
 	RegisterConCommandTriggeredCallback( "+showscores", Spawnmenu_ToggleOpen );
+	RegisterConCommandTriggeredCallback( "instant_respawn", Spawnmenu_Cl_InstantRespawn );
 	#endif
 
 	#if SERVER
 	AddSpawnCallback( "player", Spawnmenu_OnPlayerSpawnedCallback );
+
+	AddClientCommandCallback( "do_instant_respawn", ClientCommand_Spawnmenu_OnPlayerInstantRespawn );
 
 	// IsNoclipping only exists on the server, so serve noclip requests by sending them to the server first
 	// Command is bound and activated from scripts/kb_act.lst
@@ -482,3 +490,38 @@ void function Spawnmenu_ChangePlayerInvincibility( bool wantsInvincibility )
 	}
 #endif
 }
+
+#if CLIENT
+// HACK: Listen to the concommand on the client and perform a new client command to get the command to actually trigger
+void function Spawnmenu_Cl_InstantRespawn( var button )
+{
+	GetLocalClientPlayer().ClientCommand( "do_instant_respawn" );
+}
+#endif
+
+#if SERVER
+void function AddOnPlayerInstantRespawnedCallback( void functionref(entity) callbackFunc )
+{
+	Assert( !file.onPlayerInstantlyRespawnedCallbacks.contains( callbackFunc ), "Already added " + string( callbackFunc ) + " with AddOnPlayerInstantRespawnedCallback" );
+	file.onPlayerInstantlyRespawnedCallbacks.append( callbackFunc );
+}
+
+bool function ClientCommand_Spawnmenu_OnPlayerInstantRespawn( entity player, array<string> args )
+{
+	// Teleport the player to a valid spawnpoint
+	entity start = GetRandomStartPointFromAll();
+	player.SetOrigin( start.GetOrigin() );
+	player.SetAngles( start.GetAngles() );
+
+	// Play some simple fx
+	EmitSoundAtPosition( TEAM_UNASSIGNED, start.GetOrigin(), "training_scr_zen_player_fall" );
+
+	// Perform a callback so we can listen to players returning
+	foreach ( callbackFunc in file.onPlayerInstantlyRespawnedCallbacks )
+	{
+		callbackFunc( player );
+	}
+
+	return true;
+}
+#endif

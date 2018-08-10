@@ -27,6 +27,7 @@ void function CustomGauntlet_Server_Init()
 	AddClientCommandCallback( "CustomGauntlet_SetEditMode", ClientCommand_CustomGauntlet_SetEditMode );
 
 	AddCallback_OnLoadSaveGame( CustomGauntlet_OnLoadSaveGame );
+	AddOnPlayerInstantRespawnedCallback( CustomGauntlet_OnPlayerInstantRespawned );
 
 	thread CustomGauntlet_Server_Think();
 }
@@ -161,12 +162,6 @@ bool function ClientCommand_CustomGauntlet_SetEditMode( entity player, array<str
 	bool active = args[0] == "1";
 	CustomGauntletsGlobal.EditModeActive = active;
 
-	if( CustomGauntletsGlobal.HasStarted && !CustomGauntletsGlobal.HasFinished )
-	{
-		entity player = GetPlayerByIndex( 0 );
-		EmitSoundOnEntityOnlyToPlayer( player, player, "training_scr_gaunlet_abort" );
-		Remote_CallFunction_Replay( player, "ServerCallback_CustomGauntlet_Finish", -1, -1, 0, 0, 0 );
-	}
 	CustomGauntlet_Server_Reset();
 	return true;
 }
@@ -175,6 +170,13 @@ bool function ClientCommand_CustomGauntlet_SetEditMode( entity player, array<str
 
 void function CustomGauntlet_Server_Reset()
 {
+	if( CustomGauntletsGlobal.HasStarted && !CustomGauntletsGlobal.HasFinished )
+	{
+		entity player = GetPlayerByIndex( 0 );
+		EmitSoundOnEntityOnlyToPlayer( player, player, "training_scr_gaunlet_abort" );
+		Remote_CallFunction_Replay( player, "ServerCallback_CustomGauntlet_Finish", -1, -1, 0, 0, 0 );
+	}
+	
 	CustomGauntletsGlobal.HasStarted = false;
 	CustomGauntletsGlobal.HasFinished = false;
 	CustomGauntlet_Server_ClearTargets();
@@ -439,4 +441,9 @@ array<entity> function CustomGauntletCreateRope( vector origin, vector target, s
 	DispatchSpawn( rope_end )
 
 	return [ rope_start, rope_end ];
+}
+
+void function CustomGauntlet_OnPlayerInstantRespawned( entity player )
+{
+	CustomGauntlet_Server_Reset();
 }
