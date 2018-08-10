@@ -46,7 +46,7 @@ entity function CreateAnchorEntity( vector origin, vector angles, asset modelAss
 #if SERVER
 	EnableExternalSpawnMode();
 
-	entity prop_dynamic = CreateEntity( "prop_dynamic" );
+	entity prop_dynamic = CreateEntity( "prop_dynamic_lightweight" );
 	prop_dynamic.SetValueForModelKey( modelAsset );
 	prop_dynamic.kv.fadedist = -1;
 	prop_dynamic.kv.renderamt = 255;

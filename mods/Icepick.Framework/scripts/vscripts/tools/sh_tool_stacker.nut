@@ -203,7 +203,7 @@ void function Toolgun_RegisterTool_Stacker()
 			}
 
 			// Spawn duplicate prop
-			entity prop_dynamic = CreateEntity( "prop_dynamic" );
+			entity prop_dynamic = CreateEntity( "prop_dynamic_lightweight" );
 			prop_dynamic.SetValueForModelKey( traceResults.hitEnt.GetModelName() );
 			prop_dynamic.kv.fadedist = -1;
 			prop_dynamic.kv.renderamt = 255;

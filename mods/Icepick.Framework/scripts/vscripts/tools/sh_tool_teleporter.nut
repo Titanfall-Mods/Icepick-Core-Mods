@@ -201,7 +201,7 @@ void function Toolgun_CreateTeleporter( entity player, vector entryOrigin, vecto
 entity function CreateTeleporterEntity( vector origin, vector angles, asset model = $"models/beacon/beacon_doorframe_04.mdl", int solidity = 6 )
 {
 	EnableExternalSpawnMode();
-	entity prop_dynamic = CreateEntity( "prop_dynamic" );
+	entity prop_dynamic = CreateEntity( "prop_dynamic_lightweight" );
 	prop_dynamic.SetValueForModelKey( model );
 	prop_dynamic.kv.fadedist = -1;
 	prop_dynamic.kv.renderamt = 255;

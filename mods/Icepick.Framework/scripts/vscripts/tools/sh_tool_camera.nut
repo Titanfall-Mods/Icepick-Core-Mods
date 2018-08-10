@@ -145,7 +145,7 @@ void function Toolgun_RegisterTool_CameraPlacer()
 		}
 
 		// Create display entity
-		entity prop_dynamic = CreateEntity( "prop_dynamic" );
+		entity prop_dynamic = CreateEntity( "prop_dynamic_lightweight" );
 		prop_dynamic.SetValueForModelKey( ToolCamera.CameraModel );
 		prop_dynamic.kv.fadedist = -1;
 		prop_dynamic.kv.renderamt = 255;

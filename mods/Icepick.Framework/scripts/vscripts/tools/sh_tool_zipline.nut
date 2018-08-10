@@ -138,7 +138,7 @@ bool function ClientCommand_ToolZipline_AddZipline( entity player, array<string>
 
 entity function ToolZipline_CreateAnchorEntity( vector Pos, vector Angles, float Offset )
 {
-	entity prop_dynamic = CreateEntity( "prop_dynamic" );
+	entity prop_dynamic = CreateEntity( "prop_dynamic_lightweight" );
 	prop_dynamic.SetValueForModelKey( $"models/weapons/titan_trip_wire/titan_trip_wire.mdl" );
 	prop_dynamic.kv.fadedist = -1;
 	prop_dynamic.kv.renderamt = 255;

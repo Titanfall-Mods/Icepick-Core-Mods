@@ -175,7 +175,7 @@ entity function ToolGauntlet_CreateTriggerEntity( vector Pos, vector Angles, flo
 #if SERVER
 	EnableExternalSpawnMode();
 
-	entity prop_dynamic = CreateEntity( "prop_dynamic" );
+	entity prop_dynamic = CreateEntity( "prop_dynamic_lightweight" );
 	prop_dynamic.SetValueForModelKey( ModelAsset );
 	prop_dynamic.kv.fadedist = -1;
 	prop_dynamic.kv.renderamt = 255;
