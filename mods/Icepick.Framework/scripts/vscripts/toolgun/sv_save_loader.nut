@@ -100,7 +100,7 @@ void function HandleLoadTeleporter( array<string> data )
 	vector exitOrigin = Vector( data[6].tofloat(), data[7].tofloat(), data[8].tofloat() );
 	vector exitAngles = Vector( data[9].tofloat(), data[10].tofloat(), data[11].tofloat() );
 
-	Toolgun_CreateTeleporter( GetPlayerByIndex( 0 ), entryOrigin, entryAngles, exitOrigin, exitAngles );
+	Toolgun_CreateTeleporter( GetPlayerByIndex( 0 ), entryOrigin, entryAngles, exitOrigin, exitAngles, true );
 }
 
 void function HandleLoadSpawnPoint( array<string> data )

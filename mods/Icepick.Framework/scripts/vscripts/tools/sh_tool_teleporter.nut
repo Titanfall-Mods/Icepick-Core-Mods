@@ -144,10 +144,13 @@ bool function ClientCommand_ToolTeleporterSpawner_AddTeleporter( entity player, 
 	return true;
 }
 
-void function Toolgun_CreateTeleporter( entity player, vector entryOrigin, vector entryAngles, vector exitOrigin, vector exitAngles )
+void function Toolgun_CreateTeleporter( entity player, vector entryOrigin, vector entryAngles, vector exitOrigin, vector exitAngles, bool ignoreOffset = false )
 {
-	entryOrigin = entryOrigin + AnglesToRight( entryAngles ) * TELEPORTER_OFFSET_X * -1;
-	exitOrigin = exitOrigin + AnglesToRight( exitAngles ) * TELEPORTER_OFFSET_X * -1;
+	if( !ignoreOffset )
+	{
+		entryOrigin = entryOrigin + AnglesToRight( entryAngles ) * TELEPORTER_OFFSET_X * -1;
+		exitOrigin = exitOrigin + AnglesToRight( exitAngles ) * TELEPORTER_OFFSET_X * -1;
+	}
 
 	// Create entry and exit gates
 	entity entryEnt = CreateTeleporterEntity( entryOrigin, entryAngles );
