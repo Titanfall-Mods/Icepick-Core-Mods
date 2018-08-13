@@ -58,11 +58,11 @@ void function Toolgun_RegisterTool_TimeshiftMirror()
 				// Can only mirror props we've placed
 				if( ToolgunData.SpawnedEntities[i] == traceResults.hitEnt )
 				{				
-					vector TimeshiftOffset = (player.GetOrigin().z > 5000) ? Vector( 0, 0, TIMESHIFT_Z_OFFSET * -1 ) : Vector( 0, 0, TIMESHIFT_Z_OFFSET );
-					asset Asset = traceResults.hitEnt.GetModelName();
-					vector Pos = traceResults.hitEnt.GetOrigin() + TimeshiftOffset;
-					vector Ang = traceResults.hitEnt.GetAngles();
-					// @todo: Toolgun_Func_SpawnAsset( Asset, Pos, Ang );
+					vector timeshiftOffet = (player.GetOrigin().z > 5000) ? Vector( 0, 0, TIMESHIFT_Z_OFFSET * -1 ) : Vector( 0, 0, TIMESHIFT_Z_OFFSET );
+					asset targetAsset = traceResults.hitEnt.GetModelName();
+					vector origin = traceResults.hitEnt.GetOrigin() + timeshiftOffet;
+					vector angles = traceResults.hitEnt.GetAngles();
+					Spawnmenu_SpawnModelAssetWithParams( targetAsset, origin, angles );
 					return true;
 				}
 			}		

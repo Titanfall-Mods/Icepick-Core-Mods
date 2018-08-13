@@ -10,6 +10,7 @@ global function Spawnmenu_GiveTitanTactical
 global function Spawnmenu_GiveCore
 global function Spawnmenu_SpawnModel
 global function Spawnmenu_SpawnModelWithParams
+global function Spawnmenu_SpawnModelAssetWithParams
 global function Spawnmenu_SpawnNpc
 global function Spawnmenu_SpawnTitan
 global function Spawnmenu_SpawnBossTitan
@@ -251,6 +252,13 @@ void function Spawnmenu_SpawnModelWithParams( string modelName, vector position,
 		return;
 	}
 
+	Spawnmenu_SpawnModelAssetWithParams( spawnAsset, position, angles );
+#endif
+}
+
+void function Spawnmenu_SpawnModelAssetWithParams( asset spawnAsset, vector position, vector angles )
+{
+#if SERVER
 	EnableExternalSpawnMode();
 
 	entity prop_dynamic = CreateEntity( "prop_dynamic_lightweight" );
@@ -266,6 +274,7 @@ void function Spawnmenu_SpawnModelWithParams( string modelName, vector position,
 	DispatchSpawn( prop_dynamic );
 
 	ToolgunData.SpawnedEntities.append( prop_dynamic );
+	
 	DisableExternalSpawnMode();
 #endif
 }
