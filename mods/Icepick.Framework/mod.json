@@ -123,6 +123,18 @@
 			"ServerCallback": "Toolgun_RegisterTool_SpawnPoint"
 		},
 		{
+			"Path": "tools/sh_tool_weld.nut",
+			"RunOn": "SERVER || CLIENT",
+			"ClientCallback": "Toolgun_RegisterTool_Welder",
+			"ServerCallback": "Toolgun_RegisterTool_Welder"
+		},
+		{
+			"Path": "tools/sh_tool_unweld.nut",
+			"RunOn": "SERVER || CLIENT",
+			"ClientCallback": "Toolgun_RegisterTool_Unwelder",
+			"ServerCallback": "Toolgun_RegisterTool_Unwelder"
+		},
+		{
 			"Path": "sh_precache_weapons.nut",
 			"RunOn": "SERVER || CLIENT",
 			"ClientCallback": "Sh_PrecacheWeapons",
