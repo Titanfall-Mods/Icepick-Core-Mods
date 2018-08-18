@@ -169,6 +169,12 @@
 			"ServerCallback": "Spawnmenu_Init_Saves"
 		},
 		{
+			"Path": "toolgun/sh_spawnmenu_utilities.nut",
+			"RunOn": "SERVER || CLIENT",
+			"ClientCallback" : "Spawnmenu_Init_Utils",
+			"ServerCallback": "Spawnmenu_Init_Utils"
+		},
+		{
 			"Path": "toolgun/sv_save_writer.nut",
 			"RunOn": "SERVER"
 		},
