@@ -56,6 +56,13 @@ void function IcepickSave( string saveName = "SaveGame" )
 		AddSaveItem( entry );
 	}
 
+	// Save ropes
+	foreach( rope in PlacedRopes )
+	{
+		string entry = IcepickSaveOutput( "rope", PackVectorToString(rope.Origin), PackVectorToString(rope.Target), rope.Color );
+		AddSaveItem( entry );
+	}
+
 	// Write any custom data from mods
 	foreach ( callbackFunc in file.onIcepickSaveCallbacks )
 	{

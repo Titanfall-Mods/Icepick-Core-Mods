@@ -72,6 +72,9 @@ void function HandleLoadToken( string id, array<string> data )
 		case "concommand":
 			HandleLoadConCommand( data );
 			break;
+		case "rope":
+			HandleLoadRope( data );
+			break;
 	}
 
 	foreach ( callbackFunc in file.onHandleLoadTokenCallback )
@@ -123,4 +126,12 @@ void function HandleLoadConCommand( array<string> data )
 	}
 
 	ServerCommand( concommandString );
+}
+
+void function HandleLoadRope( array<string> data )
+{
+	vector origin = UnpackStringToVector( data[0] );
+	vector target = UnpackStringToVector( data[1] );
+	string colorString = data[2];
+	Toolgun_CreateRope( origin, target, colorString );
 }
