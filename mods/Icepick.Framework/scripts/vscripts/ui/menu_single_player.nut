@@ -521,6 +521,7 @@ void function LoadSPLevel()
 {
 	// @icepick
 	ClientCommand( "icepick_gamemode " + file.gamemode )
+	ClientCommand( "reload_mods" )
 
 	file.addObjectiveReminderOnSaveLoad = false
 	SetConVarInt( "sp_titanLoadoutCurrent", -1 )

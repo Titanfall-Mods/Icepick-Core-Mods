@@ -68,9 +68,42 @@ void function Icepick_RegisterGamemodes()
 	}
 	IcepickGamemodeGlobals.hasRegisteredGamemodes = true;
 
+	// Register gamemodes from Icepick
+	// @note: do these first so that we can override some aspects in script if we want
+	foreach( gamemodeData in GetIcepickGamemodes() )
+	{
+		string id = string(gamemodeData[0]);
+		string name = string(gamemodeData[1]);
+		string desc = string(gamemodeData[2]);
+
+		IcepickGamemode newGamemode = CreateNewGamemode();
+		newGamemode.id = id;
+		newGamemode.name = name;
+		newGamemode.description = desc;
+
+		// @todo
+		newGamemode.validLevels.extend( IcepickGamemodeGlobals.allSingleplayerLevels );
+		newGamemode.validLevels.extend( IcepickGamemodeGlobals.allMultiplayerLevels );
+
+		GlobalGamemodes.append( newGamemode );
+	}
+
+	// Register scripted gamemodes
 	RegisterBaseGamemode();
 	RegisterCampaignGamemode();
 	RegisterSandboxGamemode();
+
+	// Sort gamemodes alphabetically
+	GlobalGamemodes.sort( SortGamemodesAlphabetically );
+}
+
+int function SortGamemodesAlphabetically( IcepickGamemode a, IcepickGamemode b )
+{
+	if ( a.name > b.name )
+		return 1;
+	if ( a.name < b.name )
+		return -1;
+	return 0;
 }
 
 IcepickGamemode function CreateNewGamemode()
