@@ -40,6 +40,9 @@ struct
 	bool addObjectiveReminderOnSaveLoad
 	array<void functionref()> levelPartSelectFunc
 	int focusedElemNum = 0
+
+	// @icepick
+	string gamemode = "solo"
 } file
 
 void function InitSinglePlayerMenu()
@@ -255,6 +258,7 @@ void function SPButton_Click( var button, int elemNum )
 			Dev_CommandLineRemoveParm( STARTPOINT_DEV_STRING )
 	}
 
+	// @todo: allow gamemode selecting here
 	if ( elemNum == 0 )
 	{
 		TrainingModeSelect()
@@ -266,7 +270,9 @@ void function SPButton_Click( var button, int elemNum )
 			return
 	}
 
-	DifficultyMenuPopUp()
+	// DifficultyMenuPopUp()
+	// @icepick
+	GamemodeMenuPopUp()
 }
 
 bool function LevelPartSelect( int levelNum )
@@ -405,7 +411,9 @@ void function SPTrialMission_Start()
 	file.selectedStartPoint = "Level Start"
 	file.playIntro = false
 
-	DifficultyMenuPopUp()
+	// DifficultyMenuPopUp()
+	// @icepick
+	GamemodeMenuPopUp()
 }
 
 void function NewGame_ConfirmStart()
@@ -511,6 +519,9 @@ void function RunDifficulty()
 
 void function LoadSPLevel()
 {
+	// @icepick
+	ClientCommand( "icepick_gamemode " + file.gamemode )
+
 	file.addObjectiveReminderOnSaveLoad = false
 	SetConVarInt( "sp_titanLoadoutCurrent", -1 )
 	SetConVarInt( "sp_difficulty", file.difficulty )
@@ -687,7 +698,9 @@ void function LoadLevelPart( int levelNum, int levelPart )
 	file.selectedLevel = data.levelBsp
 	file.selectedStartPoint = data.startPoint
 
-	DifficultyMenuPopUp()
+	// DifficultyMenuPopUp()
+	// @icepick
+	GamemodeMenuPopUp()
 }
 
 bool function IsUnlockedChapterFocused()
@@ -696,4 +709,35 @@ bool function IsUnlockedChapterFocused()
 		return true
 
 	return false
+}
+
+// @icepick
+void function GamemodeMenuPopUp()
+{
+	DialogData dialogData
+	dialogData.header = "Select Gamemode"
+
+	// @note: since we're in the ui context we need to register them here so that we can make them appear in the menu
+	Icepick_RegisterGamemodes()
+
+	// Show all gamemodes
+	foreach( IcepickGamemode gamemode in GlobalGamemodes )
+	{
+		if( gamemode.validLevels.contains(file.selectedLevel) )
+		{
+			void functionref() callbackFunc = void function() : ( gamemode ) 
+			{
+				file.gamemode = gamemode.id;
+				DifficultyMenuPopUp();
+			}
+
+			AddDialogButton( dialogData, gamemode.name, callbackFunc, gamemode.description );
+		}
+	}
+
+	AddDialogFooter( dialogData, "#A_BUTTON_SELECT" )
+	AddDialogFooter( dialogData, "#B_BUTTON_BACK" )
+	AddDialogPCBackButton( dialogData )
+
+	OpenDialog( dialogData )
 }
