@@ -3,6 +3,7 @@ untyped
 
 global function Icepick_RegisterGamemodes
 global function CreateNewGamemode
+global function AddCallback_OnRegisterGamemodes
 
 global struct IcepickGamemodeGlobalsStruct
 {
@@ -60,6 +61,10 @@ global struct IcepickGamemode
 };
 global array<IcepickGamemode> GlobalGamemodes;
 
+struct {
+	array<void functionref()> onRegisterGamemodesCallbacks
+} file;
+
 void function Icepick_RegisterGamemodes()
 {
 	if( IcepickGamemodeGlobals.hasRegisteredGamemodes )
@@ -93,8 +98,19 @@ void function Icepick_RegisterGamemodes()
 	RegisterCampaignGamemode();
 	RegisterSandboxGamemode();
 
+	foreach ( callbackFunc in file.onRegisterGamemodesCallbacks )
+	{
+		callbackFunc();
+	}
+
 	// Sort gamemodes alphabetically
 	GlobalGamemodes.sort( SortGamemodesAlphabetically );
+}
+
+void function AddCallback_OnRegisterGamemodes( void functionref() callbackFunc )
+{
+	Assert( !file.onRegisterGamemodesCallbacks.contains( callbackFunc ), "Already added " + string( callbackFunc ) + " with AddCallback_OnRegisterGamemodes" );
+	file.onRegisterGamemodesCallbacks.append( callbackFunc );
 }
 
 int function SortGamemodesAlphabetically( IcepickGamemode a, IcepickGamemode b )
@@ -117,15 +133,14 @@ IcepickGamemode function CreateNewGamemode()
 	return Base;
 }
 
-function RegisterBaseGamemode()
+void function RegisterBaseGamemode()
 {
 	IcepickGamemode BaseGamemode = CreateNewGamemode();
 
 	GlobalGamemodes.append( BaseGamemode );
 }
 
-// @todo: move these into their own files
-function RegisterCampaignGamemode()
+void function RegisterCampaignGamemode()
 {
 	IcepickGamemode Campaign = CreateNewGamemode();
 	Campaign.id = "campaign";
@@ -136,7 +151,8 @@ function RegisterCampaignGamemode()
 	GlobalGamemodes.append( Campaign );
 }
 
-function RegisterSandboxGamemode()
+
+void function RegisterSandboxGamemode()
 {
 	IcepickGamemode Sandbox = CreateNewGamemode();
 	Sandbox.id = "sandbox";

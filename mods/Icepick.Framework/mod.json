@@ -188,12 +188,11 @@
 			"Path": "toolgun/sv_save_loader.nut",
 			"RunOn": "SERVER"
 		},
-
 		{
 			"Path": "gamemodes/sh_gamemode.nut",
 			"RunOn": "SERVER || CLIENT || UI",
 			"ClientCallback" : "Icepick_RegisterGamemodes",
 			"ServerCallback" : "Icepick_RegisterGamemodes"
-		},
+		}
 	],
 }
