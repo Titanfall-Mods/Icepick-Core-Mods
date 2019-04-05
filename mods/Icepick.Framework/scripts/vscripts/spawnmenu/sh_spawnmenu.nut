@@ -2,6 +2,7 @@
 global function Spawnmenu_Init
 global function Spawnmenu_SelectTool
 global function Spawnmenu_GiveWeapon
+global function Spawnmenu_GiveWeaponMod
 global function Spawnmenu_GiveAbility
 global function Spawnmenu_GiveGrenade
 global function Spawnmenu_GiveMelee
@@ -128,6 +129,38 @@ void function Spawnmenu_GiveWeapon( string weaponId )
 	player.GiveWeapon( weaponId )
 	player.SetActiveWeaponByName( weaponId )
 
+#endif
+}
+
+void function Spawnmenu_GiveWeaponMod( string modId )
+{
+#if SERVER
+	entity player = GetPlayerByIndex( 0 );
+	entity weapon = player.GetActiveWeapon();
+	if( weapon != null )
+	{
+		string weaponId = weapon.GetWeaponClassName();
+		array<string> mods = weapon.GetMods();
+
+		bool removed = false;
+		for( int i = 0; i < mods.len(); ++i )
+		{
+			if( mods[i] == modId )
+			{
+				mods.remove( i );
+				removed = true;
+				break;
+			}
+		}
+		if( !removed )
+		{
+			mods.append( modId );
+		}
+
+		player.TakeWeaponNow( weaponId );
+		player.GiveWeapon( weaponId, mods );
+		player.SetActiveWeaponByName( weaponId );
+	}
 #endif
 }
 
