@@ -380,7 +380,9 @@ void function TrainingStart_NormalMode()
 	file.selectedLevel = "sp_training"
 	file.selectedStartPoint = "Pod Intro"
 	file.playIntro = true
-	StartLevelNormal()
+	// StartLevelNormal()
+	// @icepick
+	GamemodeMenuPopUp()
 
 	if ( uiGlobal.activeMenu == file.menu )
 		CloseActiveMenu()
@@ -390,9 +392,11 @@ void function TrainingStart_GauntletMode()
 {
 	file.selectedLevel = "sp_training"
 	file.selectedStartPoint = "Gauntlet Mode"
-	LoadSPLevel()
-	if ( uiGlobal.activeMenu == file.menu )
-		CloseActiveMenu()
+	// LoadSPLevel()
+	// if ( uiGlobal.activeMenu == file.menu )
+	// 	CloseActiveMenu()
+	// @icepick
+	GamemodeMenuPopUp()
 }
 
 
