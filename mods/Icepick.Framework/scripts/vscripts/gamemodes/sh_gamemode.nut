@@ -96,8 +96,7 @@ void function Icepick_RegisterGamemodes()
 	// Register scripted gamemodes
 	RegisterBaseGamemode();
 	RegisterCampaignGamemode();
-	RegisterSandboxGamemode();
-
+	
 	foreach ( callbackFunc in file.onRegisterGamemodesCallbacks )
 	{
 		callbackFunc();
@@ -149,17 +148,4 @@ void function RegisterCampaignGamemode()
 	Campaign.validLevels.extend( IcepickGamemodeGlobals.allSingleplayerLevels );
 
 	GlobalGamemodes.append( Campaign );
-}
-
-
-void function RegisterSandboxGamemode()
-{
-	IcepickGamemode Sandbox = CreateNewGamemode();
-	Sandbox.id = "sandbox";
-	Sandbox.name = "Sandbox";
-	Sandbox.description = "Play with the Sandbox gamemode.";
-	Sandbox.validLevels.extend( IcepickGamemodeGlobals.allSingleplayerLevels );
-	Sandbox.validLevels.extend( IcepickGamemodeGlobals.allMultiplayerLevels );
-
-	GlobalGamemodes.append( Sandbox );
 }

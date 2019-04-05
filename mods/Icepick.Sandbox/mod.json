@@ -1,0 +1,25 @@
+{
+	"ApiId" : "sandbox",
+	"Name" : "Icepick Sandbox",
+	"Description" : "Allows you to play with the props, weapons, titans, NPCs, and more from Titanfall 2!",
+	"Authors" : [
+		"James Wilkinson"
+	],
+	"Contacts" : [
+		"titanfall@jameswilko.com"
+	],
+	"Version" : "1.0",
+	"Gamemode" : {
+		"Id": "sandbox",
+		"Name": "Sandbox",
+		"Description": "bullshit desc here."
+	},
+	"CustomScripts": [
+		{
+			"Path": "sh_sandbox_spawnmenu.nut",
+			"RunOn": "SERVER || CLIENT",
+			"ClientCallback" : "SpawnmenuSandbox_Init",
+			"ServerCallback": "SpawnmenuSandbox_Init"
+		},
+	],
+}

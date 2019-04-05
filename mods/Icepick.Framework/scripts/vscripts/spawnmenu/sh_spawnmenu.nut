@@ -1,4 +1,7 @@
 
+global function IcepickAllowSpawnmenu
+global function IcepickAllowNoclip
+
 global function Spawnmenu_Init
 global function Spawnmenu_SelectTool
 global function Spawnmenu_GiveWeapon
@@ -42,20 +45,30 @@ void function Spawnmenu_Init()
 {
 	#if CLIENT
 	ClearSpawnmenu(); // Clear spawnmenu items from previous session
-
-	RegisterConCommandTriggeredCallback( "+showscores", Spawnmenu_ToggleOpen );
-	RegisterConCommandTriggeredCallback( "instant_respawn", Spawnmenu_Cl_InstantRespawn );
 	#endif
 
 	#if SERVER
 	AddSpawnCallback( "player", Spawnmenu_OnPlayerSpawnedCallback );
 
 	AddClientCommandCallback( "do_instant_respawn", ClientCommand_Spawnmenu_OnPlayerInstantRespawn );
+	#endif
+}
 
+void function IcepickAllowSpawnmenu()
+{
+#if CLIENT
+	RegisterConCommandTriggeredCallback( "+showscores", Spawnmenu_ToggleOpen );
+	RegisterConCommandTriggeredCallback( "instant_respawn", Spawnmenu_Cl_InstantRespawn );
+#endif
+}
+
+void function IcepickAllowNoclip()
+{
+#if SERVER
 	// IsNoclipping only exists on the server, so serve noclip requests by sending them to the server first
 	// Command is bound and activated from scripts/kb_act.lst
 	AddClientCommandCallback( "toggle_noclip", ClientCommand_Spawnmenu_RequestNoclipToggle );
-	#endif
+#endif
 }
 
 #if CLIENT

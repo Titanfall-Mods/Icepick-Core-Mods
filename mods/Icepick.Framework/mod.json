@@ -25,7 +25,7 @@
 			"RunOn": "SERVER || CLIENT"
 		},
 		{
-			"Path": "sh_toolgun_utils.nut",
+			"Path": "sh_icepick_utils.nut",
 			"RunOn": "SERVER || CLIENT"
 		},
 		{
