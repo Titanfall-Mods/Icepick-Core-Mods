@@ -168,11 +168,13 @@ function RemoteFunctions_Init()
 	// Survival End
 
 	// Shield core
-	Remote_RegisterFunction( "ServerCallback_StartShieldPlayer" )
-	Remote_RegisterFunction( "ServerCallback_StopShieldPlayer" )
-	Remote_RegisterFunction( "ServerCallback_AddShieldedPlayer" )
-	Remote_RegisterFunction( "ServerCallback_RemoveShieldedPlayer" )
-
+	if (GetMapName() != "sp_skyway_v1")
+	{
+		Remote_RegisterFunction( "ServerCallback_StartShieldPlayer" )
+		Remote_RegisterFunction( "ServerCallback_StopShieldPlayer" )
+		Remote_RegisterFunction( "ServerCallback_AddShieldedPlayer" )
+		Remote_RegisterFunction( "ServerCallback_RemoveShieldedPlayer" )
+	}
 	// SP start
 	Remote_RegisterFunction( "ServerCallback_WhereIsTitan" )
 	Remote_RegisterFunction( "ServerCallback_TitanDied" )
@@ -188,7 +190,8 @@ function RemoteFunctions_Init()
 	// SP end
 
 	// COOP || SP start
-	Remote_RegisterFunction( "ServerCallback_ForcePlayMusic" )
+	if (GetMapName() != "sp_skyway_v1")
+		Remote_RegisterFunction( "ServerCallback_ForcePlayMusic" )
 	// COOP || SP end
 
 	//HACK: these nv's should eventually be code driven concepts
@@ -228,8 +231,10 @@ function RemoteFunctions_Init()
 	RegisterServerVar( "gameStateChangeTime", null )
 	RegisterServerVar( "gameState", -1 )
 	RegisterServerVar( "gameStartTime", null )
+
 	RegisterServerVar( "coopStartTime", null )
 	RegisterServerVar( "gameEndTime", 0.0 )
+
 	RegisterServerVar( "switchedSides", null )
 	RegisterServerVar( "replayDisabled", false )
 
@@ -289,12 +294,19 @@ function RemoteFunctions_Init()
 	Remote_RegisterFunction( "ServerCallback_SetMapSettings" )
 	Remote_RegisterFunction( "ServerCallback_ToneMapping" )
 	Remote_RegisterFunction( "ServerCallback_LaptopFX" )
-
 	Remote_RegisterFunction( "ServerCallback_ShowNextSpawnMessage" )
 	Remote_RegisterFunction( "ServerCallback_HideNextSpawnMessage" )
 
-	Remote_RegisterFunction( "ServerCallback_AnnounceWinner" )
-	Remote_RegisterFunction( "ServerCallback_AnnounceRoundWinner" )
+
+
+
+	if (GetMapName() != "sp_skyway_v1")
+	{
+		Remote_RegisterFunction( "ServerCallback_AnnounceWinner" )
+		Remote_RegisterFunction( "ServerCallback_AnnounceRoundWinner" )
+	}
+
+
 
 	Remote_RegisterFunction( "ServerCallback_GuidedMissileDestroyed" )
 	Remote_RegisterFunction( "ServerCallback_DoClientSideCinematicMPMoment" ) // hard to say if this is safe as fire and forget
@@ -494,16 +506,23 @@ function RemoteFunctions_Init()
 
 	// UI FUNCTIONS
 	Remote_RegisterFunction( "ServerCallback_SetUIVar" )
-	Remote_RegisterFunction( "ServerCallback_ShopPurchaseStatus" )
+
+	if (GetMapName() != "sp_skyway_v1")
+		Remote_RegisterFunction( "ServerCallback_ShopPurchaseStatus" )
 	Remote_RegisterFunction( "ServerCallback_OpenPilotLoadoutMenu" )
 
 	// Dev Only
-	Remote_RegisterFunction( "Dev_PrintClientMessage" )
-	Remote_RegisterFunction( "Dev_BuildClientMessage" )
-
+	if (GetMapName() != "sp_skyway_v1")
+	{
+		Remote_RegisterFunction( "Dev_PrintClientMessage" )
+		Remote_RegisterFunction( "Dev_BuildClientMessage" )
+	}
 	// Class Functions
 	Remote_RegisterFunction( "ServerCallback_DeploymentDeath" )
-	Remote_RegisterFunction( "ServerCallback_AddArcConnectorToy" )
+
+	if (GetMapName() != "sp_skyway_v1")
+		Remote_RegisterFunction( "ServerCallback_AddArcConnectorToy" )
+
 	Remote_RegisterFunction( "ServerCallback_PlayDialogueOnEntity" )
 	Remote_RegisterFunction( "ServerCallback_PlayDialogueAtPosition" )
 	Remote_RegisterFunction( "ServerCallback_PlayerConversation" )
@@ -766,8 +785,13 @@ function RemoteFunctions_Init()
 	}
 
 	Remote_RegisterFunction( "ServerCallback_GetObjectiveReminderOnLoad" )
+
 	Remote_RegisterFunction( "ServerCallback_ClearObjectiveReminderOnLoad" )
-	Remote_RegisterFunction( "ScriptCallback_Beacon_FreeTrialOverMessage" )
+
+	printt("Maybe if I add this the merge algorithm will be pleased.")
+
+	if (GetMapName() != "sp_skyway_v1")
+		Remote_RegisterFunction( "ScriptCallback_Beacon_FreeTrialOverMessage" )
 
 	RegisterNetworkedVariable( "rewardState", SNDC_PLAYER_GLOBAL, SNVT_INT, 0 )
 	RegisterNetworkedVariable( "goalState", SNDC_PLAYER_GLOBAL, SNVT_INT, 0 )
@@ -790,8 +814,8 @@ function RemoteFunctions_Init()
 			ClRodeoTitan_RegisterNetworkFunctions()
 			ClSentryTurret_RegisterNetworkFunctions()
 	#endif
-	
-// CUSTOM GAUNTLET START	
+
+// CUSTOM GAUNTLET START
 	Remote_RegisterFunction( "ServerCallback_CustomGauntlet_Start" );
 	Remote_RegisterFunction( "ServerCallback_CustomGauntlet_Finish" );
 	Remote_RegisterFunction( "ServerCallback_CustomGauntlet_SendScoreboardTime" );
