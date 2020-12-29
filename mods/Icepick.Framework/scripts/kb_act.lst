@@ -9,6 +9,7 @@
 "toggle_toolgun"		"Toggle Toolgun"
 "undo"					"Remove last spawned prop"
 "instant_respawn"		"Return to Spawn Point"
+"toggleconsole"		"Toggle Developer Console"
 "blank"					"=========================="
 "blank"					"#KEY_BINDINGS_HEADER_ACTIONS"
 "blank"					"=========================="
