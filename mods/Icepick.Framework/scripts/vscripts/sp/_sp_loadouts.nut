@@ -854,23 +854,24 @@ TitanLoadoutDef function GetTitanLoadoutForCurrentMap()
 	printt( "setFile", result.setFile )
 
 	// Override this later on so we can call in specific titans as we want them
-	/*
-	TitanLevelLoadoutDefaults levelDef = GetTitanLevelLoadoutDefaultsForMapname( mapName )
-	Assert( GetTitanLoadoutForPrimary( levelDef.primaryWeaponName ) != null, "Level loadout tried to specify '" + levelDef.primaryWeaponName + "' for BT, but that weapon is not in titan_properties.csv" )
+	if ( GetMapName() == "sp_skyway_v1" )
+	{
+		TitanLevelLoadoutDefaults levelDef = GetTitanLevelLoadoutDefaultsForMapname( mapName )
+		Assert( GetTitanLoadoutForPrimary( levelDef.primaryWeaponName ) != null, "Level loadout tried to specify '" + levelDef.primaryWeaponName + "' for BT, but that weapon is not in titan_properties.csv" )
 
-	int bitIndex = GetTitanLoadoutIndex( levelDef.primaryWeaponName )
+		int bitIndex = GetTitanLoadoutIndex( levelDef.primaryWeaponName )
 
-	// fall back to xo16 if not unlocked yet
-	if ( !IsBTLoadoutUnlocked( bitIndex ) )
-		levelDef.primaryWeaponName = "mp_titanweapon_xo16_shorty"
+		// fall back to xo16 if not unlocked yet
+		if ( !IsBTLoadoutUnlocked( bitIndex ) )
+			levelDef.primaryWeaponName = "mp_titanweapon_xo16_shorty"
 
-	result = expect TitanLoadoutDef( GetTitanLoadoutForPrimary( levelDef.primaryWeaponName ) )
-	result.setFile = levelDef.setFile
-	result.name = mapName
-	result.titanExecution = levelDef.titanExecution
+		result = expect TitanLoadoutDef( GetTitanLoadoutForPrimary( levelDef.primaryWeaponName ) )
+		result.setFile = levelDef.setFile
+		result.name = mapName
+		result.titanExecution = levelDef.titanExecution
 
-	PopulateTitanLoadoutFromLevelTrans( result )
-	*/
+		PopulateTitanLoadoutFromLevelTrans( result )
+	}
 	return result
 }
 
