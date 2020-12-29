@@ -854,7 +854,7 @@ TitanLoadoutDef function GetTitanLoadoutForCurrentMap()
 	printt( "setFile", result.setFile )
 
 	// Override this later on so we can call in specific titans as we want them
-	if ( GetMapName() == "sp_skyway_v1" )
+	if ( GetMapName() == "sp_skyway_v1" || GetMapName() == "sp_crashsite"  )
 	{
 		TitanLevelLoadoutDefaults levelDef = GetTitanLevelLoadoutDefaultsForMapname( mapName )
 		Assert( GetTitanLoadoutForPrimary( levelDef.primaryWeaponName ) != null, "Level loadout tried to specify '" + levelDef.primaryWeaponName + "' for BT, but that weapon is not in titan_properties.csv" )
