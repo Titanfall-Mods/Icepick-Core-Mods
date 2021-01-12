@@ -11,6 +11,11 @@ void function Spawnmenu_Init_Entities()
 	RegisterCategoryItem( "npcs_humans", "npc_soldier_shotgun", Localize("#NPC_SOLDIER") + " (Shotgun)" );
 	RegisterCategoryItem( "npcs_humans", "npc_soldier_smg", Localize("#NPC_SOLDIER") + " (SMG)" );
 
+	RegisterPageCategory( "entities", "npcs_humans_friendly", "Friendly Humans", "Spawnmenu_SpawnNpc" );
+	RegisterCategoryItem( "npcs_humans_friendly", "npc_soldier_friendly", Localize("#NPC_SOLDIER") );
+	RegisterCategoryItem( "npcs_humans_friendly", "npc_soldier_shotgun_friendly", Localize("#NPC_SOLDIER") + " (Shotgun)" );
+	RegisterCategoryItem( "npcs_humans_friendly", "npc_soldier_smg_friendly", Localize("#NPC_SOLDIER") + " (SMG)" );
+	
 	RegisterPageCategory( "entities", "npcs_robots", "Robots", "Spawnmenu_SpawnNpc" );
 	RegisterCategoryItem( "npcs_robots", "npc_spectre", Localize("#NPC_SPECTRE") );
 	RegisterCategoryItem( "npcs_robots", "npc_stalker", Localize("#NPC_STALKER") );
@@ -22,6 +27,18 @@ void function Spawnmenu_Init_Entities()
 	RegisterCategoryItem( "npcs_robots", "npc_drone_plasma", Localize("#NPC_DRONE_PLASMA") );
 	RegisterCategoryItem( "npcs_robots", "npc_drone_worker", Localize("#NPC_DRONE_WORKER") );
 	RegisterCategoryItem( "npcs_robots", "npc_frag_drone", Localize("#WPN_FRAG_DRONE") );
+	
+	RegisterPageCategory( "entities", "npcs_robots_friendly", "Friendly Robots", "Spawnmenu_SpawnNpc" );
+	RegisterCategoryItem( "npcs_robots_friendly", "npc_spectre_friendly", Localize("#NPC_SPECTRE") );
+	RegisterCategoryItem( "npcs_robots_friendly", "npc_stalker_friendly", Localize("#NPC_STALKER") );
+	RegisterCategoryItem( "npcs_robots_friendly", "npc_stalker_zombie_friendly", Localize("#NPC_STALKER_ZOMBIE") );
+	RegisterCategoryItem( "npcs_robots_friendly", "npc_stalker_zombie_mossy_friendly", Localize("#NPC_STALKER_ZOMBIE_MOSSY") );
+	RegisterCategoryItem( "npcs_robots_friendly", "npc_super_spectre_friendly", Localize("#NPC_SUPER_SPECTRE") );
+	RegisterCategoryItem( "npcs_robots_friendly", "npc_drone_friendly", Localize("#NPC_DRONE") );
+	RegisterCategoryItem( "npcs_robots_friendly", "npc_drone_rocket_friendly", Localize("#NPC_DRONE_ROCKET") );
+	RegisterCategoryItem( "npcs_robots_friendly", "npc_drone_plasma_friendly", Localize("#NPC_DRONE_PLASMA") );
+	RegisterCategoryItem( "npcs_robots_friendly", "npc_drone_worker_friendly", Localize("#NPC_DRONE_WORKER") );
+	RegisterCategoryItem( "npcs_robots_friendly", "npc_frag_drone_friendly", Localize("#WPN_FRAG_DRONE") );
 
 	RegisterPageCategory( "entities", "npcs_titans", "Titans", "Spawnmenu_SpawnTitan" );
 	RegisterCategoryItem( "npcs_titans", "npc_titan_atlas_tracker", "Tone" );
