@@ -354,6 +354,55 @@ void function Spawnmenu_SpawnNpc( string npcId )
 			spawnNpc = CreateNPCTitan( "titan_buddy", TEAM_MILITIA, spawnPos, spawnAng, [] );
 			SetSpawnOption_AISettings( spawnNpc, "npc_titan_buddy" );
 			break;
+		case "npc_soldier_friendly":
+			spawnNpc = CreateSoldier( TEAM_MILITIA, spawnPos, spawnAng );
+			break;
+		case "npc_soldier_shotgun_friendly":
+			spawnNpc = CreateSoldier( TEAM_MILITIA, spawnPos, spawnAng );
+			SetSpawnOption_Weapon( spawnNpc, "mp_weapon_shotgun" );
+			break;
+		case "npc_soldier_smg_friendly":
+			spawnNpc = CreateSoldier( TEAM_MILITIA, spawnPos, spawnAng );
+			SetSpawnOption_Weapon( spawnNpc, "mp_weapon_car" );
+			break;
+		case "npc_soldier_sniper_friendly":
+			spawnNpc = CreateSoldier( TEAM_MILITIA, spawnPos, spawnAng );
+			SetSpawnOption_Weapon( spawnNpc, "mp_weapon_dmr" );
+			break;
+		case "npc_spectre_friendly":
+			spawnNpc = CreateSpectre( TEAM_MILITIA, spawnPos, spawnAng );
+			break;
+		case "npc_stalker_friendly":
+			spawnNpc = CreateStalker( TEAM_MILITIA, spawnPos, spawnAng );
+			break;
+		case "npc_stalker_zombie_friendly":
+			spawnNpc = CreateZombieStalker( TEAM_MILITIA, spawnPos, spawnAng );
+			break;
+		case "npc_stalker_zombie_mossy_friendly":
+			spawnNpc = CreateZombieStalkerMossy( TEAM_MILITIA, spawnPos, spawnAng );
+			break;
+		case "npc_super_spectre_friendly":
+			spawnNpc = CreateSuperSpectre( TEAM_MILITIA, spawnPos, spawnAng );
+			break;
+		case "npc_frag_drone_friendly":
+			spawnNpc = CreateFragDrone( TEAM_MILITIA, spawnPos, spawnAng );
+			break;
+		case "npc_drone_friendly":
+			spawnNpc = CreateGenericDrone( TEAM_MILITIA, spawnPos, spawnAng );
+			break;
+		case "npc_drone_rocket_friendly":
+			spawnNpc = CreateRocketDrone( TEAM_MILITIA, spawnPos, spawnAng );
+			break;
+		case "npc_drone_shield_friendly":
+			spawnNpc = CreateShieldDrone( TEAM_MILITIA, spawnPos, spawnAng );
+			break;
+		case "npc_drone_plasma_friendly":
+			spawnNpc = CreateRocketDrone( TEAM_MILITIA, spawnPos, spawnAng );
+			SetSpawnOption_Weapon( spawnNpc, "mp_weapon_droneplasma" );
+			break;
+		case "npc_drone_worker_friendly":
+			spawnNpc = CreateWorkerDrone( TEAM_MILITIA, spawnPos, spawnAng );
+			break;
 	}
 	DispatchSpawn( spawnNpc );
 #endif
