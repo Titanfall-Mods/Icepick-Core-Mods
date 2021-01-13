@@ -35,7 +35,7 @@
 			"ServerCallback": "Convars_Shared_Init"
 		},
 		{
-			"Path": "spawnlists/spmp_compiled_spawn_list.nut",
+			"Path": "spawnmenu/spmp_compiled_spawn_list.nut",
 			"RunOn": "SERVER || CLIENT"
 		},
 		{
@@ -123,6 +123,30 @@
 			"ServerCallback": "Toolgun_RegisterTool_SpawnPoint"
 		},
 		{
+			"Path": "tools/sh_tool_weld.nut",
+			"RunOn": "SERVER || CLIENT",
+			"ClientCallback": "Toolgun_RegisterTool_Welder",
+			"ServerCallback": "Toolgun_RegisterTool_Welder"
+		},
+		{
+			"Path": "tools/sh_tool_unweld.nut",
+			"RunOn": "SERVER || CLIENT",
+			"ClientCallback": "Toolgun_RegisterTool_Unwelder",
+			"ServerCallback": "Toolgun_RegisterTool_Unwelder"
+		},
+		{
+			"Path": "tools/sh_tool_rope.nut",
+			"RunOn": "SERVER || CLIENT",
+			"ClientCallback": "Toolgun_RegisterTool_Rope",
+			"ServerCallback": "Toolgun_RegisterTool_Rope"
+		},
+		{
+			"Path": "tools/sh_tool_throw.nut",
+			"RunOn": "SERVER || CLIENT",
+			"ClientCallback": "Toolgun_RegisterTool_TitanThrow",
+			"ServerCallback": "Toolgun_RegisterTool_TitanThrow"
+		},
+		{
 			"Path": "sh_precache_weapons.nut",
 			"RunOn": "SERVER || CLIENT",
 			"ClientCallback": "Sh_PrecacheWeapons",
@@ -133,28 +157,34 @@
 			"RunOn": "SERVER || CLIENT"
 		},
 		{
-			"Path": "toolgun/sh_spawnmenu.nut",
+			"Path": "spawnmenu/sh_spawnmenu.nut",
 			"RunOn": "SERVER || CLIENT",
 			"ClientCallback" : "Spawnmenu_Init",
 			"ServerCallback": "Spawnmenu_Init"
 		},
 		{
-			"Path": "toolgun/sh_spawnmenu_entities.nut",
+			"Path": "spawnmenu/sh_spawnmenu_entities.nut",
 			"RunOn": "SERVER || CLIENT",
 			"ClientCallback" : "Spawnmenu_Init_Entities",
 			"ServerCallback": "Spawnmenu_Init_Entities"
 		},
 		{
-			"Path": "toolgun/sh_spawnmenu_weapons.nut",
+			"Path": "spawnmenu/sh_spawnmenu_weapons.nut",
 			"RunOn": "SERVER || CLIENT",
 			"ClientCallback" : "Spawnmenu_Init_Weapons",
 			"ServerCallback": "Spawnmenu_Init_Weapons"
 		},
 		{
-			"Path": "toolgun/sh_spawnmenu_saves.nut",
+			"Path": "spawnmenu/sh_spawnmenu_saves.nut",
 			"RunOn": "SERVER || CLIENT",
 			"ClientCallback" : "Spawnmenu_Init_Saves",
 			"ServerCallback": "Spawnmenu_Init_Saves"
+		},
+		{
+			"Path": "spawnmenu/sh_spawnmenu_utilities.nut",
+			"RunOn": "SERVER || CLIENT",
+			"ClientCallback" : "Spawnmenu_Init_Utils",
+			"ServerCallback": "Spawnmenu_Init_Utils"
 		},
 		{
 			"Path": "toolgun/sv_save_writer.nut",

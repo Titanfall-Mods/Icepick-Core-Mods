@@ -69,6 +69,12 @@ void function HandleLoadToken( string id, array<string> data )
 		case "spawnpoint":
 			HandleLoadSpawnPoint( data );
 			break;
+		case "concommand":
+			HandleLoadConCommand( data );
+			break;
+		case "rope":
+			HandleLoadRope( data );
+			break;
 	}
 
 	foreach ( callbackFunc in file.onHandleLoadTokenCallback )
@@ -109,4 +115,23 @@ void function HandleLoadSpawnPoint( array<string> data )
 	vector angles = UnpackStringToVector( data[1] );
 	CustomSpawnPoint newSpawn = ToolSpawnPoint_AddSpawn( origin, angles );
 	file.loadedCustomSpawns.append( newSpawn );
+}
+
+void function HandleLoadConCommand( array<string> data )
+{
+	string concommandString = "";
+	foreach( string str in data )
+	{
+		concommandString += str + " ";
+	}
+
+	ServerCommand( concommandString );
+}
+
+void function HandleLoadRope( array<string> data )
+{
+	vector origin = UnpackStringToVector( data[0] );
+	vector target = UnpackStringToVector( data[1] );
+	string colorString = data[2];
+	Toolgun_CreateRope( origin, target, colorString );
 }

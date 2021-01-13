@@ -290,11 +290,14 @@ function RemoteFunctions_Init()
 	Remote_RegisterFunction( "ServerCallback_ToneMapping" )
 	Remote_RegisterFunction( "ServerCallback_LaptopFX" )
 
+// @icepick
+#if MP
 	Remote_RegisterFunction( "ServerCallback_ShowNextSpawnMessage" )
 	Remote_RegisterFunction( "ServerCallback_HideNextSpawnMessage" )
 
 	Remote_RegisterFunction( "ServerCallback_AnnounceWinner" )
 	Remote_RegisterFunction( "ServerCallback_AnnounceRoundWinner" )
+#endif
 
 	Remote_RegisterFunction( "ServerCallback_GuidedMissileDestroyed" )
 	Remote_RegisterFunction( "ServerCallback_DoClientSideCinematicMPMoment" ) // hard to say if this is safe as fire and forget
@@ -348,8 +351,11 @@ function RemoteFunctions_Init()
 	Remote_RegisterFunction( "ServerCallback_TitanBatteryDown" )
 
 	// Ping
+// @icepick
+#if MP
 	Remote_RegisterFunction( "ServerCallback_SpottingHighlight" )
 	Remote_RegisterFunction( "ServerCallback_SpottingDeny" )
+#endif
 
 	// Rodeo Battery
 	RegisterNetworkedVariable( "batteryOnBack", SNDC_PLAYER_EXCLUSIVE, SNVT_ENTITY )
@@ -413,10 +419,13 @@ function RemoteFunctions_Init()
 	Remote_RegisterFunction( "ServerCallback_UpdateTitanModel" )
 
 	// DEV ONLY
+// @icepick
+#if MP
 	Remote_RegisterFunction( "ServerCallback_MVUpdateModelBounds" )
 	Remote_RegisterFunction( "ServerCallback_MVEnable" )
 	Remote_RegisterFunction( "ServerCallback_MVDisable" )
 	Remote_RegisterFunction( "ServerCallback_ModelViewerDisableConflicts" )
+#endif
 
 	Remote_RegisterFunction( "ServerCallback_Test" )
 
@@ -494,8 +503,11 @@ function RemoteFunctions_Init()
 
 	// UI FUNCTIONS
 	Remote_RegisterFunction( "ServerCallback_SetUIVar" )
+// @icepick
+#if MP
 	Remote_RegisterFunction( "ServerCallback_ShopPurchaseStatus" )
 	Remote_RegisterFunction( "ServerCallback_OpenPilotLoadoutMenu" )
+#endif
 
 	// Dev Only
 	Remote_RegisterFunction( "Dev_PrintClientMessage" )

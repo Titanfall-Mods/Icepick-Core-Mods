@@ -23,7 +23,7 @@ void function Toolgun_RegisterTool_GauntletPlaceWeapon()
 	{
 		string help = "Fire to place a respawning weapon in the world.\nShoot an existing respawner to update it.";
 		#if CLIENT || UI
-		help += "\nPlacing: " + Localize( expect string(ToolGauntletWeapon.spawningId) );
+		help += "\nPlacing: " + GetNameForWeaponId( expect string(ToolGauntletWeapon.spawningId) );
 		#endif
 		return help;
 	}
@@ -443,5 +443,52 @@ entity function RecreatePlayerWeaponPickup( entity oldWeapon )
 	oldWeapon.Destroy()
 
 	return weapon
+}
+#endif
+
+#if CLIENT || UI
+string function GetNameForWeaponId( string weaponId )
+{
+	switch( weaponId )
+	{
+		case "mp_weapon_rspn101": return Localize("#WPN_RSPN101");
+		case "mp_weapon_rspn101_og": return Localize("#WPN_RSPN101_OG");
+		case "mp_weapon_hemlok": return Localize("#WPN_HEMLOK");
+		case "mp_weapon_g2": return Localize("#WPN_G2");
+		case "mp_weapon_vinson": return Localize("#WPN_VINSON");
+		case "mp_weapon_car": return Localize("#WPN_CAR");
+		case "mp_weapon_alternator_smg": return Localize("#WPN_ALTERNATOR_SMG");
+		case "mp_weapon_hemlok_smg": return Localize("#WPN_HEMLOK_SMG");
+		case "mp_weapon_r97": return Localize("#WPN_R97");
+		case "mp_weapon_lmg": return Localize("#WPN_LMG");
+		case "mp_weapon_lstar": return Localize("#WPN_LSTAR");
+		case "mp_weapon_esaw": return Localize("#WPN_ESAW");
+		case "mp_weapon_sniper": return Localize("#WPN_SNIPER");
+		case "mp_weapon_doubletake": return Localize("#WPN_DOUBLETAKE");
+		case "mp_weapon_dmr": return Localize("#WPN_DMR");
+		case "mp_weapon_shotgun": return Localize("#WPN_SHOTGUN");
+		case "mp_weapon_mastiff": return Localize("#WPN_MASTIFF");
+		case "mp_weapon_smr": return Localize("#WPN_SMR");
+		case "mp_weapon_epg": return Localize("#WPN_EPG");
+		case "mp_weapon_softball": return Localize("#WPN_SOFTBALL");
+		case "mp_weapon_pulse_lmg": return Localize("#WPN_PULSE_LMG");
+		case "mp_weapon_wingman_n": return Localize("#WPN_WINGMAN_N");
+		case "mp_weapon_shotgun_pistol": return Localize("#WPN_SHOTGUN_PISTOL");
+		case "mp_weapon_semipistol": return Localize("#WPN_P2011");
+		case "mp_weapon_autopistol": return Localize("#WPN_RE45_AUTOPISTOL");
+		case "mp_weapon_wingman": return Localize("#WPN_WINGMAN");
+		case "mp_weapon_defender": return Localize("#WPN_CHARGE_RIFLE");
+		case "mp_weapon_mgl": return Localize("#WPN_MGL");
+		case "mp_weapon_arc_launcher": return Localize("#WPN_ARC_LAUNCHER");
+		case "mp_weapon_rocket_launcher": return Localize("#WPN_ROCKET_LAUNCHER");
+		case "mp_weapon_smart_pistol": return Localize("#WPN_SMART_PISTOL");
+		case "mp_weapon_frag_grenade": return Localize("#WPN_FRAG_GRENADE");
+		case "mp_weapon_thermite_grenade": return Localize("#WPN_THERMITE_GRENADE");
+		case "mp_weapon_grenade_electric_smoke": return Localize("#WPN_GRENADE_ELECTRIC_SMOKE");
+		case "mp_weapon_grenade_emp": return Localize("#WPN_GRENADE_EMP");
+		case "mp_weapon_grenade_gravity": return Localize("#WPN_GRENADE_GRAVITY");
+		case "mp_weapon_satchel": return Localize("#WPN_SATCHEL");
+	}
+	return "ERROR: " + weaponId;
 }
 #endif

@@ -13,6 +13,7 @@ global ToolgunDataStruct ToolgunData
 
 struct {
 	entity GrabbedEntity,
+	entity EntityParent,
 	vector GrabOffset,
 	vector RotatePivot,
 	float GrabDistance,
@@ -158,10 +159,13 @@ bool function ClientCommand_Toolgun_PrimaryAttack( entity player, array<string> 
 bool function ClientCommand_Toolgun_GrabEntity( entity player, array<string> args )
 {
 	ToolgunGrab.GrabbedEntity = GetEntByIndex( args[0].tointeger() );
-	if( ToolgunGrab.GrabbedEntity != null )
+	if( IsValid( ToolgunGrab.GrabbedEntity ) )
 	{
 		ToolgunGrab.GrabOffset = Vector( args[1].tofloat(), args[2].tofloat(), args[3].tofloat() );
 		ToolgunGrab.GrabDistance = args[4].tofloat();
+		ToolgunGrab.EntityParent = ToolgunGrab.GrabbedEntity.GetParent();
+		
+		ToolgunGrab.GrabbedEntity.ClearParent();
 
 		/*
 		entity cpEnd = CreateEntity( "info_placement_helper" )
@@ -201,7 +205,13 @@ bool function ClientCommand_Toolgun_GrabEntity( entity player, array<string> arg
 
 bool function ClientCommand_Toolgun_ReleaseEntity( entity player, array<string> args )
 {
+	if( IsValid( ToolgunGrab.EntityParent ) )
+	{
+		ToolgunGrab.GrabbedEntity.SetParent( ToolgunGrab.EntityParent );
+		ToolgunGrab.EntityParent = null;
+	}
 	ToolgunGrab.GrabbedEntity = null;
+
 	// ToolgunGrab.GrabBeamEffect.Destroy();
 	// ToolgunGrab.GrabBeamTarget.Destroy();
 

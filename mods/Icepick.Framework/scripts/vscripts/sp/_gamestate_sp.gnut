@@ -177,6 +177,10 @@ void function EntitiesDidLoad_SpGameState()
 		level.nv.titanAvailability = eTitanAvailability.Never
 
 	ServerCommand( "sv_weapon_despawn_Time 180" )
+
+	// @icepick: update the tick rate so that moving things is more responsive
+	ServerCommand( "base_tickinterval_sp 0.016" )
+	ServerCommand("cl_updaterate_sp 120")
 }
 
 /************************************************************************************************\

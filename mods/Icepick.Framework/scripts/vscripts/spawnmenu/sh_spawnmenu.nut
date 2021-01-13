@@ -2,6 +2,7 @@
 global function Spawnmenu_Init
 global function Spawnmenu_SelectTool
 global function Spawnmenu_GiveWeapon
+global function Spawnmenu_GiveWeaponMod
 global function Spawnmenu_GiveAbility
 global function Spawnmenu_GiveGrenade
 global function Spawnmenu_GiveMelee
@@ -128,6 +129,38 @@ void function Spawnmenu_GiveWeapon( string weaponId )
 	player.GiveWeapon( weaponId )
 	player.SetActiveWeaponByName( weaponId )
 
+#endif
+}
+
+void function Spawnmenu_GiveWeaponMod( string modId )
+{
+#if SERVER
+	entity player = GetPlayerByIndex( 0 );
+	entity weapon = player.GetActiveWeapon();
+	if( weapon != null )
+	{
+		string weaponId = weapon.GetWeaponClassName();
+		array<string> mods = weapon.GetMods();
+
+		bool removed = false;
+		for( int i = 0; i < mods.len(); ++i )
+		{
+			if( mods[i] == modId )
+			{
+				mods.remove( i );
+				removed = true;
+				break;
+			}
+		}
+		if( !removed )
+		{
+			mods.append( modId );
+		}
+
+		player.TakeWeaponNow( weaponId );
+		player.GiveWeapon( weaponId, mods );
+		player.SetActiveWeaponByName( weaponId );
+	}
 #endif
 }
 
@@ -294,6 +327,30 @@ void function Spawnmenu_SpawnNpc( string npcId )
 	vector spawnAng = angles;
 	int team = TEAM_IMC;
 
+	var teamTagPos = npcId.find( "#" )
+	if(teamTagPos != null)
+	{
+		expect int(teamTagPos)
+		string teamId = npcId.slice(teamTagPos);
+		npcId = npcId.slice(0, teamTagPos);
+
+		switch(teamId)
+		{
+			case "#militia":
+				team = TEAM_MILITIA;
+				break;
+			case "#imc":
+				team = TEAM_IMC;
+				break;
+			case "#unassigned":
+				team = TEAM_UNASSIGNED;
+				break;
+			case "#both":
+				team = TEAM_BOTH;
+				break;
+		}
+	}
+
 	entity spawnNpc = null;
 	switch( npcId )
 	{
@@ -354,55 +411,6 @@ void function Spawnmenu_SpawnNpc( string npcId )
 			spawnNpc = CreateNPCTitan( "titan_buddy", TEAM_MILITIA, spawnPos, spawnAng, [] );
 			SetSpawnOption_AISettings( spawnNpc, "npc_titan_buddy" );
 			break;
-		case "npc_soldier_friendly":
-			spawnNpc = CreateSoldier( TEAM_MILITIA, spawnPos, spawnAng );
-			break;
-		case "npc_soldier_shotgun_friendly":
-			spawnNpc = CreateSoldier( TEAM_MILITIA, spawnPos, spawnAng );
-			SetSpawnOption_Weapon( spawnNpc, "mp_weapon_shotgun" );
-			break;
-		case "npc_soldier_smg_friendly":
-			spawnNpc = CreateSoldier( TEAM_MILITIA, spawnPos, spawnAng );
-			SetSpawnOption_Weapon( spawnNpc, "mp_weapon_car" );
-			break;
-		case "npc_soldier_sniper_friendly":
-			spawnNpc = CreateSoldier( TEAM_MILITIA, spawnPos, spawnAng );
-			SetSpawnOption_Weapon( spawnNpc, "mp_weapon_dmr" );
-			break;
-		case "npc_spectre_friendly":
-			spawnNpc = CreateSpectre( TEAM_MILITIA, spawnPos, spawnAng );
-			break;
-		case "npc_stalker_friendly":
-			spawnNpc = CreateStalker( TEAM_MILITIA, spawnPos, spawnAng );
-			break;
-		case "npc_stalker_zombie_friendly":
-			spawnNpc = CreateZombieStalker( TEAM_MILITIA, spawnPos, spawnAng );
-			break;
-		case "npc_stalker_zombie_mossy_friendly":
-			spawnNpc = CreateZombieStalkerMossy( TEAM_MILITIA, spawnPos, spawnAng );
-			break;
-		case "npc_super_spectre_friendly":
-			spawnNpc = CreateSuperSpectre( TEAM_MILITIA, spawnPos, spawnAng );
-			break;
-		case "npc_frag_drone_friendly":
-			spawnNpc = CreateFragDrone( TEAM_MILITIA, spawnPos, spawnAng );
-			break;
-		case "npc_drone_friendly":
-			spawnNpc = CreateGenericDrone( TEAM_MILITIA, spawnPos, spawnAng );
-			break;
-		case "npc_drone_rocket_friendly":
-			spawnNpc = CreateRocketDrone( TEAM_MILITIA, spawnPos, spawnAng );
-			break;
-		case "npc_drone_shield_friendly":
-			spawnNpc = CreateShieldDrone( TEAM_MILITIA, spawnPos, spawnAng );
-			break;
-		case "npc_drone_plasma_friendly":
-			spawnNpc = CreateRocketDrone( TEAM_MILITIA, spawnPos, spawnAng );
-			SetSpawnOption_Weapon( spawnNpc, "mp_weapon_droneplasma" );
-			break;
-		case "npc_drone_worker_friendly":
-			spawnNpc = CreateWorkerDrone( TEAM_MILITIA, spawnPos, spawnAng );
-			break;
 	}
 	DispatchSpawn( spawnNpc );
 #endif
@@ -420,6 +428,29 @@ void function Spawnmenu_SpawnTitan( string titanId )
 	vector spawnPos = origin;
 	vector spawnAng = angles;
 	int team = TEAM_IMC;
+	var teamTagPos = titanId.find( "#" )
+	if(teamTagPos != null)
+	{
+		expect int(teamTagPos)
+		string teamId = titanId.slice(teamTagPos);
+		titanId = titanId.slice(0, teamTagPos);
+		
+		switch(teamId)
+		{
+			case "#militia":
+				team = TEAM_MILITIA;
+				break;
+			case "#imc":
+				team = TEAM_IMC;
+				break;
+			case "#unassigned":
+				team = TEAM_UNASSIGNED;
+				break;
+			case "#both":
+				team = TEAM_BOTH;
+				break;
+		}
+	}
 
 	entity spawnNpc = CreateNPCTitan( "npc_titan", team, spawnPos, spawnAng, [] );
 	SetSpawnOption_NPCTitan( spawnNpc, TITAN_HENCH );

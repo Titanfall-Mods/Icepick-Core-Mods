@@ -80,29 +80,29 @@ void function InitSinglePlayerMenu()
 		file.allLevels[ data.levelNum ].append( data )
 	}
 
-	AddMPMapToMenu( "mp_black_water_canal", "Black Water Canal", "An IMC fueling station nestled deep in the rocky canals of the planet Cibus.", $"loadscreens/mp_black_water_canal_lobby" );
-	AddMPMapToMenu( "mp_grave", "Boomtown", "An underground IMC Simulation Dome, one of many hidden throughout the Frontier.", $"loadscreens/mp_grave_lobby" );
-	AddMPMapToMenu( "mp_crashsite3", "Crash Site", "The wreckage of the MCS James MacAllan on the planet Typhon.", $"loadscreens/mp_crashsite3_lobby" );
-	AddMPMapToMenu( "mp_complex3", "Complex", "An IMC research complex on Typhon, used to test the effects of the Fold Weapon and the Ark.", $"loadscreens/mp_complex3_lobby" );
-	AddMPMapToMenu( "mp_drydock", "Drydock", "A drydock for spacefaring vessels controlled by the IMC.", $"loadscreens/mp_drydock_lobby" );
-	AddMPMapToMenu( "mp_eden", "Eden", "A dilapidated residential community for IMC employees, ravaged by years of fracking.", $"loadscreens/mp_eden_lobby" );
-	AddMPMapToMenu( "mp_thaw", "Exoplanet", "A biological research station on a remote Frontier planet.", $"loadscreens/mp_thaw_lobby" );
-	AddMPMapToMenu( "mp_forwardbase_kodai", "Forwardbase Kodai", "A facility overlooking one of Typhon's interstellar beacons.", $"loadscreens/mp_forwardbase_kodai_lobby" );
-	AddMPMapToMenu( "mp_homestead", "Homestead", "A farming colony occupied by the IMC.", $"loadscreens/mp_homestead_lobby" );
-	AddMPMapToMenu( "mp_colony02", "Colony", "A disputed town on the planet Troy, fought over by the Militia and IMC.", $"loadscreens/mp_colony02_lobby" );
-	AddMPMapToMenu( "mp_angel_city", "Angel City", "One of the largest human settlements in the Frontier. It is tightly controlled by the IMC.", $"loadscreens/mp_angle_city_r2_lobby" );
-	AddMPMapToMenu( "mp_glitch", "Glitch", "A VR simulation based on the planet Harmony.", $"loadscreens/mp_glitch_lobby" );
-	AddMPMapToMenu( "mp_relic02", "Relic", "The wreck of the IMS Odyssey, stripped for materials by it's former crew to build their new colony.", $"loadscreens/mp_relic02_lobby" );
-	AddMPMapToMenu( "mp_wargames", "War Games", "A VR simulation based on Angel City and Airbase Sierra, corrupted by heavy interference.", $"loadscreens/mp_wargames_lobby" );
-	AddMPMapToMenu( "mp_rise", "Rise", "A long range desert partol output setup in an abandoned IMC reservoir.", $"loadscreens/mp_rise_lobby" );
-	AddMPMapToMenu( "mp_lf_stacks", "Livefire: Stacks", "A combat simulation facility with many shipping containers and construction platforms.", $"loadscreens/mp_stacks_lobby" );
-	AddMPMapToMenu( "mp_lf_meadow", "Livefire: Meadow", "A rural combat simulation facility.", $"loadscreens/mp_meadow_lobby" );
-	AddMPMapToMenu( "mp_lf_township", "Livefire: Township", "A combat simulation facility focused on urban combat.", $"loadscreens/mp_lf_township_lobby" );
-	AddMPMapToMenu( "mp_lf_deck", "Livefire: Deck", "A combat simulation facility that specializes in urban and close quarters combat.", $"loadscreens/mp_lf_deck_lobby" );
-	AddMPMapToMenu( "mp_lf_traffic", "Livefire: Traffic", "A combat simulation facility with many vehicles for cover.", $"loadscreens/mp_lf_traffic_lobby" );
-	AddMPMapToMenu( "mp_lf_uma", "Livefire: UMA", "A combat simulation facility with tight corridors and small open spaces.", $"loadscreens/mp_lf_uma_lobby" );
-	AddMPMapToMenu( "mp_coliseum", "Coliseum", "A simulated arena where pilots compete to prove their combat skills.", $"loadscreens/mp_coliseum_lobby" );
-	AddMPMapToMenu( "mp_coliseum_column", "Pillars", "A simulated arena, with three vertical pillars, where pilots compete to prove their combat skills.", $"loadscreens/mp_coliseum_column_lobby" );
+	AddMPMapToMenu( "mp_black_water_canal", Localize("#MP_BLACK_WATER_CANAL"), Localize("#MP_BLACK_WATER_CANAL_CLASSIC_DESC"), $"loadscreens/mp_black_water_canal_lobby" );
+	AddMPMapToMenu( "mp_grave", Localize("#MP_GRAVE"), Localize("#MP_GRAVE_CLASSIC_DESC"), $"loadscreens/mp_grave_lobby" );
+	AddMPMapToMenu( "mp_crashsite3", Localize("#MP_CRASHSITE3"), Localize("#MP_CRASHSITE3_CLASSIC_DESC") , $"loadscreens/mp_crashsite3_lobby" );
+	AddMPMapToMenu( "mp_complex3", Localize("#MP_COMPLEX3"), Localize("#MP_COMPLEX3_CLASSIC_DESC"), $"loadscreens/mp_complex3_lobby" );
+	AddMPMapToMenu( "mp_drydock", Localize("#MP_DRYDOCK"), Localize("#MP_DRYDOCK_CLASSIC_DESC"), $"loadscreens/mp_drydock_lobby" );
+	AddMPMapToMenu( "mp_eden", Localize("#MP_EDEN"), Localize("#MP_EDEN_CLASSIC_DESC"), $"loadscreens/mp_eden_lobby" );
+	AddMPMapToMenu( "mp_thaw", Localize("#MP_THAW"), Localize("#MP_THAW_CLASSIC_DESC"), $"loadscreens/mp_thaw_lobby" );
+	AddMPMapToMenu( "mp_forwardbase_kodai", Localize("#MP_FORWARDBASE_KODAI"), Localize("#MP_FORWARDBASE_KODAI_CLASSIC_DESC"), $"loadscreens/mp_forwardbase_kodai_lobby" );
+	AddMPMapToMenu( "mp_homestead", Localize("#MP_HOMESTEAD"), Localize("#MP_HOMESTEAD_CLASSIC_DESC"), $"loadscreens/mp_homestead_lobby" );
+	AddMPMapToMenu( "mp_colony02", Localize("#MP_COLONY02"), Localize("#MP_COLONY02_CLASSIC_DESC"), $"loadscreens/mp_colony02_lobby" );
+	AddMPMapToMenu( "mp_angel_city", Localize("#MP_ANGEL_CITY"), Localize("#MP_ANGEL_CITY_CLASSIC_DESC"), $"loadscreens/mp_angle_city_r2_lobby" );
+	AddMPMapToMenu( "mp_glitch", Localize("#MP_GLITCH"), Localize("#MP_GLITCH_CLASSIC_DESC"), $"loadscreens/mp_glitch_lobby" );
+	AddMPMapToMenu( "mp_relic02", Localize("#MP_RELIC02"), Localize("#MP_RELIC02_CLASSIC_DESC"), $"loadscreens/mp_relic02_lobby" );
+	AddMPMapToMenu( "mp_wargames", Localize("#MP_WARGAMES"), Localize("#MP_WARGAMES_CLASSIC_DESC"), $"loadscreens/mp_wargames_lobby" );
+	AddMPMapToMenu( "mp_rise", Localize("#MP_RISE"), Localize("#MP_RISE_CLASSIC_DESC"), $"loadscreens/mp_rise_lobby" );
+	AddMPMapToMenu( "mp_lf_stacks", Localize("#MP_LF_STACKS"), Localize("#MP_LF_STACKS_CLASSIC_DESC"), $"loadscreens/mp_stacks_lobby" );
+	AddMPMapToMenu( "mp_lf_meadow", Localize("#MP_LF_MEADOW"), Localize("#MP_LF_MEADOW_CLASSIC_DESC"), $"loadscreens/mp_meadow_lobby" );
+	AddMPMapToMenu( "mp_lf_township", Localize("#MP_LF_TOWNSHIP"), Localize("#MP_LF_TOWNSHIP_CLASSIC_DESC"), $"loadscreens/mp_lf_township_lobby" );
+	AddMPMapToMenu( "mp_lf_deck", Localize("#MP_LF_DECK"), Localize("#MP_LF_DECK_CLASSIC_DESC"), $"loadscreens/mp_lf_deck_lobby" );
+	AddMPMapToMenu( "mp_lf_traffic", Localize("#MP_LF_TRAFFIC"), Localize("#MP_LF_TRAFFIC_CLASSIC_DESC"), $"loadscreens/mp_lf_traffic_lobby" );
+	AddMPMapToMenu( "mp_lf_uma", Localize("#MP_LF_UMA"), Localize("#MP_LF_UMA_CLASSIC_DESC"), $"loadscreens/mp_lf_uma_lobby" );
+	AddMPMapToMenu( "mp_coliseum", Localize("#MP_COLISEUM"), Localize("#MP_COLISEUM_CLASSIC_DESC"), $"loadscreens/mp_coliseum_lobby" );
+	AddMPMapToMenu( "mp_coliseum_column", Localize("#MP_COLISEUM_COLUMN"), Localize("#MP_COLISEUM_COLUMN_CLASSIC_DESC"), $"loadscreens/mp_coliseum_column_lobby" );
 
 	file.gridData.rows = 2
 	file.gridData.columns = 5
@@ -197,7 +197,9 @@ void function UpdateButtonData( var button, int elemNum )
 	RuiSetInt( rui, "blueLionTotal", maxLions )
 	RuiSetBool( rui, "finishedMaster", completedMaster )
 
-	if ( elemNum == 0 )
+	// @icepick
+	bool hideMaster = elemNum == 0 || data.levelBsp.find( "mp_" ) == 0
+	if ( hideMaster )
 		RuiSetBool( rui, "showMaster", false )
 	else
 		RuiSetBool( rui, "showMaster", true )

@@ -1,9 +1,5 @@
 
-global function Spawnmenu_Init_Saves
-
-#if CLIENT
-global function Spawnmenu_OnSavedGameToFile
-#endif
+global function Spawnmenu_Init_Utils
 
 #if SERVER
 global function Spawnmenu_PerformUtility
@@ -13,16 +9,15 @@ global function AddOnSpawnmenuUtilityCallback
 struct
 {
 	array<void functionref(string id)> onPerformUtilityCallback,
-	array<string> existingSaveFiles
 } file
 
-void function Spawnmenu_Init_Saves()
+void function Spawnmenu_Init_Utils()
 {
 	#if CLIENT
-	RegisterSpawnmenuPage( "saves", "Saves" );
+	RegisterSpawnmenuPage( "utilities", "Utilities" );
 
 	// Add some utility functions for cleaning up the map
-	RegisterPageCategory( "saves", "utilities", "Utilities", "Spawnmenu_PerformUtility" );
+	RegisterPageCategory( "utilities", "utilities", "Utilities", "Spawnmenu_PerformUtility" );
 	RegisterCategoryItem( "utilities", "cleanup.all", "Cleanup Everything" );
 	RegisterCategoryItem( "utilities", "cleanup.props", "Cleanup Props" );
 	RegisterCategoryItem( "utilities", "cleanup.ziplines", "Cleanup Ziplines" );
@@ -30,71 +25,10 @@ void function Spawnmenu_Init_Saves()
 	RegisterCategoryItem( "utilities", "cleanup.spawnpoints", "Cleanup Spawn Points" );
 	RegisterCategoryItem( "utilities", "cleanup.weapons", "Cleanup Weapons" );
 	RegisterCategoryItem( "utilities", "cleanup.npcs", "Cleanup NPCs" );
-
-	// Add categories where all our saves will be listed
-	RegisterPageCategory( "saves", "saves-current", Localize("#" + GetMapName().toupper()) + " Saves", "Spawnmenu_LoadSave" ); // Current map saves
-	RegisterPageCategory( "saves", "saves-all", "Saves for all other maps", "Spawnmenu_LoadSave" ); // Saves for all other maps just in case
-
-	// List save files in the saves folder
-	array<string> saveNames = UntypedArrayToStringArray( GetSaveFiles() );
-	foreach( saveFile in saveNames )
-	{
-		AddSaveFileToMenu( saveFile );
-	}
 	#endif
 }
 
-#if CLIENT
-void function AddSaveFileToMenu( string saveFile )
-{
-	// Make sure the file is unique when we refresh the list
-	foreach( existingSave in file.existingSaveFiles )
-	{
-		if( existingSave == saveFile )
-		{
-			return;
-		}
-	}
-
-	// Parse and add the file
-	array<string> splitName = split( saveFile, "\\" );
-	splitName = split( splitName[splitName.len() - 1], "." );
-
-	string saveMap = splitName[ splitName.len() - 2 ];
-	bool isCurrentMapSave = saveMap == GetMapName();
-	string itemCategory = isCurrentMapSave ? "saves-current" : "saves-all";
-
-	string fileName = "";
-	string displayName = "";
-	for( int i = 0; i < splitName.len(); ++i )
-	{
-		fileName += (fileName == "" ? "" : ".") + splitName[i];
-		if( i < splitName.len() - 2 )
-		{
-			displayName += (displayName == "" ? "" : ".") + splitName[i];
-		}
-	}
-
-	if( !isCurrentMapSave )
-	{
-		displayName += " (" + Localize("#" + saveMap.toupper()) + ")";
-	}
-
-	RegisterCategoryItem( itemCategory, fileName, displayName );
-
-	// Record the file as existing so we don't get duplicates
-	file.existingSaveFiles.append( saveFile );
-}
-
-void function Spawnmenu_OnSavedGameToFile( string fileName )
-{
-	AddSaveFileToMenu( fileName );
-}
-#endif
-
 #if SERVER
-
-// -----------------------------------------------------------------------------
 
 void function AddOnSpawnmenuUtilityCallback( void functionref(string id) callbackFunc )
 {

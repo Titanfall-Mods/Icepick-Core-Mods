@@ -44,6 +44,24 @@ void function Spawnmenu_Init_Weapons()
 	RegisterCategoryItem( "wep_pilot_secondary", "mp_weapon_rocket_launcher", Localize("#WPN_ROCKET_LAUNCHER") );
 	RegisterCategoryItem( "wep_pilot_secondary", "mp_weapon_smart_pistol", Localize("#WPN_SMART_PISTOL") );
 
+	RegisterPageCategory( "weapons", "wep_pilot_weapon_mods", "Pilot - Weapon Mods", "Spawnmenu_GiveWeaponMod" );
+	RegisterCategoryItem( "wep_pilot_weapon_mods", "extended_ammo", Localize("#MOD_EXTENDED_MAG_NAME") );
+	RegisterCategoryItem( "wep_pilot_weapon_mods", "silencer", Localize("#MOD_SILENCER_NAME") );
+	RegisterCategoryItem( "wep_pilot_weapon_mods", "hcog", Localize("#MOD_HCOG_NAME") );
+	RegisterCategoryItem( "wep_pilot_weapon_mods", "redline_sight", Localize("#MOD_ZOOM_SIGHT_NAME") );
+	RegisterCategoryItem( "wep_pilot_weapon_mods", "aog", Localize("#MOD_AOG_NAME") );
+	RegisterCategoryItem( "wep_pilot_weapon_mods", "holosight", Localize("#MOD_HOLOSIGHT_NAME") );
+	RegisterCategoryItem( "wep_pilot_weapon_mods", "scope_4x", Localize("#MOD_SCOPE_4X_NAME") );
+	RegisterCategoryItem( "wep_pilot_weapon_mods", "ricochet", Localize("#MOD_RICOCHET_NAME") );
+	RegisterCategoryItem( "wep_pilot_weapon_mods", "threat_scope", Localize("#MOD_THREAT_SIGHT_NAME") );
+	RegisterCategoryItem( "wep_pilot_weapon_mods", "quick_charge", Localize("#MOD_CHARGE_HACK_NAME") );
+	RegisterCategoryItem( "wep_pilot_weapon_mods", "tactical_cdr_on_kill", Localize("#MOD_TACTIKILL_NAME") );
+	RegisterCategoryItem( "wep_pilot_weapon_mods", "pas_fast_ads", Localize("#MOD_GUN_READY_NAME") );
+	RegisterCategoryItem( "wep_pilot_weapon_mods", "pas_fast_swap", Localize("#MOD_SPEED_TRANSITION_NAME") );
+	RegisterCategoryItem( "wep_pilot_weapon_mods", "pas_fast_reload", Localize("#MOD_FAST_RELOAD_NAME") );
+	RegisterCategoryItem( "wep_pilot_weapon_mods", "pro_screen", Localize("#MOD_PRO_SCREEN_NAME") );
+	RegisterCategoryItem( "wep_pilot_weapon_mods", "pas_run_and_gun", Localize("#MOD_GUNRUNNER_NAME") );
+
 	RegisterPageCategory( "weapons", "wep_pilot_abilities", "Pilot Abilities", "Spawnmenu_GiveAbility" );
 	RegisterCategoryItem( "wep_pilot_abilities", "mp_ability_cloak", Localize("#WPN_CLOAK") );
 	RegisterCategoryItem( "wep_pilot_abilities", "mp_ability_grapple", Localize("#WPN_GRAPPLE") );
