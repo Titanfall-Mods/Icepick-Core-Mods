@@ -197,7 +197,9 @@ void function UpdateButtonData( var button, int elemNum )
 	RuiSetInt( rui, "blueLionTotal", maxLions )
 	RuiSetBool( rui, "finishedMaster", completedMaster )
 
-	if ( elemNum == 0 )
+	// @icepick
+	bool hideMaster = elemNum == 0 || data.levelBsp.find( "mp_" ) == 0
+	if ( hideMaster )
 		RuiSetBool( rui, "showMaster", false )
 	else
 		RuiSetBool( rui, "showMaster", true )
